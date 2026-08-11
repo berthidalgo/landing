@@ -77,12 +77,11 @@ window.CONFIG = {
   RESENAS_NOTA:  '',   // ej: '4.8'
   RESENAS_TOTAL: '',   // ej: '1,240'
 
-  // Reseñas REALES de tus clientes. Vacío = se muestra el bloque de
-  // "sé de los primeros" en su lugar, que es lo honesto mientras no las tengas.
+  // Reseñas REALES de tus clientes. Vacío = la sección no existe.
   // Inventarlas es publicidad engañosa (INDECOPI) y además se nota.
   // Cómo conseguirlas en 3 días: README.md, sección "Las primeras reseñas".
   //   { texto:'Corta muy bien y se siente firme en la mano. Llegó rápido.',
-  //     nombre:'M. G.', lugar:'Los Olivos', hace:'hace 2 horas' }
+  //     nombre:'M. G.', lugar:'Los Olivos', hace:'hace 2 días' }
   RESENAS: []
 };
 </script>
@@ -160,11 +159,16 @@ h3{font-size:17.6px;font-weight:700}
   font-weight:700;padding:.4rem .7rem;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.22)}
 .pastilla-v{background:var(--verde-osc)}
 .pastilla-n{background:var(--naranja)}
-.hero-pie{display:flex;align-items:center;gap:.6rem;padding:.85rem 1rem 0}
-.hero-pie .btn-mini{background:#1F5C2E;color:#fff;font-family:inherit;font-weight:700;
-  font-size:14px;padding:.85rem 1.1rem;border-radius:99px;border:0;white-space:nowrap;
-  min-height:44px;cursor:pointer}
-.hero-pie small{font-size:11px;font-weight:700;color:var(--tinta);line-height:1.25}
+.hero-pie{padding:.9rem 1rem 0}
+.hero-pie .btn-mini{display:block;width:100%;background:#1F5C2E;color:#fff;
+  font-family:inherit;font-weight:700;font-size:16px;letter-spacing:.01em;
+  padding:.9rem 1rem;border-radius:99px;border:0;min-height:48px;cursor:pointer}
+.hero-pie .btn-mini:hover{background:#164523}
+.hero-sellos{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-top:.9rem}
+.hero-sellos span{display:grid;justify-items:center;gap:.25rem;font-size:10.5px;
+  font-weight:700;color:var(--tinta);line-height:1.25;text-align:center;
+  text-transform:uppercase;letter-spacing:.01em}
+.hero-sellos i{font-size:17px;font-style:normal;line-height:1}
 
 /* ── Galería ────────────────────────────────────────────────────── */
 .galeria{display:flex;gap:.4rem;overflow-x:auto;padding:.75rem 0;scrollbar-width:none}
@@ -182,9 +186,11 @@ h3{font-size:17.6px;font-weight:700}
 .precio-fila{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem}
 .precio{font-size:24.75px;font-weight:900;color:var(--morado)}
 .precio-antes{font-size:18px;font-weight:700;color:var(--gris);text-decoration:line-through}
-.wa-chip{margin-left:auto;display:inline-flex;align-items:center;gap:.35rem;
-  background:var(--verde-2);color:#fff;font-size:13px;font-weight:700;
-  padding:.7rem .85rem;border-radius:var(--r-sm);text-decoration:none;min-height:44px}
+/* Enlace discreto: no debe competir con el CTA principal. */
+.wa-linea{display:flex;align-items:center;justify-content:center;gap:.4rem;
+  margin:.7rem 0 0;padding:.7rem;min-height:44px;color:var(--verde-osc);
+  font-size:14px;font-weight:700;text-decoration:none}
+.wa-linea:hover{text-decoration:underline}
 
 /* ── Botón principal ────────────────────────────────────────────── */
 .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -196,14 +202,27 @@ h3{font-size:17.6px;font-weight:700}
 .btn:active{transform:translateY(1px)}
 .btn small{font-size:15px;font-weight:500;opacity:.95;margin-top:.1rem}
 
-/* El CTA late para que no se pierda en el scroll largo. */
-.btn-late{animation:latido 2.2s ease-in-out infinite}
+/* El CTA late y un brillo lo recorre: en una página de 9.000 px hace falta
+   que el botón se note sin llegar a marear. */
+.btn-late{position:relative;overflow:hidden;animation:latido 2.6s ease-in-out infinite}
 @keyframes latido{
-  0%,100%{transform:scale(1);   box-shadow:0 2px 0 rgba(0,0,0,.06), 0 0 0 0 rgba(0,208,132,.5)}
-  50%    {transform:scale(1.025);box-shadow:0 2px 0 rgba(0,0,0,.06), 0 0 0 12px rgba(0,208,132,0)}
+  0%,72%,100%{transform:scale(1);    box-shadow:0 2px 0 rgba(0,0,0,.06), 0 0 0 0 rgba(0,208,132,.55)}
+  82%        {transform:scale(1.03); box-shadow:0 6px 16px rgba(0,208,132,.4), 0 0 0 14px rgba(0,208,132,0)}
+  92%        {transform:scale(.995); box-shadow:0 2px 0 rgba(0,0,0,.06), 0 0 0 0 rgba(0,208,132,0)}
 }
+/* El destello va en un pseudo-elemento para no repintar el botón entero. */
+.btn-late::after{
+  content:'';position:absolute;top:0;left:-60%;width:45%;height:100%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);
+  transform:skewX(-18deg);animation:brillo 2.6s ease-in-out infinite;
+}
+@keyframes brillo{0%,55%{left:-60%} 85%,100%{left:130%}}
 .btn-late:hover,.btn-late:active{animation-play-state:paused}
-@media (prefers-reduced-motion:reduce){ .btn-late{animation:none} }
+.btn-late:hover::after{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){
+  .btn-late{animation:none}
+  .btn-late::after{display:none}
+}
 .btn-lin{background:#fff;color:var(--tinta);border:1.5px solid var(--linea);font-size:15px}
 .btn-lin:hover{background:var(--f3)}
 
@@ -307,18 +326,6 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
   cursor:pointer}
 .punto[aria-current="true"]{background:var(--tinta)}
 
-/* ── Sustituto honesto de las reseñas ───────────────────────────── */
-.primeros{border-top:1px solid var(--linea);padding-top:1.25rem;margin-top:.5rem}
-.primeros h3{font-size:22px;font-weight:900;text-transform:uppercase;line-height:1.15;
-  margin-bottom:.6rem}
-.primeros p{font-size:14.5px;color:var(--gris)}
-.primeros b{color:var(--tinta)}
-.primeros ul{list-style:none;margin:1rem 0;padding:0}
-.primeros li{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;
-  font-size:14px;color:var(--tinta-90);line-height:1.4}
-.primeros-pie{font-size:13.5px;font-style:italic;border-left:3px solid var(--turquesa-b);
-  padding-left:.75rem;margin:0}
-
 /* ── Contenido largo ────────────────────────────────────────────── */
 .contenido{padding:1.75rem 0 .5rem}
 .contenido h2{margin-bottom:1.1rem}
@@ -392,12 +399,6 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
   background:#000;aspect-ratio:1}
 .video-caja video{width:100%;height:100%;object-fit:cover;display:block}
 
-/* ── Widget de reseñas ──────────────────────────────────────────── */
-.resenas-widget{text-align:center;border-top:1px solid var(--linea);padding:1.75rem 0 .5rem;
-  margin-top:1.5rem}
-.resenas-widget p{color:var(--gris);margin-bottom:.4rem}
-.resenas-widget a{color:#B98A00;font-weight:700;text-decoration:none;
-  display:inline-block;padding:.7rem 0;min-height:44px}
 
 /* ── Barra fija ─────────────────────────────────────────────────── */
 .barra{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;
@@ -559,8 +560,11 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <div class="wrap hero-pie">
     <button class="btn-mini" data-abrir>PRUÉBALO HOY MISMO</button>
-    <small>🚚 ENVÍO<br>RÁPIDO</small>
-    <small>🛡 CALIDAD<br>GARANTIZADA</small>
+    <div class="hero-sellos">
+      <span><i aria-hidden="true">🚚</i>Envío<br>rápido</span>
+      <span><i aria-hidden="true">🛡️</i>Calidad<br>garantizada</span>
+      <span><i aria-hidden="true">💵</i>Pagas al<br>recibir</span>
+    </div>
   </div>
 </section>
 
@@ -586,15 +590,16 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <span class="precio num" data-precio-hero>S/. 69.00</span>
     <s class="precio-antes num" data-precio-antes>S/. 129.90</s>
     <span class="badge-oferta" data-badge-oferta hidden>⏱ OFERTA LIMITADA</span>
-    <a class="wa-chip" href="#" data-wa-link>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
-      Escríbenos
-    </a>
   </div>
 
   <p class="stock" data-stock hidden></p>
 
   <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+
+  <a class="wa-linea" href="#" data-wa-link>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
+    ¿Tienes dudas? Escríbenos por WhatsApp
+  </a>
 
   <!-- Qué pasa después de pedir: baja la ansiedad del contraentrega. -->
   <div class="pasos" aria-label="Cómo avanza tu pedido">
@@ -661,22 +666,6 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <!-- Se pintan desde CONFIG.RESENAS -->
   <div class="resenas" data-resenas hidden></div>
 
-  <!-- Mientras no haya reseñas reales, esto ocupa su lugar. -->
-  <div class="primeros" data-primeros hidden>
-    <h3>Acabamos de lanzarlo<br>en el Perú</h3>
-    <p>Todavía no tenemos reseñas publicadas, y no vamos a inventarlas. Lo que sí
-      te damos es que <b>el riesgo lo asumimos nosotros</b>:</p>
-    <ul>
-      <li><span aria-hidden="true">💵</span> <span>Pagas cuando lo tienes en la mano.
-        Si al verlo no te convence, no lo recibes.</span></li>
-      <li><span aria-hidden="true">↩️</span> <span>7 días para cambiarlo si llega dañado
-        o no es lo que esperabas.</span></li>
-      <li><span aria-hidden="true">💬</span> <span>Un WhatsApp real donde te
-        respondemos, antes y después de comprar.</span></li>
-    </ul>
-    <p class="primeros-pie">¿Lo pides y nos cuentas qué tal? A los primeros clientes
-      les preguntamos qué les pareció.</p>
-  </div>
 </div>
 
 <!-- ═══ CONTENIDO LARGO ════════════════════════════════════════════ -->
@@ -884,10 +873,6 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
   </div>
 
-  <div class="resenas-widget">
-    <p>Todavía no hay reseñas publicadas.</p>
-    <p><a href="#" data-wa-link>Sé el primero en escribir una</a></p>
-  </div>
 </div>
 
 <svg class="onda" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
@@ -1124,25 +1109,20 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   }
 
   /* ── Reseñas ─────────────────────────────────────────────────────
-     Con reseñas reales se enseñan; sin ellas, el bloque de "acabamos de
-     lanzar". Nunca las dos, y nunca reseñas inventadas. */
+     Solo si son reales. Sin ellas la sección no existe: ni reseñas
+     inventadas ni un texto que las eche de menos. */
   var cajaRes = $('[data-resenas]');
-  var listaRes = C.RESENAS || [];
-  if (listaRes.length){
+  (C.RESENAS || []).forEach(function(r){
     cajaRes.hidden = false;
-    listaRes.forEach(function(r){
-      var d = document.createElement('div');
-      d.className = 'resena';
-      d.innerHTML =
-        '<span class="estrellas" aria-label="5 de 5 estrellas">★★★★★</span>' +
-        '<p>' + r.texto + '</p>' +
-        '<span><b>' + r.nombre + '</b>' + (r.lugar ? ' de ' + r.lugar : '') +
-        (r.hace ? ' · ' + r.hace : '') + '</span>';
-      cajaRes.appendChild(d);
-    });
-  } else {
-    $('[data-primeros]').hidden = false;
-  }
+    var d = document.createElement('div');
+    d.className = 'resena';
+    d.innerHTML =
+      '<span class="estrellas" aria-label="5 de 5 estrellas">★★★★★</span>' +
+      '<p>' + r.texto + '</p>' +
+      '<span><b>' + r.nombre + '</b>' + (r.lugar ? ' de ' + r.lugar : '') +
+      (r.hace ? ' · ' + r.hace : '') + '</span>';
+    cajaRes.appendChild(d);
+  });
 
   /* ── Vídeo de demostración ───────────────────────────────────── */
   if (C.VIDEO && C.VIDEO.activo && C.VIDEO.archivo){

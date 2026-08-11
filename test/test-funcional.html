@@ -147,12 +147,12 @@ document.getElementById('f').addEventListener('load', function(){
   cel.dispatchEvent(new w.Event('input'));
   chk('El campo de celular filtra a 9 dígitos', cel.value === '987654321', cel.value);
 
-  /* ── 7.ter Reseñas honestas ─────────────────────────────────── */
-  chk('Sin reseñas reales, no se inventan',
+  /* ── 7.ter Reseñas: solo si son reales ──────────────────────── */
+  chk('Sin reseñas reales, la sección no aparece',
       !visible(D.querySelector('[data-resenas]')));
-  chk('En su lugar sale el bloque de lanzamiento',
-      visible(D.querySelector('[data-primeros]')));
-  chk('Ya no hay textos de plantilla [EJEMPLO]',
+  chk('No se menciona la falta de reseñas',
+      D.body.innerText.toLowerCase().indexOf('reseñas publicadas') === -1);
+  chk('No hay textos de plantilla [EJEMPLO]',
       D.body.innerText.indexOf('[EJEMPLO') === -1);
 
   /* ── 7.bis Huecos de imagen ─────────────────────────────────── */
