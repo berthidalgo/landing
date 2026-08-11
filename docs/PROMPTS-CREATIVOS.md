@@ -1,124 +1,153 @@
-# 🎨 Prompts para los creativos — YUNQUE
+# 🎨 Creativos de la landing — qué generar y dónde va cada uno
 
-Todo lo que hay que generar, con el prompt listo para pegar. Genera, guarda en esta misma
-carpeta con el nombre indicado y avísame: yo los meto en la landing.
+Genera, guarda **con el nombre exacto** en `landing-cuchillo/img/` y avísame: yo los
+engancho y despliego.
 
-> **Regla que atraviesa todo:** este producto se anuncia como **utensilio de cocina**.
-> Nunca como arma, táctico, vikingo, de caza, de camping o de supervivencia. Ni en la
-> imagen ni en el texto. Es lo que separa un anuncio aprobado de una cuenta restringida.
-> Detalle en [`../landing-cuchillo/README.md`](../landing-cuchillo/README.md).
-
----
-
-## ⚠️ Antes que nada: el vídeo que dejaste no se puede usar
-
-`WhatsApp Video 2026-08-10 at 6.20.05 PM.mp4` tiene dos problemas:
-
-1. **Marca de agua de TikTok de `@aninda_shop06`** en todos los fotogramas.
-2. Rótulo impreso: *"Unauthorised commercial use of video strictly prohibited"*.
-
-Meta y TikTok penalizan en entrega el material con marca de agua de otra plataforma, y el
-aviso legal expone a una reclamación de derechos. **Sirve como referencia de lo que
-queremos grabar, no como creativo.** Los prompts de abajo lo reemplazan.
+> **Regla que atraviesa todo:** esto se anuncia como **utensilio de cocina**. Nunca como
+> arma, táctico, vikingo, de caza, camping o supervivencia. Ni en la imagen ni en el texto.
+> Es lo que separa un anuncio aprobado de una cuenta restringida.
+> Lista completa de palabras prohibidas al final.
 
 ---
 
-## 1 · Foto principal · `hero.png` — 1:1
+## 📐 Dónde encaja cada pieza (AIDA)
+
+| Fase | Bloque de la landing | Qué hace | Archivo |
+|---|---|---|---|
+| **A**tención | Héroe | Frenar el scroll en 1 segundo | `hero.jpg` |
+| **A** | Galería | Dar a entender que es real | `g1…g5.jpg` |
+| **I**nterés | Beneficios · Antes/Después | "esto resuelve *mi* problema" | `agarre.jpg` |
+| **I** | **Vídeo demostración** | La prueba. **Lo que más convierte** | `demo.mp4` |
+| **D**eseo | Un solo cuchillo para toda tu cocina | Verlo en su cocina | `uso.jpg` |
+| **D** | Medidas | Matar la objeción del tamaño | *ya resuelto en SVG* |
+| **A**cción | Packs · Formulario | — | *no necesita imagen* |
+
+---
+
+## 1 · `hero.jpg` — la más importante · 1:1
+
+Es lo primero que ve alguien que viene de TikTok. Si esta falla, el resto da igual.
 
 > Professional product photography of a hand-forged kitchen cleaver with a wide curved
-> blade, a large oval finger-hole cut into the blade, dark hammered forge finish with a
-> mottled damascus-like pattern, and a polished rosewood handle with three steel rivets.
-> The knife rests on a thick walnut cutting board in a warm domestic kitchen. Soft
-> directional window light from the left, deep shadows, dark charcoal background.
-> Shot on 85mm, f/4, high detail on the steel texture. Square 1:1 composition, the knife
-> filling most of the frame, diagonal placement.
-> **Negative:** no text, no watermark, no logos, no hands, no blood, no raw meat,
-> no tactical or military props, no outdoor setting.
+> blade and a large oval finger-hole cut into the blade, dark hammered forge finish with a
+> mottled damascus-like pattern, polished rosewood handle with three steel rivets. Resting
+> on a thick walnut cutting board in a warm home kitchen, sliced tomato and fresh herbs
+> beside it. Soft directional window light from the left, deep shadows, warm charcoal
+> background. Shot on 85mm, f/4, high detail on the steel texture. Square 1:1, the knife
+> filling most of the frame on a diagonal.
+> **Negative:** no text, no watermark, no logos, no hands, no blood, no raw red meat, no
+> tactical or military props, no outdoor or camping setting, no dark moody horror lighting.
 
-## 2 · Escala real · `escala.png` — 1:1
+## 2 · `g1.jpg` … `g5.jpg` — galería · 1:1
 
-La objeción número uno de este producto es *"¿qué tan grande es?"*.
+Cinco vistas. La galería está **oculta** hasta que haya al menos dos.
 
-> Product photo of a hand-forged kitchen cleaver with a finger-hole in the blade, lying
-> flat on a light grey seamless surface next to a standard kitchen fork and a lime, for
-> size comparison. Overhead top-down shot, even soft studio light, minimal shadows.
-> Clean, catalogue style, 1:1.
-> **Negative:** no text, no watermark, no rulers, no hands.
+| Archivo | Qué debe mostrar |
+|---|---|
+| `g1.jpg` | El cuchillo completo sobre fondo claro y limpio (catálogo) |
+| `g2.jpg` | **La foto de medidas** que ya tienes, con las cotas 20 cm y 8.5 cm |
+| `g3.jpg` | Macro del hueco de agarre con dos dedos dentro |
+| `g4.jpg` | Cortando: tomate, calabaza o carne |
+| `g5.jpg` | El paquete: cuchillo + funda protectora |
 
-## 3 · En uso, cocina peruana · `uso-cocina.png` — 4:5
+Para `g1`:
 
-> Warm lifestyle photo: a woman's hands, mid-forties, resting fingers inside the
+> Clean product photo of a forged kitchen cleaver with a finger-hole in the blade and
+> wooden handle, lying flat on a light grey seamless background. Overhead top-down shot,
+> even soft studio light, minimal shadows, catalogue style, square 1:1.
+> **Negative:** no text, no watermark, no hands, no props.
+
+## 3 · `agarre.jpg` — el argumento entero · 1:1
+
+El hueco de agarre es lo único que diferencia este cuchillo de otros cuarenta.
+
+> Extreme macro close-up of the oval finger-hole in a forged kitchen knife blade, with two
+> fingers hooked through it mid-cut. Focus on the transition between the polished edge
+> bevel and the dark hammered forge finish. Warm rim light, blurred wooden kitchen
+> background, shallow depth of field, 1:1.
+> **Negative:** no text, no watermark, no blood, no raw red meat.
+
+## 4 · `uso.jpg` — en una cocina peruana · 1:1
+
+> Warm lifestyle photo: a woman's hands, mid-forties, fingers resting inside the
 > finger-hole of a wide forged kitchen cleaver while slicing a red onion on a wooden board.
-> Home kitchen in Lima: ceramic tile backsplash, a pot of rice out of focus behind.
-> Natural late-afternoon light, shallow depth of field, warm tones. Documentary style,
-> not staged. 4:5 vertical.
-> **Negative:** no text, no watermark, no blood, no raw red meat, no professional chef
-> uniform, no dark or dramatic mood.
-
-## 4 · El detalle que vende · `detalle-hueco.png` — 1:1
-
-El hueco de agarre es el argumento entero. Merece su propia foto.
-
-> Extreme macro close-up of the oval finger-hole in a forged kitchen knife blade, two
-> fingers hooked through it. Focus on the transition between the polished edge bevel and
-> the dark hammered forge finish. Warm rim light, blurred wooden kitchen background.
-> 1:1, shallow depth of field.
-> **Negative:** no text, no watermark, no blood, no cutting action.
-
-## 5 · Foto para prueba social · `entrega.png` — 1:1
-
-> Casual smartphone-style photo, slightly imperfect: a kraft cardboard parcel just opened
-> on a kitchen table, the forged cleaver visible inside its protective sleeve. Daylight
-> from a window, a mug and keys in the corner of the frame. Looks like a real customer
-> photo, not a studio shot. 1:1.
-> **Negative:** no text, no watermark, no branding on the box, no studio lighting.
+> Home kitchen in Lima: ceramic tile backsplash, a pot of rice out of focus behind. Natural
+> late-afternoon light, shallow depth of field, warm tones. Documentary style, not staged.
+> Square 1:1.
+> **Negative:** no text, no watermark, no blood, no professional chef uniform, no dark or
+> dramatic mood, no studio lighting.
 
 ---
 
-## 🎬 Vídeo para TikTok / Reels · 9:16, 15–20 s
+# 🎬 `demo.mp4` — el vídeo · 9:16 · 15–20 s
 
-Tres ángulos. Empieza por el **A**: es el que ataca la objeción real (la muñeca cansada) y
-el que se sostiene sin afirmar nada que no podamos probar.
+**Es la pieza que más va a mover la aguja.** Un cuchillo se vende viendo cómo corta. La
+landing ya tiene el hueco reservado: en cuanto lo tengas, se activa con una línea.
 
-### A · "El hueco" — demostración
+## ⚠️ El vídeo que dejaste no sirve para esto
 
-| Seg | Imagen | Voz / rótulo |
+`WhatsApp Video…mp4` lleva marca de agua de TikTok de `@aninda_shop06` y el rótulo
+*"Unauthorised commercial use strictly prohibited"*. Meta y TikTok penalizan en entrega el
+material con marca de agua de otra plataforma. Tres salidas, por orden de rapidez:
+
+1. **Pídeselo al proveedor.** Ese vídeo es material de fábrica y `@aninda_shop06` casi
+   seguro también lo republicó. Los mayoristas mandan el pack limpio y con permiso de uso
+   solo por pedirlo por WhatsApp. **10 minutos, cero riesgo.**
+2. **Grábalo tú** con el guion A de abajo: 20 minutos con un móvil. Además el UGC propio
+   rinde más en frío que el vídeo de catálogo que ya usan otros diez vendedores.
+3. Genera uno por IA con el prompt de más abajo, mientras llega el del proveedor.
+
+## Guion A · "El hueco" — empieza por este
+
+Ataca la objeción real (la muñeca que se cansa) y no afirma nada que no podamos probar.
+
+| Seg | Imagen | Rótulo en pantalla |
 |---|---|---|
-| 0–2 | Primer plano: dedos entrando en el hueco de la hoja | **"¿Ves este hueco?"** |
-| 2–5 | Mano cortando cebolla, muñeca casi quieta | "Tus dedos van *encima* del filo." |
-| 5–9 | Mismo corte con un cuchillo normal: la muñeca hace fuerza | "Con uno normal, la fuerza la hace tu muñeca." |
-| 9–13 | La hoja cae sola sobre una zanahoria y la parte | "Con este, la hace el peso." |
-| 13–17 | Producto sobre la tabla, se sobreimprime el precio | "S/69, y pagas cuando te llega." |
+| 0–2 | Macro: dos dedos entrando en el hueco de la hoja | **"¿Ves este hueco?"** |
+| 2–5 | Corte de cebolla, la muñeca casi quieta | "Tus dedos van *encima* del filo" |
+| 5–9 | El mismo corte con un cuchillo normal: la muñeca forcejea | "Con uno normal, la fuerza la hace tu muñeca" |
+| 9–13 | La hoja cae sola y parte una zanahoria | "Con este, la hace el peso" |
+| 13–17 | Producto sobre la tabla + precio | **"S/69 · Pagas cuando te llega"** |
 
-### B · "Una sola herramienta"
+## Guion B · "Una sola herramienta"
 
-Plano cenital fijo. Se corta seguido: cebolla → pollo → zanahoria → se aplasta un ajo con
-el plano de la hoja → se arrastra todo a la olla con la hoja. Sin voz, solo el sonido real
-del corte. Rótulo final: **"Un cuchillo. Toda la cocina. S/69."**
+Plano cenital fijo, sin voz, solo el sonido real del corte: cebolla → pollo → zanahoria →
+machacar ajo con el plano de la hoja → arrastrar todo a la olla con la hoja.
+Rótulo final: **"Un cuchillo. Toda la cocina. S/69."**
 
-### C · UGC honesto (grábalo con el móvil, sin producción)
+## Guion C · UGC — el que más rinde en frío
 
-Alguien de tu entorno que cocine a diario, hablando a cámara en su cocina:
-*"Yo tenía tres cuchillos y ninguno cortaba el pollo. Este llegó ayer…"*, y corta en
-directo. **Este suele ser el que más rinde en frío, y es el más barato de hacer.**
+Alguien de tu entorno que cocine a diario, en su cocina, hablando a cámara:
+*"Yo tenía tres cuchillos y ninguno cortaba bien el pollo. Este llegó ayer…"* y corta en
+directo. Grabado con móvil, sin producción. **Es el más barato y suele ganar.**
 
-**Especificaciones:** 9:16 · 1080×1920 · texto dentro del 80% central (fuera de la zona de
-la interfaz) · gancho en los primeros 2 segundos · subtítulos quemados, casi nadie lo verá
-con sonido.
+## Prompt para vídeo por IA (Veo / Kling / Runway)
+
+> Close-up cinematic shot in a warm home kitchen: a hand-forged kitchen cleaver with a
+> large oval finger-hole in the blade slices cleanly through a ripe tomato on a wooden
+> cutting board. The hand grips through the hole in the blade, fingers above the edge.
+> Shallow depth of field, warm afternoon window light, slow motion, steam and fresh herbs
+> in the background. Vertical 9:16, photorealistic, no text.
+> **Negative:** no watermark, no logos, no blood, no raw red meat, no hands in gloves, no
+> outdoor setting, no weapons context.
+
+**Especificaciones:** 9:16 · 1080×1920 · **menos de 3 MB** para la landing (recórtalo a
+15 s y compáralo) · gancho en los 2 primeros segundos · subtítulos quemados, casi nadie lo
+verá con sonido.
 
 ---
 
-## Palabras prohibidas en los creativos
+## 🚫 Palabras prohibidas
 
 No las uses en el vídeo, el texto del anuncio ni la landing:
 
-> arma · táctico · vikingo · samurái · supervivencia · caza · combate · militar ·
-> machete · daga · espada · defensa personal · camping · matar · degollar · sangre · letal
+> arma · táctico · vikingo · samurái · supervivencia · caza · combate · militar · machete ·
+> daga · espada · defensa personal · camping · matar · degollar · sangre · letal
 
 Y las que **sí** hay que usar, porque anclan la categoría correcta: *cocina, cocinar,
-utensilio de cocina, tabla de cortar, picar, verduras, hogar*.
+utensilio de cocina, tabla de cortar, picar, verduras, hogar, chef*.
 
-Para verificarlo antes de publicar:
+Comprobar antes de publicar:
 
 ```bash
 node landing-cuchillo/test/compliance-check.js

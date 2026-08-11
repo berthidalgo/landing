@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es-PE">
 <head>
 <meta charset="utf-8">
@@ -41,17 +41,23 @@ window.CONFIG = {
     { id: 3, cant: 3, titulo: '3 unidades', precio: 119, antes: 207, etiqueta: '¡Mega Oferta!' }
   ],
 
-  UPSELL: { activo: true, nombre: 'Piedra afiladora de doble grano', precio: 29 },
+  // ⚠️ DESACTIVADOS a propósito: no vendemos ningún complemento todavía.
+  // Cuando tengas un segundo producto REAL del mismo proveedor, pon
+  // activo:true con su nombre y precio. No ofrezcas lo que no puedes enviar:
+  // se convierte en un reclamo el día de la entrega.
+  UPSELL: { activo: false, nombre: '', precio: 0 },
 
   POST_UPSELL: {
-    activo: true,
-    titulo: '¡Excelente decisión!',
-    texto:  'Un filo forjado dura años, pero solo si lo reavivas cada cierto tiempo. Añade la tabla de bambú y te llega en el mismo paquete, sin costo de envío extra.',
-    nombre: 'Tabla de picar de bambú · 38 × 26 cm',
-    antes:  69,
-    precio: 39,
+    activo: false,
+    titulo: '', texto: '', nombre: '',
+    antes: 0, precio: 0,
     minutos: 5           // al llegar a 0 la oferta se retira DE VERDAD
   },
+
+  // Vídeo de demostración. Ponlo en img/ y activa: es lo que más convierte
+  // en tráfico frío. Debe ser TUYO o del proveedor con permiso — sin marcas
+  // de agua de TikTok, que Meta penaliza en entrega.
+  VIDEO: { activo: false, archivo: 'img/demo.mp4', poster: 'img/producto.jpg' },
 
   NUM_PEDIDO_DESDE: 1040,
 
@@ -180,6 +186,15 @@ h3{font-size:17.6px;font-weight:700}
 .btn:hover{background:var(--verde-osc)}
 .btn:active{transform:translateY(1px)}
 .btn small{font-size:15px;font-weight:500;opacity:.95;margin-top:.1rem}
+
+/* El CTA late para que no se pierda en el scroll largo. */
+.btn-late{animation:latido 2.2s ease-in-out infinite}
+@keyframes latido{
+  0%,100%{transform:scale(1);   box-shadow:0 2px 0 rgba(0,0,0,.06), 0 0 0 0 rgba(0,208,132,.5)}
+  50%    {transform:scale(1.025);box-shadow:0 2px 0 rgba(0,0,0,.06), 0 0 0 12px rgba(0,208,132,0)}
+}
+.btn-late:hover,.btn-late:active{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){ .btn-late{animation:none} }
 .btn-lin{background:#fff;color:var(--tinta);border:1.5px solid var(--linea);font-size:15px}
 .btn-lin:hover{background:var(--f3)}
 
@@ -317,6 +332,31 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .foto-pendiente b{color:var(--tinta);font-size:14px}
 .foto-pendiente code{font-family:ui-monospace,monospace;font-size:12px;color:var(--morado)}
 
+/* ── Plano acotado: contenido visual que no depende de tener fotos ── */
+.plano{background:var(--f3);border-radius:var(--r);padding:1.1rem .75rem;margin:1rem 0 1.25rem}
+.plano svg{width:100%;height:auto;display:block;overflow:visible}
+.trazo{fill:none;stroke:var(--tinta);stroke-width:2.5;stroke-linejoin:round}
+.trazo-hueco{fill:var(--f3);stroke:var(--tinta);stroke-width:2.5}
+.cota{stroke:var(--morado);stroke-width:1.2;fill:none}
+.cota-txt{font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;
+  fill:var(--morado);text-anchor:middle}
+.guia{stroke:#9A9A9A;stroke-width:.75;stroke-dasharray:3 3}
+.guia-txt{font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;fill:var(--gris)}
+@media (prefers-reduced-motion:no-preference){
+  .plano .dibuja{stroke-dasharray:1400;stroke-dashoffset:1400}
+  .plano.visible .dibuja{animation:trazar 1.4s cubic-bezier(.4,0,.2,1) forwards}
+  @keyframes trazar{to{stroke-dashoffset:0}}
+  .plano .cota,.plano .guia,.plano .cota-txt,.plano .guia-txt{opacity:0}
+  .plano.visible .cota,.plano.visible .guia,
+  .plano.visible .cota-txt,.plano.visible .guia-txt{animation:aparece .5s .85s ease forwards}
+  @keyframes aparece{to{opacity:1}}
+}
+
+/* ── Vídeo del producto ─────────────────────────────────────────── */
+.video-caja{position:relative;border-radius:var(--r);overflow:hidden;margin:1.25rem 0;
+  background:#000;aspect-ratio:1}
+.video-caja video{width:100%;height:100%;object-fit:cover;display:block}
+
 /* ── Widget de reseñas ──────────────────────────────────────────── */
 .resenas-widget{text-align:center;border-top:1px solid var(--linea);padding:1.75rem 0 .5rem;
   margin-top:1.5rem}
@@ -346,6 +386,15 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .cerrar{position:absolute;top:.6rem;right:.6rem;width:2rem;height:2rem;background:none;
   border:0;color:var(--gris);font-size:1.4rem;line-height:1;cursor:pointer}
 .modal-cuerpo{padding:1rem}
+.mini-pedido{display:grid;grid-template-columns:auto 1fr auto;gap:.7rem;align-items:center;
+  background:var(--turquesa);border:1.5px solid var(--turquesa-b);border-radius:var(--r);
+  padding:.65rem .75rem;margin-bottom:.25rem}
+.mini-pedido img{border-radius:6px}
+.mini-pedido b{display:block;font-size:15px;font-weight:700;color:var(--tinta);line-height:1.2}
+.mini-pedido small{font-size:12px;color:var(--gris)}
+.mini-precio{font-size:18px;font-weight:900;color:var(--tinta);white-space:nowrap}
+.sellos-modal{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;
+  margin-top:.75rem;font-size:12px;color:var(--gris);font-weight:500}
 .campo{margin-bottom:.75rem}
 .campo label{display:block;font-size:13.5px;font-weight:700;color:var(--tinta);
   margin-bottom:.25rem}
@@ -501,7 +550,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <p class="stock" data-stock hidden></p>
 
-  <button class="btn" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+  <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
 
   <!-- Qué pasa después de pedir: baja la ansiedad del contraentrega. -->
   <div class="pasos" aria-label="Cómo avanza tu pedido">
@@ -537,7 +586,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <p class="sub" id="packs">Elige la cantidad a llevar:</p>
   <div class="packs" role="radiogroup" aria-label="Elige la cantidad" data-packs></div>
 
-  <button class="btn" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+  <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
 
   <div style="margin-top:1.25rem">
     <details>
@@ -619,6 +668,13 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <p class="rotulo">Así se corta cuando la mano<br>va encima del filo</p>
 
+  <!-- Vídeo de demostración: se muestra solo si CONFIG.VIDEO.activo -->
+  <div class="video-caja" data-video hidden></div>
+
+  <div style="margin:1.25rem 0">
+    <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+  </div>
+
   <h2 style="margin:1.75rem 0 0">Un solo cuchillo<br>para toda tu cocina</h2>
   <div class="rejilla">
     <div><i aria-hidden="true">🥩</i><b>Corta carne con hueso</b></div>
@@ -657,10 +713,38 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <li>Lávalo a mano y sécalo. No lo metas al lavavajillas.</li>
   </ol>
 
-  <div class="foto-pendiente">
-    <b>Falta la foto de medidas</b>
-    <span>La del plano con las cotas de 20 cm y 8.5 cm</span>
-    <code>img/medidas.jpg</code>
+  <h2 style="margin:1.75rem 0 .25rem">Las medidas<br>de verdad</h2>
+  <p style="text-align:center;color:var(--gris);font-size:14px">
+    Casi nadie las publica. Aquí están, para que sepas qué te llega.</p>
+
+  <div class="plano" id="plano">
+    <svg viewBox="0 0 340 210" role="img"
+         aria-label="Plano acotado del cuchillo: 20 cm de largo total y 8.5 cm de ancho de hoja, con el hueco de agarre y el mango de madera.">
+      <path class="trazo dibuja" d="M30 128 L232 128 Q252 128 258 116 L268 96
+            Q246 52 196 40 Q140 27 86 34 Q52 39 36 56 Q24 70 26 92 Q27 114 30 128 Z"/>
+      <path class="trazo-hueco" d="M96 60 Q136 52 168 62 Q186 68 186 82 Q186 96 168 100
+            Q136 108 100 100 Q80 95 80 80 Q80 65 96 60 Z"/>
+      <path class="trazo dibuja" d="M268 96 L300 74 Q312 67 316 74 Q320 82 310 90
+            L272 118 Q264 122 260 116 Z"/>
+      <circle cx="284" cy="97" r="2.6" fill="var(--tinta)"/>
+      <circle cx="300" cy="86" r="2.6" fill="var(--tinta)"/>
+
+      <g class="cota">
+        <path d="M26 150 L26 158 M316 150 L316 158 M26 154 L316 154"/>
+        <path d="M26 154 l7 -3 v6 z M316 154 l-7 -3 v6 z" fill="var(--morado)"/>
+      </g>
+      <text class="cota-txt" x="150" y="174">20 cm</text>
+      <g class="cota">
+        <path d="M330 34 L338 34 M330 128 L338 128 M334 34 L334 128"/>
+        <path d="M334 34 l-3 7 h6 z M334 128 l-3 -7 h6 z" fill="var(--morado)"/>
+      </g>
+      <text class="cota-txt" x="286" y="26">8.5 cm</text>
+
+      <g class="guia"><path d="M133 80 L133 194"/></g>
+      <text class="guia-txt" x="133" y="206" text-anchor="middle">Hueco de agarre</text>
+      <g class="guia"><path d="M292 82 L292 14"/></g>
+      <text class="guia-txt" x="252" y="10" text-anchor="middle">Mango de madera</text>
+    </svg>
   </div>
 
   <h3>Especificaciones:</h3>
@@ -709,7 +793,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <p>Sí. Escríbenos por WhatsApp con tus datos de facturación cuando hagas el pedido.</p></details>
 
   <div style="margin-top:1.5rem">
-    <button class="btn" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+    <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
   </div>
 
   <div class="resenas-widget">
@@ -766,7 +850,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 <!-- ═══ BARRA FIJA ═════════════════════════════════════════════════ -->
 <div class="barra">
   <div class="barra-precio"><b class="num" data-precio-barra>S/. 69.00</b><span>Envío gratis</span></div>
-  <button class="btn" data-abrir>COMPRAR AHORA</button>
+  <button class="btn btn-late" data-abrir>COMPRAR AHORA</button>
 </div>
 
 <!-- ═══ MODAL DE PEDIDO ════════════════════════════════════════════ -->
@@ -779,6 +863,18 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     </div>
 
     <form class="modal-cuerpo" id="form" novalidate>
+      <!-- Qué está comprando, siempre a la vista: evita el abandono por duda. -->
+      <div class="mini-pedido">
+        <img src="img/producto-sm.webp" alt="" width="48" height="48">
+        <span>
+          <b data-mini-pack>2 unidades</b>
+          <small>Cuchillo Ergonómico Forjado</small>
+        </span>
+        <b class="mini-precio num" data-mini-precio>S/. 89.00</b>
+      </div>
+
+      <p class="sub">¿A dónde te lo enviamos?</p>
+
       <div class="campo">
         <label for="cel">Celular con WhatsApp <span class="req">*</span></label>
         <input id="cel" name="cel" type="tel" inputmode="numeric" autocomplete="tel"
@@ -798,7 +894,9 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
         </div>
         <div class="campo">
           <label for="ciu">Ciudad o distrito <span class="req">*</span></label>
-          <input id="ciu" name="ciu" type="text" placeholder="Ej: Los Olivos" required>
+          <select id="ciu" name="ciu" required disabled>
+            <option value="">Elige provincia…</option>
+          </select>
           <p class="error" id="e-ciu">Falta tu distrito o ciudad.</p>
         </div>
       </div>
@@ -835,11 +933,17 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
         <div class="total"><span>Total</span><b class="num" data-r-total></b></div>
       </div>
 
-      <button class="btn" type="submit">
-        Realizar Pedido y Pagar al Recibir
+      <button class="btn btn-late" type="submit">
+        REALIZAR PEDIDO
         <small data-btn-total></small>
       </button>
-      <p class="tras-btn">No pagas nada ahora · Confirmamos por WhatsApp</p>
+
+      <div class="sellos-modal">
+        <span>🔒 Compra segura</span>
+        <span>💵 Pagas al recibir</span>
+        <span>↩️ 7 días de garantía</span>
+      </div>
+      <p class="tras-btn">Te escribimos por WhatsApp para confirmar la entrega.</p>
     </form>
 
     <!-- Post-purchase upsell: el pedido YA está registrado cuando se ve esto. -->
@@ -945,6 +1049,16 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   });
   if (!(C.RESENAS || []).length) cajaRes.hidden = true;
 
+  /* ── Vídeo de demostración ───────────────────────────────────── */
+  if (C.VIDEO && C.VIDEO.activo && C.VIDEO.archivo){
+    var cv = $('[data-video]');
+    cv.hidden = false;
+    // Silenciado y en bucle: casi nadie ve la landing con sonido.
+    cv.innerHTML = '<video src="' + C.VIDEO.archivo + '" poster="' + (C.VIDEO.poster || '') +
+      '" muted loop playsinline autoplay preload="metadata" ' +
+      'aria-label="El cuchillo cortando carne y verduras"></video>';
+  }
+
   /* ── Galería ─────────────────────────────────────────────────── */
   var FOTOS = ['img/producto-sm.webp'];
   var gal = $('[data-galeria]');
@@ -1004,7 +1118,9 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     $('[data-r-desc]').textContent  = desc ? '−' + sol(desc) : sol(0);
     $('[data-r-desc-fila]').hidden  = !desc;
     $('[data-r-total]').textContent = sol(total);
-    $('[data-btn-total]').textContent = sol(total);
+    $('[data-btn-total]').textContent = 'y pagar al recibir · ' + sol(total);
+    $('[data-mini-pack]').textContent   = sel.titulo;
+    $('[data-mini-precio]').textContent = sol(sel.precio);
 
     var fila = $('[data-r-up-fila]');
     fila.hidden = !extra;
@@ -1058,13 +1174,70 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     }
   }
 
-  /* ── Provincias ──────────────────────────────────────────────── */
-  var DEPS = ['Lima','Amazonas','Áncash','Apurímac','Arequipa','Ayacucho','Cajamarca','Callao',
-    'Cusco','Huancavelica','Huánuco','Ica','Junín','La Libertad','Lambayeque','Loreto',
-    'Madre de Dios','Moquegua','Pasco','Piura','Puno','San Martín','Tacna','Tumbes','Ucayali'];
+  /* ── Provincias y distritos ──────────────────────────────────────
+     Lima y Callao con todos sus distritos, porque ahí está el grueso del
+     reparto propio; el resto, sus ciudades principales. "Otro" siempre al
+     final: una dirección mal escrita cuesta una entrega fallida. */
+  var UBIGEO = {
+    'Lima': ['Ancón','Ate','Barranco','Breña','Carabayllo','Chaclacayo','Chorrillos',
+      'Cieneguilla','Comas','El Agustino','Independencia','Jesús María','La Molina',
+      'La Victoria','Lima (Cercado)','Lince','Los Olivos','Lurigancho-Chosica','Lurín',
+      'Magdalena del Mar','Miraflores','Pachacámac','Pucusana','Pueblo Libre',
+      'Puente Piedra','Punta Hermosa','Punta Negra','Rímac','San Bartolo','San Borja',
+      'San Isidro','San Juan de Lurigancho','San Juan de Miraflores','San Luis',
+      'San Martín de Porres','San Miguel','Santa Anita','Santa María del Mar','Santa Rosa',
+      'Santiago de Surco','Surquillo','Villa El Salvador','Villa María del Triunfo',
+      'Cañete','Huaral','Huacho','Barranca'],
+    'Callao': ['Bellavista','Callao','Carmen de La Legua','La Perla','La Punta','Mi Perú',
+      'Ventanilla'],
+    'Amazonas': ['Chachapoyas','Bagua','Bagua Grande','Jaén (frontera)','Lamud'],
+    'Áncash': ['Huaraz','Chimbote','Nuevo Chimbote','Casma','Huarmey','Caraz','Yungay'],
+    'Apurímac': ['Abancay','Andahuaylas','Chalhuanca','Talavera'],
+    'Arequipa': ['Arequipa','Cerro Colorado','Cayma','Paucarpata','Camaná','Mollendo','Majes'],
+    'Ayacucho': ['Ayacucho (Huamanga)','Huanta','San Miguel','Puquio'],
+    'Cajamarca': ['Cajamarca','Jaén','Chota','Cutervo','Bambamarca','Celendín'],
+    'Cusco': ['Cusco','Wanchaq','San Sebastián','San Jerónimo','Sicuani','Quillabamba','Urubamba'],
+    'Huancavelica': ['Huancavelica','Lircay','Pampas','Acobamba'],
+    'Huánuco': ['Huánuco','Amarilis','Tingo María','La Unión','Aucayacu'],
+    'Ica': ['Ica','Chincha Alta','Pisco','Nazca','Palpa'],
+    'Junín': ['Huancayo','El Tambo','Chilca','Jauja','Tarma','La Oroya','Satipo','Chanchamayo'],
+    'La Libertad': ['Trujillo','La Esperanza','El Porvenir','Víctor Larco','Chepén',
+      'Pacasmayo','Otuzco','Huamachuco'],
+    'Lambayeque': ['Chiclayo','José Leonardo Ortiz','La Victoria','Lambayeque','Ferreñafe','Motupe'],
+    'Loreto': ['Iquitos','Yurimaguas','Nauta','Requena'],
+    'Madre de Dios': ['Puerto Maldonado','Iberia','Salvación'],
+    'Moquegua': ['Moquegua','Ilo','Omate'],
+    'Pasco': ['Cerro de Pasco','Oxapampa','Villa Rica','La Merced'],
+    'Piura': ['Piura','Castilla','Sullana','Talara','Paita','Catacaos','Chulucanas','Sechura'],
+    'Puno': ['Puno','Juliaca','Ilave','Ayaviri','Azángaro','Desaguadero'],
+    'San Martín': ['Tarapoto','Moyobamba','Juanjuí','Rioja','Nueva Cajamarca'],
+    'Tacna': ['Tacna','Alto de la Alianza','Ciudad Nueva','Locumba'],
+    'Tumbes': ['Tumbes','Zarumilla','Aguas Verdes','Corrales'],
+    'Ucayali': ['Pucallpa','Yarinacocha','Campoverde','Atalaya']
+  };
+
+  var selCiu = $('#ciu');
   $('#dep').innerHTML = '<option value="">Elige…</option>' +
-    DEPS.map(function(d){ return '<option>' + d + '</option>'; }).join('');
-  $('#dep').addEventListener('change', refrescarEnvio);
+    Object.keys(UBIGEO).map(function(d){ return '<option>' + d + '</option>'; }).join('');
+
+  function poblarDistritos(){
+    var lista = UBIGEO[$('#dep').value];
+    if (!lista){
+      selCiu.innerHTML = '<option value="">Elige provincia…</option>';
+      selCiu.disabled = true;
+      return;
+    }
+    selCiu.disabled = false;
+    selCiu.innerHTML = '<option value="">Elige…</option>' +
+      lista.map(function(c){ return '<option>' + c + '</option>'; }).join('') +
+      '<option value="Otro">Otro (lo indico por WhatsApp)</option>';
+  }
+
+  $('#dep').addEventListener('change', function(){
+    poblarDistritos();
+    refrescarEnvio();
+  });
+  poblarDistritos();
   refrescarEnvio();
 
   /* ── Modal ───────────────────────────────────────────────────── */
