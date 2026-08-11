@@ -107,7 +107,52 @@ ANULADO`— y el panel solo suma como cobrado lo que está en `ENTREGADO`. Actua
 medida que el courier te confirma. Es literalmente el número que te dirá cuánto puedes
 pagar por cada conversación de WhatsApp.
 
-## 5 · La respuesta automática de WhatsApp (no te la saltes)
+## 5 · Quién le escribe a quién (importante)
+
+Hay **dos mensajes distintos** y conviene no confundirlos:
+
+| | Quién lo manda | Cómo |
+|---|---|---|
+| **1. El pedido** | **El cliente → tú** | `wa.me` le abre WhatsApp con el mensaje ya escrito. Solo pulsa enviar |
+| **2. La confirmación** | **Tú → el cliente** | Mensaje de bienvenida de WhatsApp Business, o Cloud API |
+
+**Una página web no puede escribirle al cliente.** Solo el titular de un WhatsApp puede
+iniciar una conversación; por eso el enlace `wa.me` apunta a *tu* número. Es correcto: el
+cliente escribe, tú recibes el pedido con su número y ya puedes responderle.
+
+Es exactamente lo que hace Kenku: el cliente manda *"quiero confirmar mi pedido #KP127434"*
+y a los segundos les responde *"Te saluda Frankz de Kenku…"*.
+
+Para el mensaje 2 tienes dos opciones:
+
+### Opción A — Mensaje de bienvenida (gratis, 2 minutos)
+
+La de abajo. Se dispara solo cuando el cliente te escribe por primera vez. **Es la que
+recomiendo para empezar.**
+
+### Opción B — Cloud API (automático, sin esperar a que escriba)
+
+Si tienes WhatsApp Business Platform, el script le escribe **en cuanto entra el pedido**,
+aunque el cliente no llegue a pulsar enviar — recuperas los que abandonan en ese paso.
+
+Meta obliga a usar una **plantilla aprobada** para iniciar conversación. Crea una en
+*Administrador de WhatsApp → Plantillas*, categoría **Utilidad**, con tres variables:
+
+> ¡Hola {{1}}! 👋 Recibimos tu pedido **#{{2}}** por **{{3}}**.
+> Para coordinar la entrega, ¿me compartes tu ubicación? 📍
+> Recuerda: pagas recién cuando lo recibes.
+
+Y añade a las Propiedades del script:
+
+| Propiedad | Valor |
+|---|---|
+| `WA_TOKEN` | Token permanente de la app de Meta |
+| `WA_PHONE_ID` | Phone Number ID del número |
+| `WA_TEMPLATE` | El nombre exacto de la plantilla aprobada |
+
+Si esas tres están vacías, el envío se salta sin romper nada.
+
+## 6 · La respuesta automática de WhatsApp (no te la saltes)
 
 Cuando el cliente te escribe, tu primer mensaje decide si el pedido llega o se pierde.
 Kenku responde en segundos y **no intenta vender nada: pide la ubicación**. Es la jugada

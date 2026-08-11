@@ -127,12 +127,14 @@ document.getElementById('f').addEventListener('load', function(){
   chk('No aparece pantalla de post-venta', !visible(D.getElementById('postventa')));
 
   var msg = decodeURIComponent(String(destino));
-  chk('El mensaje lleva el total a cobrar', msg.indexOf('Total a pagar al recibir: S/. 89.00') > -1);
+  chk('Va dirigido a la tienda', String(destino).indexOf('wa.me/51924104066') > -1);
+  chk('El mensaje lleva el total', msg.indexOf('S/. 89.00') > -1);
   chk('El mensaje lleva el número de pedido', /#\d{4,}/.test(msg));
-  chk('El mensaje lleva la dirección', msg.indexOf('Av. Siempre Viva 123') > -1);
-  chk('El mensaje lleva la referencia', msg.indexOf('Portón verde') > -1);
-  chk('El mensaje pregunta por la entrega', msg.indexOf('¿Cuándo me estaría llegando?') > -1);
-  chk('El mensaje no ofrece complementos', msg.indexOf('Además:') === -1);
+  chk('El mensaje dice la forma de pago', msg.indexOf('Pago contra entrega') > -1);
+  chk('El mensaje lleva el distrito', msg.indexOf('Los Olivos') > -1);
+  chk('El mensaje invita a coordinar', msg.toLowerCase().indexOf('coordinar') > -1);
+  chk('No quedan variables sin rellenar', !/\{\w+\}/.test(msg), msg.slice(0, 60));
+  chk('El mensaje es corto (< 220 caracteres)', msg.length < 220, msg.length + ' caracteres');
 
   /* ── 6. Modal ───────────────────────────────────────────────── */
   var modal = D.getElementById('modal');

@@ -70,6 +70,22 @@ window.CONFIG = {
 
   NUM_PEDIDO_DESDE: 1040,
 
+  // El mensaje que el CLIENTE te envía al terminar el formulario.
+  // Se abre ya escrito en su WhatsApp; él solo pulsa enviar.
+  // Edítalo a gusto. Variables disponibles:
+  //   {pedido} {producto} {pack} {unidades} {total} {nombre} {celular}
+  //   {direccion} {ciudad} {departamento} {referencia} {pago}
+  // Corto a propósito: cuanto más largo, más gente lo lee y no lo envía.
+  MENSAJE_WA: [
+    'Hola! 👋 Acabo de hacer mi pedido *#{pedido}*',
+    '',
+    '🔪 {pack} — *{total}*',
+    '📍 {ciudad}, {departamento}',
+    '{pago}',
+    '',
+    'Quedo atento para coordinar la entrega 🙌'
+  ].join('\n'),
+
   // Registro en Google Sheets + aviso con sonido de caja. Ver backend/README.md
   PEDIDOS: { url: '', token: '' },
 
@@ -1426,25 +1442,31 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   var pedido = null;
 
+  /** Rellena la plantilla de CONFIG.MENSAJE_WA con los datos del pedido. */
   function mensajeWhatsApp(){
-    var extras = pedido.extras.length ? pedido.extras.join(' + ') : '';
-    return [
-      '👋 Hola ' + C.MARCA + ', quiero confirmar mi pedido #' + pedido.num,
-      '',
-      'Producto: ' + C.PRODUCTO + ' — ' + pedido.pack,
-      extras ? 'Además: ' + extras : '',
-      pedido.adelanto
-        ? 'Adelanto de envío: ' + sol(pedido.adelanto) +
-          ' · Resto al recoger: ' + sol(pedido.total - pedido.adelanto)
-        : 'Total a pagar al recibir: ' + sol(pedido.total),
-      pedido.adelanto ? 'Total: ' + sol(pedido.total) : '',
-      '',
-      'Nombre: ' + pedido.nombre,
-      'Dirección: ' + pedido.direccion + ', ' + pedido.ciudad + ', ' + pedido.departamento,
-      'Referencia: ' + pedido.referencia,
-      '',
-      '¿Cuándo me estaría llegando?'
-    ].filter(Boolean).join('\n');
+    var pago = pedido.adelanto
+      ? '💵 Adelanto de envío ' + sol(pedido.adelanto) +
+        ' · resto al recoger ' + sol(pedido.total - pedido.adelanto)
+      : '💵 Pago contra entrega';
+
+    var datos = {
+      pedido: pedido.num,
+      producto: C.PRODUCTO,
+      pack: pedido.pack,
+      unidades: pedido.unidades,
+      total: sol(pedido.total),
+      nombre: pedido.nombre,
+      celular: pedido.celular,
+      direccion: pedido.direccion,
+      ciudad: pedido.ciudad,
+      departamento: pedido.departamento,
+      referencia: pedido.referencia,
+      pago: pago
+    };
+
+    return (C.MENSAJE_WA || '').replace(/\{(\w+)\}/g, function(coincidencia, clave){
+      return datos[clave] !== undefined ? datos[clave] : coincidencia;
+    });
   }
   function irAWhatsApp(){
     API.navegar('https://wa.me/' + C.WHATSAPP + '?text=' + encodeURIComponent(mensajeWhatsApp()));

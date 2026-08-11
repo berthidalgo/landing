@@ -23,6 +23,14 @@ const PUSHOVER_TOKEN = P.getProperty('PUSHOVER_TOKEN');   // opcional
 const TELEGRAM_TOKEN = P.getProperty('TELEGRAM_TOKEN');   // opcional
 const TELEGRAM_CHAT  = P.getProperty('TELEGRAM_CHAT');    // opcional
 
+// WhatsApp Business Cloud API — para escribirle TÚ al cliente (opcional).
+// Sin esto, el cliente te escribe a ti y tú respondes con el mensaje de
+// bienvenida de WhatsApp Business. Ver README, sección 5.
+const WA_TOKEN   = P.getProperty('WA_TOKEN');       // token permanente de Meta
+const WA_PHONE   = P.getProperty('WA_PHONE_ID');    // Phone Number ID
+const WA_PLANTILLA = P.getProperty('WA_TEMPLATE');  // nombre de la plantilla aprobada
+const MARCA = P.getProperty('MARCA') || 'nuestra tienda';
+
 const COLUMNAS = ['Fecha', 'Pedido', 'Estado', 'Nombre', 'Celular', 'Departamento', 'Ciudad',
                   'Dirección', 'Referencia', 'Pack', 'Unidades', 'Adicional',
                   'Total S/', 'Origen', 'Campaña', 'Dispositivo'];
@@ -75,6 +83,7 @@ function doPost(e) {
 
     hoja.appendRow(fila);
     notificar(d, false);
+    avisarAlCliente(d);          // solo si hay Cloud API configurada
     return json({ ok: true, pedido: d.pedido });
 
   } catch (err) {
@@ -163,6 +172,51 @@ function notificar(d, esAmpliacion) {
         muteHttpExceptions: true
       });
     } catch (err) { console.error('Telegram: ' + err); }
+  }
+}
+
+// ─── Escribirle al cliente (WhatsApp Cloud API) ────────────────────
+//
+// Meta solo deja iniciar una conversación con una PLANTILLA aprobada.
+// Si no tienes Cloud API, deja estas propiedades vacías: el cliente te
+// escribe primero y tu mensaje de bienvenida hace el mismo trabajo.
+
+function avisarAlCliente(d) {
+  if (!WA_TOKEN || !WA_PHONE || !WA_PLANTILLA) return;
+  if (!d.celular) return;
+
+  // Perú: 9 dígitos + prefijo 51. Se limpia por si llega con espacios.
+  const numero = '51' + String(d.celular).replace(/\D/g, '').slice(-9);
+
+  try {
+    const respuesta = UrlFetchApp.fetch(
+      'https://graph.facebook.com/v21.0/' + WA_PHONE + '/messages', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + WA_TOKEN },
+      payload: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to: numero,
+        type: 'template',
+        template: {
+          name: WA_PLANTILLA,
+          language: { code: 'es' },
+          components: [{
+            type: 'body',
+            parameters: [
+              { type: 'text', text: String(d.nombre || 'hola').split(' ')[0] },
+              { type: 'text', text: String(d.pedido || '') },
+              { type: 'text', text: 'S/ ' + (Number(d.total) || 0) }
+            ]
+          }]
+        }
+      }),
+      muteHttpExceptions: true
+    });
+    const codigo = respuesta.getResponseCode();
+    if (codigo >= 300) console.error('WhatsApp API ' + codigo + ': ' + respuesta.getContentText());
+  } catch (err) {
+    console.error('WhatsApp API: ' + err);   // nunca debe romper el pedido
   }
 }
 
