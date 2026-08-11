@@ -17,11 +17,16 @@ window.CONFIG = {
   MARCA:     'YUNQUE',
   PRODUCTO:  'Cuchillo Ergonómico Forjado – Hoja Curva 20 cm',
 
-  WHATSAPP:  '51999999999',        // ← TU número, formato 51XXXXXXXXX
+  WHATSAPP:  '51924104066',        // ← TU número, formato 51XXXXXXXXX
   PIXEL_ID:  '',                   // ← Meta · Administrador de eventos
   TIKTOK_ID: '',                   // ← TikTok Ads · píxel
 
   PRECIO_ANTES: 120,               // precio tachado (ancla). 0 lo oculta
+
+  // Provincia paga un adelanto para cubrir el envío de la agencia.
+  // 0 = contraentrega puro en todo el país.
+  ADELANTO_PROVINCIA: 20,
+  SIN_ADELANTO: ['Lima', 'Callao'],   // dónde NO se pide adelanto
 
   PACKS: [
     { id: 1, cant: 1, titulo: '1 unidad',   precio:  69, antes:   0, etiqueta: '' },
@@ -86,6 +91,8 @@ h3{font-size:17.6px;font-weight:700}
 .wrap{width:var(--ancho);margin-inline:auto}
 .num{font-variant-numeric:tabular-nums}
 :where(a,button,input,select,summary):focus-visible{outline:3px solid var(--morado);outline-offset:2px}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .estrellas{color:var(--amarillo);letter-spacing:.5px}
 
 /* ── Cabecera ───────────────────────────────────────────────────── */
@@ -95,6 +102,18 @@ h3{font-size:17.6px;font-weight:700}
 .cab-logo{font-weight:900;font-size:26px;letter-spacing:-.02em;color:var(--tinta)}
 .cab-ico{width:44px;height:44px;display:grid;place-content:center;background:none;
   border:0;padding:0;cursor:pointer;color:var(--tinta);margin:-8px 0}
+
+/* ── Ticker de avisos ───────────────────────────────────────────── */
+.ticker-wrap{background:var(--morado);color:#fff;overflow:hidden;padding:.45rem 0}
+.ticker{display:flex;gap:2rem;width:max-content;white-space:nowrap;
+  animation:ticker-scroll 38s linear infinite}
+.ticker:hover{animation-play-state:paused}
+@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{display:inline-flex;align-items:center;gap:.4rem;font-size:12.5px;
+  font-weight:700;letter-spacing:.01em}
+@media (prefers-reduced-motion:reduce){
+  .ticker{animation:none;width:100%;justify-content:center;overflow-x:auto}
+}
 
 /* ── Héroe (creativo maquetado, como el banner de la referencia) ── */
 .hero{background:linear-gradient(180deg,#EFEDE9 0%,#E3DFD8 100%);padding-bottom:1rem}
@@ -280,6 +299,9 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
   border:1px solid var(--linea);border-radius:var(--r-sm);padding:.75rem;font-size:14px}
 .envio-op b{color:var(--tinta)}
 .envio-op span{color:var(--verde-osc);font-weight:700}
+.aviso-adelanto{margin:.6rem 0 0;padding:.7rem .8rem;background:#FFF8E6;
+  border:1px solid #F0D48A;border-radius:var(--r-sm);font-size:13.5px;color:#6B5312}
+.aviso-adelanto b{color:#4A3808}
 .resumen{border:1px solid var(--linea);border-radius:var(--r-sm);padding:.8rem;
   margin-top:.9rem;font-size:14px;background:#FAFAFA}
 .resumen div{display:flex;justify-content:space-between;padding:.25rem 0}
@@ -352,6 +374,13 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </button>
 </header>
 
+<!-- ═══ TICKER DE AVISOS ═══════════════════════════════════════════ -->
+<div class="ticker-wrap">
+  <!-- La lista va duplicada: el bucle a -50% la encadena sin salto. -->
+  <div class="ticker" data-ticker aria-hidden="true"></div>
+  <p class="visually-hidden" data-ticker-texto></p>
+</div>
+
 <!-- ═══ HÉROE ══════════════════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-barra">
@@ -410,7 +439,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <div class="envios">
     <div>
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-      <span><b>Envío Gratis</b> • A todo el Perú, sin mínimo de compra.</span>
+      <span><b>Envío Gratis en Lima</b> • A provincia por agencia, con S/ 20 de adelanto.</span>
     </div>
     <div>
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5zM3.3 7 12 12l8.7-5M12 22V12"/></svg>
@@ -418,7 +447,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     </div>
     <div>
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span><b>Compra Segura</b>. Pagas recién cuando lo tienes en la mano.</span>
+      <span><b>Compra Segura</b>. En Lima pagas recién cuando lo tienes en la mano.</span>
     </div>
   </div>
 
@@ -554,8 +583,9 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <h3 id="faq">Preguntas frecuentes:</h3>
   <details><summary>¿De verdad pago cuando lo recibo?</summary>
-    <p>Sí. Haces el pedido con tus datos, te lo llevamos a tu dirección y recién ahí pagas.
-      Si no te convence al verlo, no lo recibes.</p></details>
+    <p>En Lima y Callao, sí: haces el pedido, te lo llevamos a tu dirección y recién ahí
+      pagas. En provincias enviamos por agencia y se adelantan S/ 20 para cubrir el envío;
+      el resto lo pagas al recoger tu pedido en la agencia.</p></details>
   <details><summary>¿Cuánto demora en llegar?</summary>
     <p>En Lima, entre 24 y 48 horas. En provincias, de 2 a 5 días hábiles. Te avisamos por
       WhatsApp cuando sale tu pedido.</p></details>
@@ -682,7 +712,8 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       <div class="packs" role="radiogroup" aria-label="Cantidad" data-packs></div>
 
       <p class="sub">Opciones de envío</p>
-      <div class="envio-op"><b>Envío gratis</b><span>Gratis</span></div>
+      <div class="envio-op"><b data-envio-tit>Envío gratis</b><span data-envio-val>Gratis</span></div>
+      <p class="aviso-adelanto" data-adelanto hidden></p>
 
       <label class="upsell" data-upsell hidden>
         <input type="checkbox" id="up">
@@ -860,12 +891,51 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     $('#up').addEventListener('change', function(e){ up = e.target.checked; refrescar(); });
   }
 
+  /* ── Ticker de avisos ────────────────────────────────────────── */
+  var AVISOS = [
+    '🚚 ENVÍOS A TODO EL PERÚ',
+    '📦 PROVINCIA CON S/ ' + (C.ADELANTO_PROVINCIA || 0) + ' DE ADELANTO',
+    '✔️ COMPRA SEGURA CON GARANTÍA'
+  ].filter(function(t){ return C.ADELANTO_PROVINCIA > 0 || t.indexOf('ADELANTO') < 0; });
+
+  var tic = $('[data-ticker]');
+  // Se pinta dos veces: el bucle a -50% encadena sin salto visible.
+  tic.innerHTML = AVISOS.concat(AVISOS).map(function(t){
+    return '<span class="ticker-item">' + t + '</span>';
+  }).join('');
+  $('[data-ticker-texto]').textContent = AVISOS.join('. ') + '.';
+
+  /* ── Adelanto en provincia ───────────────────────────────────── */
+  /** Lima y Callao son contraentrega puro; el resto paga el envío de agencia. */
+  function pideAdelanto(){
+    return C.ADELANTO_PROVINCIA > 0 &&
+           $('#dep').value !== '' &&
+           (C.SIN_ADELANTO || []).indexOf($('#dep').value) < 0;
+  }
+  function refrescarEnvio(){
+    var caja = $('[data-adelanto]');
+    if (pideAdelanto()){
+      caja.hidden = false;
+      caja.innerHTML = 'A ' + $('#dep').value + ' enviamos por agencia. Se adelanta ' +
+        '<b>' + sol(C.ADELANTO_PROVINCIA) + '</b> para el envío y el resto lo pagas ' +
+        'al recoger tu pedido.';
+      $('[data-envio-tit]').textContent = 'Envío por agencia';
+      $('[data-envio-val]').textContent = sol(C.ADELANTO_PROVINCIA) + ' de adelanto';
+    } else {
+      caja.hidden = true;
+      $('[data-envio-tit]').textContent = 'Envío gratis';
+      $('[data-envio-val]').textContent = 'Gratis';
+    }
+  }
+
   /* ── Provincias ──────────────────────────────────────────────── */
   var DEPS = ['Lima','Amazonas','Áncash','Apurímac','Arequipa','Ayacucho','Cajamarca','Callao',
     'Cusco','Huancavelica','Huánuco','Ica','Junín','La Libertad','Lambayeque','Loreto',
     'Madre de Dios','Moquegua','Pasco','Piura','Puno','San Martín','Tacna','Tumbes','Ucayali'];
   $('#dep').innerHTML = '<option value="">Elige…</option>' +
     DEPS.map(function(d){ return '<option>' + d + '</option>'; }).join('');
+  $('#dep').addEventListener('change', refrescarEnvio);
+  refrescarEnvio();
 
   /* ── Modal ───────────────────────────────────────────────────── */
   var modal = $('#modal'), ultimoFoco = null;
@@ -946,7 +1016,11 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       '',
       'Producto: ' + C.PRODUCTO + ' — ' + pedido.pack,
       extras ? 'Además: ' + extras : '',
-      'Total a pagar al recibir: ' + sol(pedido.total),
+      pedido.adelanto
+        ? 'Adelanto de envío: ' + sol(pedido.adelanto) +
+          ' · Resto al recoger: ' + sol(pedido.total - pedido.adelanto)
+        : 'Total a pagar al recibir: ' + sol(pedido.total),
+      pedido.adelanto ? 'Total: ' + sol(pedido.total) : '',
       '',
       'Nombre: ' + pedido.nombre,
       'Dirección: ' + pedido.direccion + ', ' + pedido.ciudad + ', ' + pedido.departamento,
@@ -965,6 +1039,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       direccion: pedido.direccion, referencia: pedido.referencia,
       pack: pedido.pack, unidades: pedido.unidades,
       adicional: pedido.extras.join(' + '), total: pedido.total,
+      adelanto: pedido.adelanto,
       origen: pedido.origen, campana: pedido.campana,
       dispositivo: navigator.userAgent.slice(0, 120)
     });
@@ -985,6 +1060,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       pack: sel.titulo, unidades: sel.cant,
       extras: extra ? [C.UPSELL.nombre] : [],
       total: sel.precio + extra,
+      adelanto: pideAdelanto() ? C.ADELANTO_PROVINCIA : 0,
       origen: org.origen, campana: org.campana
     };
 

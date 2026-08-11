@@ -53,6 +53,25 @@ document.getElementById('f').addEventListener('load', function(){
 
   packs[1].click();
 
+  /* ── 3.bis Adelanto de provincia ────────────────────────────── */
+  var aviso = D.querySelector('[data-adelanto]');
+  var dep = D.getElementById('dep');
+  dep.value = 'Lima'; dep.dispatchEvent(new w.Event('change'));
+  chk('Lima: sin aviso de adelanto', !visible(aviso));
+  chk('Lima: el envío sigue gratis',
+      D.querySelector('[data-envio-val]').textContent === 'Gratis',
+      D.querySelector('[data-envio-val]').textContent);
+
+  dep.value = 'Piura'; dep.dispatchEvent(new w.Event('change'));
+  chk('Provincia: avisa del adelanto', visible(aviso));
+  chk('Provincia: el aviso dice el importe',
+      aviso.textContent.indexOf('S/. 20.00') > -1, aviso.textContent.slice(0, 60));
+  chk('Provincia: la opción de envío cambia',
+      D.querySelector('[data-envio-val]').textContent.indexOf('20.00') > -1,
+      D.querySelector('[data-envio-val]').textContent);
+
+  dep.value = 'Lima'; dep.dispatchEvent(new w.Event('change'));
+
   /* ── 4. Validación del formulario ───────────────────────────── */
   var destino = null;
   API.navegar = function(url){ destino = url; };
