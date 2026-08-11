@@ -1,0 +1,5 @@
+# Lo que NO se publica: solo debe salir al aire la landing y sus recursos.
+test/
+backend/
+docs/
+*.md

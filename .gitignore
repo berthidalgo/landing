@@ -1,0 +1,25 @@
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel/
+
+# Material de trabajo que no va al repo público:
+# vídeos y fotos de proveedor, capturas de referencia, material con marca de agua.
+PROWIN/
+*.mp4
+*.mov
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+
+# Dependencias (por si algún día hace falta un build)
+node_modules/
