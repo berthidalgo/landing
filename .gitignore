@@ -7,10 +7,16 @@
 .vercel/
 
 # Material de trabajo que no va al repo público:
-# vídeos y fotos de proveedor, capturas de referencia, material con marca de agua.
+# másteres de proveedor, capturas de referencia, material con marca de agua.
 PROWIN/
 *.mp4
 *.mov
+
+# …salvo los vídeos ya preparados para web: recomprimidos, sin marca de agua
+# de terceros y por debajo de 6 MB. Son los que la landing sirve de verdad.
+!img/bucle.mp4
+!img/demo.mp4
+!img/demo2.mp4
 
 # Sistema
 .DS_Store

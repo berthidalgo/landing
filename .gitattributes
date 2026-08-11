@@ -8,3 +8,6 @@
 *.webp  binary
 *.jpg   binary
 *.png   binary
+
+# Los vídeos también son binarios.
+*.mp4   binary
