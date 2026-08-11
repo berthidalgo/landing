@@ -61,12 +61,27 @@ window.CONFIG = {
 
   // Enseña los recuadros punteados con el nombre del archivo que falta.
   // Ponlo en false el día que lances: en producción no deben verse.
-  MOSTRAR_HUECOS: true,
+  MOSTRAR_HUECOS: false,
 
-  // Vídeo de demostración. Ponlo en img/ y activa: es lo que más convierte
-  // en tráfico frío. Debe ser TUYO o del proveedor con permiso — sin marcas
-  // de agua de TikTok, que Meta penaliza en entrega.
-  VIDEO: { activo: false, archivo: 'img/demo.mp4', poster: 'img/hero.jpg' },
+  // Vídeo de demostración. Es lo que más convierte en tráfico frío.
+  // Dos piezas a propósito: `bucle` son 6 s sin sonido que arrancan solos
+  // (600 KB, el gancho), y `archivo` es el vídeo completo, que solo se
+  // descarga si el visitante lo pide. Así la página sigue siendo ligera en 4G.
+  // Material del proveedor, recomprimido y sin marcas de agua ajenas.
+  VIDEO: {
+    activo: true,
+    bucle:   'img/bucle.mp4',
+    archivo: 'img/demo.mp4',
+    poster:  'img/demo-poster.webp'
+  },
+
+  // Segundo vídeo, más abajo: el largo, para quien quiere ver más.
+  // No lleva bucle: se queda en el póster hasta que lo pulsan.
+  VIDEO2: {
+    activo: true,
+    archivo: 'img/demo2.mp4',
+    poster:  'img/demo2-poster.webp'
+  },
 
   NUM_PEDIDO_DESDE: 1040,
 
@@ -414,9 +429,19 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 }
 
 /* ── Vídeo del producto ─────────────────────────────────────────── */
+/* 4:5, el formato vertical de anuncio: se ve grande sin comerse la pantalla
+   entera como haría un 9:16 completo. */
 .video-caja{position:relative;border-radius:var(--r);overflow:hidden;margin:1.25rem 0;
-  background:#000;aspect-ratio:1}
-.video-caja video{width:100%;height:100%;object-fit:cover;display:block}
+  background:#000;aspect-ratio:4/5}
+.video-caja video,
+.video-caja img{width:100%;height:100%;object-fit:cover;display:block}
+/* El botón vive sobre el vídeo: el bucle engancha, el clic trae el completo. */
+.video-play{position:absolute;left:50%;bottom:.75rem;transform:translateX(-50%);
+  display:inline-flex;align-items:center;gap:.4rem;min-height:44px;
+  background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;
+  padding:.55rem 1.05rem;font-family:inherit;font-size:14px;font-weight:700;
+  cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.video-play:active{background:rgba(0,0,0,.85)}
 
 
 /* ── Barra fija ─────────────────────────────────────────────────── */
@@ -782,6 +807,9 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
          alt="El cuchillo en uso sobre una tabla de cocina.">
   </picture>
 
+  <p class="rotulo">Un rato en la cocina, sin cambiar de cuchillo</p>
+  <div class="video-caja" data-video2 hidden></div>
+
   <h3>Características:</h3>
   <ul>
     <li><b>Agarre integrado:</b> el hueco en la hoja te deja meter los dedos y trabajar con
@@ -1115,14 +1143,32 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   });
 
   /* ── Vídeo de demostración ───────────────────────────────────── */
-  if (C.VIDEO && C.VIDEO.activo && C.VIDEO.archivo){
-    var cv = $('[data-video]');
-    cv.hidden = false;
-    // Silenciado y en bucle: casi nadie ve la landing con sonido.
-    cv.innerHTML = '<video src="' + C.VIDEO.archivo + '" poster="' + (C.VIDEO.poster || '') +
-      '" muted loop playsinline autoplay preload="metadata" ' +
-      'aria-label="El cuchillo cortando carne y verduras"></video>';
+  // El vídeo pesado NO se descarga al abrir la página: primero se ve un bucle
+  // corto (o solo el póster), y el completo llega cuando lo piden. En 4G eso
+  // es la diferencia entre una página que abre y una que abandonan.
+  function montarVideo(caja, cfg, etiqueta){
+    if (!caja || !cfg || !cfg.activo || !cfg.archivo) return;
+    caja.hidden = false;
+    var poster = cfg.poster || '';
+
+    caja.innerHTML = (cfg.bucle
+      ? '<video src="' + cfg.bucle + '" poster="' + poster + '" muted loop ' +
+        'playsinline autoplay preload="metadata" aria-label="' + etiqueta + '"></video>'
+      : '<img src="' + poster + '" alt="' + etiqueta + '" loading="lazy">') +
+      '<button type="button" class="video-play" data-ver>▶ ' +
+      (cfg.bucle ? 'Ver el vídeo completo' : 'Ver el vídeo') + '</button>';
+
+    caja.querySelector('[data-ver]').addEventListener('click', function(){
+      caja.innerHTML = '<video src="' + cfg.archivo + '" poster="' + poster +
+        '" controls autoplay muted loop playsinline preload="auto" ' +
+        'aria-label="' + etiqueta + '"></video>';
+      evento('ViewContent', { content_name: 'video' });
+    });
   }
+  montarVideo($('[data-video]'), C.VIDEO,
+    'El cuchillo cortando carne y verduras');
+  montarVideo($('[data-video2]'), C.VIDEO2,
+    'El cuchillo en una cocina, cortando de todo');
 
   /* ── Galería ─────────────────────────────────────────────────── */
   // Miniaturas de la galería. Las genera procesar-imagenes.py desde
