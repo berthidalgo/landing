@@ -15,6 +15,7 @@ PROWIN/
 # …salvo los vídeos ya preparados para web: recomprimidos, sin marca de agua
 # de terceros y por debajo de 6 MB. Son los que la landing sirve de verdad.
 !img/bucle.mp4
+!img/bucle2.mp4
 !img/demo.mp4
 !img/demo2.mp4
 
