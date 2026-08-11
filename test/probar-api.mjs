@@ -19,6 +19,11 @@ globalThis.fetch = async (url, opciones) => {
   enviado = { url, cuerpo: JSON.parse(opciones.body) };
   if (simular === 'caido') throw new Error('red caída');
   if (simular === 'error') return { ok: false, status: 500, text: async () => 'boom' };
+  // Apps Script responde 200 aunque rechace el pedido: lo dice en el cuerpo.
+  if (simular === 'rechazado') {
+    return { ok: true, status: 200, text: async () => '{"ok":false,"error":"token inválido"}' };
+  }
+  if (simular === 'html') return { ok: true, status: 200, text: async () => '<html>error</html>' };
   return { ok: true, status: 200, text: async () => '{"ok":true}' };
 };
 
@@ -74,6 +79,19 @@ comprobar('rechaza un cuerpo desmesurado',
 // 4 · Las suscripciones sí pueden ir sin número de pedido
 comprobar('acepta una suscripción',
   (await llamar(JSON.stringify({ tipo: 'suscripcion', correo: 'a@b.com' }))).codigo === 200);
+
+// 4.bis · Un rechazo del receptor NO puede pasar por éxito
+simular = 'rechazado';
+res = await llamar(JSON.stringify(PEDIDO), 'POST', '4.4.4.4');
+comprobar('un "ok:false" de Apps Script se reporta como NO registrado',
+  res.cuerpo.ok === false);
+simular = 'html';
+res = await llamar(JSON.stringify(PEDIDO), 'POST', '4.4.4.5');
+comprobar('una respuesta que no es JSON tampoco cuenta como registrada',
+  res.cuerpo.ok === false);
+simular = 'ok';
+res = await llamar(JSON.stringify(PEDIDO), 'POST', '4.4.4.6');
+comprobar('un registro correcto sí se reporta como ok', res.cuerpo.ok === true);
 
 // 5 · Si el receptor falla, la venta NO se rompe
 simular = 'caido';

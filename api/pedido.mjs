@@ -99,10 +99,22 @@ export default async function handler(req, res) {
       body: JSON.stringify(carga)
     });
     const texto = await respuesta.text();
-    // Un fallo del receptor no puede parecer un fallo de la venta: se registra
-    // aquí y el cliente sigue su camino a WhatsApp igual.
-    if (!respuesta.ok) console.error('Apps Script ' + respuesta.status + ': ' + texto);
-    return res.status(200).json({ ok: respuesta.ok });
+
+    // No basta con el código HTTP: Apps Script responde 200 aunque rechace el
+    // pedido (token inválido, por ejemplo) y lo dice solo en el cuerpo. Sin
+    // mirar dentro, un token mal puesto se traduce en ventas que nadie registra
+    // y que nadie ve fallar.
+    let cuerpo = null;
+    try { cuerpo = JSON.parse(texto); } catch { /* no vino JSON */ }
+    const registrado = respuesta.ok && cuerpo !== null && cuerpo.ok === true;
+
+    if (!registrado) {
+      console.error('EL PEDIDO NO SE REGISTRÓ — HTTP ' + respuesta.status +
+                    ' · respuesta: ' + texto.slice(0, 300));
+    }
+    // Pase lo que pase, el cliente sigue su camino a WhatsApp: la venta nunca
+    // se rompe por un fallo de registro.
+    return res.status(200).json({ ok: registrado });
   } catch (err) {
     console.error('No se pudo registrar el pedido: ' + err);
     return res.status(200).json({ ok: false });
