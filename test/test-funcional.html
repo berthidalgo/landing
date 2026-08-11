@@ -139,6 +139,19 @@ document.getElementById('f').addEventListener('load', function(){
   cel.dispatchEvent(new w.Event('input'));
   chk('El campo de celular filtra a 9 dígitos', cel.value === '987654321', cel.value);
 
+  /* ── 7.bis Huecos de imagen ─────────────────────────────────── */
+  var huecos = D.querySelectorAll('[data-hueco], [data-hueco-video]');
+  chk('Hay huecos marcados para las imágenes', huecos.length >= 5,
+      huecos.length + ' huecos');
+  chk('Los huecos se ven mientras faltan fotos',
+      [].every.call(huecos, function(h){ return visible(h); }));
+  chk('La galería muestra los slots pendientes',
+      D.querySelectorAll('.galeria .foto-pendiente').length === 4,
+      D.querySelectorAll('.galeria .foto-pendiente').length + ' slots');
+  chk('Cada hueco dice qué archivo falta',
+      [].every.call(D.querySelectorAll('[data-hueco] code, [data-hueco-video] code'),
+                    function(c){ return c.textContent.trim().length > 3; }));
+
   /* ── 8. Fidelidad a la plantilla de referencia ──────────────── */
   var cs = w.getComputedStyle;
   var btn = D.querySelector('.btn');
