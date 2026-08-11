@@ -21,7 +21,13 @@ window.CONFIG = {
   PIXEL_ID:  '',                   // ← Meta · Administrador de eventos
   TIKTOK_ID: '',                   // ← TikTok Ads · píxel
 
-  PRECIO_ANTES: 120,               // precio tachado (ancla). 0 lo oculta
+  PRECIO_ANTES: 129.90,            // precio tachado (ancla). 0 lo oculta
+
+  OFERTA_LIMITADA: true,           // muestra el distintivo junto al precio
+  // Unidades que te quedan DE VERDAD. 0 = no se muestra nada.
+  // No pongas un número inventado: si el cliente vuelve mañana y sigue
+  // igual, pierdes la credibilidad que sostiene el contraentrega.
+  STOCK: 0,
 
   // Provincia paga un adelanto para cubrir el envío de la agencia.
   // 0 = contraentrega puro en todo el país.
@@ -54,7 +60,15 @@ window.CONFIG = {
 
   // Prueba social. Pon los números REALES o déjalos vacíos para ocultarlos.
   RESENAS_NOTA:  '',   // ej: '4.8'
-  RESENAS_TOTAL: ''    // ej: '1,240'
+  RESENAS_TOTAL: '',   // ej: '1,240'
+
+  // Reseñas de clientes. Sustituye estas tres por reales:
+  // el compliance bloquea la publicación mientras digan [EJEMPLO].
+  RESENAS: [
+    { texto: '[EJEMPLO — sustituir por reseña real]', nombre: '[Nombre]', lugar: '[Distrito]', hace: '' },
+    { texto: '[EJEMPLO — sustituir por reseña real]', nombre: '[Nombre]', lugar: '[Distrito]', hace: '' },
+    { texto: '[EJEMPLO — sustituir por reseña real]', nombre: '[Nombre]', lugar: '[Distrito]', hace: '' }
+  ]
 };
 </script>
 
@@ -169,6 +183,54 @@ h3{font-size:17.6px;font-weight:700}
 .btn-lin{background:#fff;color:var(--tinta);border:1.5px solid var(--linea);font-size:15px}
 .btn-lin:hover{background:var(--f3)}
 
+/* ── Badge de oferta y stock ────────────────────────────────────── */
+.badge-oferta{display:inline-flex;align-items:center;gap:.3rem;background:var(--morado);
+  color:#fff;font-size:12.5px;font-weight:700;padding:.4rem .7rem;border-radius:99px;
+  white-space:nowrap}
+.stock{display:flex;align-items:center;gap:.4rem;font-size:14px;font-weight:700;
+  color:var(--tinta);margin:.75rem 0;padding-bottom:.75rem;border-bottom:1px solid var(--linea)}
+
+/* ── Barra de progreso del pedido ───────────────────────────────── */
+.pasos{display:grid;grid-template-columns:repeat(3,1fr);margin:1.25rem 0;position:relative}
+.pasos::before{content:'';position:absolute;top:22px;left:16.66%;right:16.66%;height:2px;
+  background:var(--morado);opacity:.35}
+.paso{text-align:center;position:relative}
+.paso i{display:grid;place-content:center;width:44px;height:44px;margin:0 auto .45rem;
+  border-radius:50%;background:var(--morado);color:#fff;font-style:normal}
+.paso span{display:block;font-size:11.5px;font-weight:700;color:var(--tinta);
+  letter-spacing:.02em;line-height:1.3}
+
+/* ── Comparativa antes / después ────────────────────────────────── */
+.vs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--linea);border:1px solid var(--linea);border-radius:var(--r);
+  overflow:hidden;margin:1.25rem 0}
+.vs-lado{background:#fff;padding:1rem .8rem}
+.vs-lado.malo{background:#FBFBFB}
+.vs-lado h4{margin:0 0 .15rem;font-size:15px;font-weight:900;color:var(--tinta);
+  text-transform:uppercase}
+.vs-lado .quien{display:block;font-size:12px;color:var(--gris);margin-bottom:.7rem}
+.vs-lado ul{list-style:none;margin:0;padding:0}
+.vs-lado li{display:flex;gap:.4rem;align-items:flex-start;font-size:13.5px;
+  padding:.28rem 0;line-height:1.35}
+.vs-lado.malo li{color:var(--gris)}
+.vs-lado .mk{flex:none;font-weight:900;font-size:13px;line-height:1.4}
+.vs-lado.malo .mk{color:#C44}
+.vs-lado.bueno .mk{color:var(--verde-osc)}
+/* Va arriba, a la altura de los títulos: al centro taparía las viñetas. */
+.vs-sello{position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  width:34px;height:34px;border-radius:50%;background:var(--morado);color:#fff;
+  display:grid;place-content:center;font-size:12px;font-weight:900;
+  box-shadow:0 0 0 3px #fff}
+.vs-lado h4{padding-right:18px}
+.vs-lado.bueno h4,.vs-lado.bueno .quien{padding-left:18px;padding-right:0}
+
+/* ── Rejilla de beneficios ──────────────────────────────────────── */
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1.25rem 0}
+.rejilla div{background:var(--f3);border-radius:var(--r);padding:.85rem .7rem;text-align:center}
+.rejilla i{display:grid;place-content:center;width:38px;height:38px;margin:0 auto .45rem;
+  border-radius:50%;background:#fff;font-style:normal;font-size:18px}
+.rejilla b{display:block;font-size:13px;font-weight:700;color:var(--tinta);line-height:1.3}
+
 /* ── Caja gris de envío ─────────────────────────────────────────── */
 .envios{background:var(--f3);border-radius:var(--r);padding:.9rem 1rem;margin:1rem 0}
 .envios div{display:flex;gap:.6rem;padding:.4rem 0;font-size:14px;align-items:flex-start}
@@ -211,9 +273,11 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 
 /* ── Reseñas ────────────────────────────────────────────────────── */
 .resenas{border-top:1px solid var(--linea);padding-top:1rem}
-.resena p{margin:0 0 .35rem;font-size:15px;color:var(--tinta-90)}
-.resena span{font-size:14px;color:var(--gris)}
-.resena b{color:var(--tinta);font-weight:500}
+.resena{padding:.9rem 0;border-bottom:1px solid var(--linea)}
+.resena:last-child{border-bottom:0}
+.resena p{margin:.25rem 0 .35rem;font-size:15px;color:var(--tinta-90)}
+.resena span{font-size:13.5px;color:var(--gris)}
+.resena b{color:var(--tinta);font-weight:700}
 .puntos{display:flex;gap:.35rem;justify-content:center;margin:.9rem 0 0}
 .punto{width:8px;height:8px;border-radius:50%;background:#CFCFCF;border:0;padding:0;
   cursor:pointer}
@@ -427,14 +491,33 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <div class="precio-fila">
     <span class="precio num" data-precio-hero>S/. 69.00</span>
-    <s class="precio-antes num" data-precio-antes>S/. 120.00</s>
+    <s class="precio-antes num" data-precio-antes>S/. 129.90</s>
+    <span class="badge-oferta" data-badge-oferta hidden>⏱ OFERTA LIMITADA</span>
     <a class="wa-chip" href="#" data-wa-link>
       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
       Escríbenos
     </a>
   </div>
 
+  <p class="stock" data-stock hidden></p>
+
   <button class="btn" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+
+  <!-- Qué pasa después de pedir: baja la ansiedad del contraentrega. -->
+  <div class="pasos" aria-label="Cómo avanza tu pedido">
+    <div class="paso">
+      <i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12a9 9 0 1 1-6.2-8.5"/></svg></i>
+      <span>PEDIDO<br>RECIBIDO</span>
+    </div>
+    <div class="paso">
+      <i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7 12 12l8.7-5"/></svg></i>
+      <span>LISTO PARA<br>ENVIAR</span>
+    </div>
+    <div class="paso">
+      <i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg></i>
+      <span>EN TU<br>PUERTA</span>
+    </div>
+  </div>
 
   <div class="envios">
     <div>
@@ -482,14 +565,8 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <div class="tira"><span>🛡 Pago Contraentrega</span><span>🚚 Envío Gratis</span></div>
 
-  <!-- ⚠️ EJEMPLOS: sustituir por reseñas reales antes de publicar. -->
-  <div class="resenas">
-    <div class="resena" data-resena>
-      <p>[EJEMPLO — sustituir por reseña real]</p>
-      <span><b>[Nombre]</b> de [Distrito] <span class="estrellas">★★★★★</span></span>
-    </div>
-    <div class="puntos" data-puntos></div>
-  </div>
+  <!-- Se pintan desde CONFIG.RESENAS -->
+  <div class="resenas" data-resenas></div>
 </div>
 
 <!-- ═══ CONTENIDO LARGO ════════════════════════════════════════════ -->
@@ -513,14 +590,44 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <li><span class="tick" aria-hidden="true">✓</span> Viene con funda para guardarlo seguro</li>
   </ul>
 
-  <!-- Sustituye este hueco por la foto y borra la clase foto-pendiente. -->
-  <div class="foto-pendiente">
-    <b>Falta una foto</b>
-    <span>Comparativa: el agarre normal contra el agarre en la hoja</span>
-    <code>img/agarre.jpg</code>
+  <h2 style="margin:1.75rem 0 0">Con cuchillo común<br>o con este</h2>
+  <div class="vs">
+    <div class="vs-lado malo">
+      <h4>Antes</h4>
+      <span class="quien">con un cuchillo común</span>
+      <ul>
+        <li><span class="mk" aria-hidden="true">✕</span> Cortes irregulares</li>
+        <li><span class="mk" aria-hidden="true">✕</span> Aplastas el tomate</li>
+        <li><span class="mk" aria-hidden="true">✕</span> La muñeca hace la fuerza</li>
+        <li><span class="mk" aria-hidden="true">✕</span> Serruchas la carne</li>
+        <li><span class="mk" aria-hidden="true">✕</span> Cambias de cuchillo tres veces</li>
+      </ul>
+    </div>
+    <div class="vs-lado bueno">
+      <h4>Después</h4>
+      <span class="quien">con <span data-marca>YUNQUE</span></span>
+      <ul>
+        <li><span class="mk" aria-hidden="true">✓</span> Cortes parejos</li>
+        <li><span class="mk" aria-hidden="true">✓</span> Rebanadas limpias</li>
+        <li><span class="mk" aria-hidden="true">✓</span> El peso hace la fuerza</li>
+        <li><span class="mk" aria-hidden="true">✓</span> Separas por la articulación</li>
+        <li><span class="mk" aria-hidden="true">✓</span> Uno solo para todo</li>
+      </ul>
+    </div>
+    <span class="vs-sello" aria-hidden="true">VS</span>
   </div>
 
   <p class="rotulo">Así se corta cuando la mano<br>va encima del filo</p>
+
+  <h2 style="margin:1.75rem 0 0">Un solo cuchillo<br>para toda tu cocina</h2>
+  <div class="rejilla">
+    <div><i aria-hidden="true">🥩</i><b>Corta carne con hueso</b></div>
+    <div><i aria-hidden="true">🍅</i><b>Rebana sin aplastar</b></div>
+    <div><i aria-hidden="true">🥕</i><b>Pica verduras rápido</b></div>
+    <div><i aria-hidden="true">🧄</i><b>Machaca con el plano</b></div>
+    <div><i aria-hidden="true">💪</i><b>Menos esfuerzo</b></div>
+    <div><i aria-hidden="true">🧼</i><b>Fácil de limpiar</b></div>
+  </div>
 
   <div class="foto-pendiente">
     <b>Falta una foto</b>
@@ -814,6 +921,29 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   }
   if (C.PRECIO_ANTES > 0) $('[data-precio-antes]').textContent = sol(C.PRECIO_ANTES);
   else $('[data-precio-antes]').hidden = true;
+
+  if (C.OFERTA_LIMITADA) $('[data-badge-oferta]').hidden = false;
+
+  // Solo se anuncia escasez si el stock es un número real puesto a mano.
+  if (C.STOCK > 0){
+    var st = $('[data-stock]');
+    st.hidden = false;
+    st.innerHTML = '🔥 Quedan <b class="num">' + C.STOCK + '</b> unidades disponibles';
+  }
+
+  /* ── Reseñas ─────────────────────────────────────────────────── */
+  var cajaRes = $('[data-resenas]');
+  (C.RESENAS || []).forEach(function(r){
+    var d = document.createElement('div');
+    d.className = 'resena';
+    d.innerHTML =
+      '<span class="estrellas" aria-label="5 de 5 estrellas">★★★★★</span>' +
+      '<p>' + r.texto + '</p>' +
+      '<span><b>' + r.nombre + '</b>' + (r.lugar ? ' de ' + r.lugar : '') +
+      (r.hace ? ' · ' + r.hace : '') + '</span>';
+    cajaRes.appendChild(d);
+  });
+  if (!(C.RESENAS || []).length) cajaRes.hidden = true;
 
   /* ── Galería ─────────────────────────────────────────────────── */
   var FOTOS = ['img/producto-sm.webp'];
