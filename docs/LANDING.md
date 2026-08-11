@@ -233,20 +233,35 @@ Playwright, viewport 390×844:
 Material del proveedor, preparado para web. Los másteres (`img/vid1.mp4`, `img/vid2.mp4`,
 29 MB entre los dos) están **fuera de git**: se regeneran desde el original.
 
-| Archivo | De | Peso | Cómo se sirve |
-|---|---|---|---|
-| `bucle.mp4` | vid1, 6 s | **609 KB** | Arranca solo, sin sonido, en bucle. Es el gancho |
-| `demo.mp4` | vid1, 15 s | 2,0 MB | Solo al pulsar "Ver el vídeo completo" |
-| `demo2.mp4` | vid2, 44 s | 5,5 MB | Más abajo, solo al pulsar |
+Los dos vídeos se comportan igual: un bucle corto que arranca solo y el completo al pulsar.
 
-Al abrir la página se descargan **688 KB** de vídeo (el bucle y los pósters); el resto
-llega únicamente si el visitante lo pide. Sin esto, una landing de 190 KB pasaría a 29 MB.
+| Archivo | De | Resolución | Peso | Cuándo se descarga |
+|---|---|---|---|---|
+| `demo-poster` · `demo2-poster` | — | 810 px | **117 KB** | Al abrir la página |
+| `bucle.mp4` | vid1, 6 s | 810×1440 · **60 fps** | 1,6 MB | Al llegar el bloque a pantalla |
+| `bucle2.mp4` | vid2, 6 s | 810×1440 · 30 fps | 1,0 MB | Al llegar el bloque a pantalla |
+| `demo.mp4` | vid1, 15 s | **1080×1920 · 60 fps** | 7,5 MB | Solo al pulsar |
+| `demo2.mp4` | vid2, 44 s | **1080×1920 · 30 fps** | 12,6 MB | Solo al pulsar |
+
+**Al abrir solo se bajan 117 KB de imagen.** Los bucles esperan a que el bloque se acerque a
+la pantalla (`IntersectionObserver`, 400 px de margen): quien no baja hasta ahí no descarga
+un solo byte de vídeo. Sin este escalonado, la landing pasaría de 190 KB a 29 MB.
+
+`vid1` es HEVC a 60 fps y `vid2` VP9 a 29,97: **el framerate es el del original**, no se
+interpola nada (inventar fotogramas deforma los bordes en un corte rápido).
 
 ```bash
 # Recomprimir un máster nuevo (necesita ffmpeg)
-ffmpeg -i vid1.mp4 -vf "scale=640:1138:flags=lanczos" -c:v libx264 -crf 32 \
-  -preset slow -pix_fmt yuv420p -movflags +faststart -an demo.mp4
+ffmpeg -i vid1.mp4 -c:v libx264 -crf 28 -preset slow -profile:v high \
+  -pix_fmt yuv420p -movflags +faststart -an demo.mp4          # completo, 1080p
+
+ffmpeg -ss 5 -t 6 -i vid1.mp4 -vf "scale=810:1440:flags=lanczos" -c:v libx264 \
+  -crf 30 -preset slow -pix_fmt yuv420p -movflags +faststart -an bucle.mp4   # gancho
 ```
+
+> Los `.mp4` están vetados por el `.gitignore` del repo de publicación, con excepciones
+> explícitas para estos cuatro. Si añades un vídeo nuevo, acuérdate de la excepción o se
+> quedará fuera sin avisar.
 
 A `vid2` se le **eliminó la marca de agua** «TIỆN ÍCH KORA» (una tienda vietnamita) con el
 filtro `delogo`: Meta y TikTok degradan la entrega del material con logotipo de otra
