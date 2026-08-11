@@ -5,16 +5,31 @@ montado sobre **Google Sheets + Apps Script**, que es gratis y no tiene servidor
 mantener.
 
 ```
-Landing  ──POST──▶  Apps Script  ──┬──▶  Google Sheets   (el pedido queda guardado)
-(el cliente pulsa   (Web App)      ├──▶  Pushover        (💰 cha-ching en tu móvil)
- "Realizar pedido")                └──▶  Telegram        (respaldo gratis)
-        │
+Landing  ──POST──▶  /api/pedido  ──POST──▶  Apps Script  ──┬──▶  Google Sheets  (queda guardado)
+(el cliente pulsa   (función de              (Web App)     ├──▶  Pushover       (💰 cha-ching)
+ "Realizar pedido")  Vercel: guarda                        └──▶  Telegram       (respaldo gratis)
+        │            el secreto)
         └──▶ WhatsApp con el pedido ya escrito (el cliente confirma contigo)
 ```
 
 El registro se manda con `navigator.sendBeacon`, que **sobrevive a la navegación** a
 WhatsApp. Si el envío falla, la venta sigue: nunca se bloquea al cliente por un fallo de
 registro.
+
+### Por qué hay una función en medio
+
+La landing es HTML público: **cualquier credencial que viva ahí la puede leer cualquiera**
+con ver el código fuente. Si el navegador llamara directo a Apps Script, la URL y el token
+del receptor estarían a la vista, y un bot podría llenarte la hoja de pedidos falsos —o
+agotarte la cuota diaria de Apps Script y dejarte sin registrar los pedidos de verdad.
+
+[`api/pedido.mjs`](../api/pedido.mjs) resuelve eso: el navegador habla con **tu** función,
+y solo esa función conoce el destino y el token, guardados en las variables de entorno de
+Vercel. Es exactamente el modelo de las apps COD de Shopify (Releasit y compañía): un
+servidor en medio que guarda las credenciales. La diferencia es que aquí no cuesta nada.
+
+De paso, la función descarta los campos que no reconoce y **frena a quien intente más de 6
+envíos por minuto** desde la misma IP.
 
 ---
 
@@ -39,14 +54,26 @@ registro.
 
 ## 2 · Conectar la landing
 
-En `index.html`, dentro de `window.CONFIG`:
+**En `index.html` no se toca nada**: ya apunta a `/api/pedido`, que es la función que vive
+en tu propio dominio.
 
 ```js
-PEDIDOS: {
-  url:   'https://script.google.com/macros/s/AKfy…/exec',
-  token: 'la-misma-palabra-secreta'
-},
+PEDIDOS: { url: '/api/pedido' },   // ya está así, no hay secretos aquí
 ```
+
+Lo que sí hay que rellenar son las **variables de entorno de Vercel** (proyecto → Settings →
+Environment Variables). Es el único sitio donde vive el secreto:
+
+| Variable | Valor |
+|---|---|
+| `PEDIDOS_URL` | la URL del despliegue: `https://script.google.com/macros/s/AKfy…/exec` |
+| `PEDIDOS_TOKEN` | la misma palabra secreta que pusiste en `TOKEN` del Apps Script |
+
+Márcalas para **Production** (y Preview si quieres probar antes). Después de añadirlas,
+**vuelve a desplegar**: Vercel solo las inyecta en despliegues nuevos.
+
+> Si estas dos variables faltan, el pedido no se registra pero **la venta no se rompe**: el
+> cliente llega igual a WhatsApp. Lo verás en los *Logs* del proyecto en Vercel.
 
 ## 3 · El "cha-ching" 💰
 
@@ -66,7 +93,9 @@ suscripción.
    | `PUSHOVER_USER` | tu User Key |
    | `PUSHOVER_TOKEN` | el API Token de la aplicación |
 
-5. Ejecuta la función **`probar`** desde el editor. Debe sonar el cha-ching en tu móvil.
+5. Ejecuta la función **`probar`** desde el editor. Recorre el mismo camino que un pedido
+   real: escribe una fila marcada `PRUEBA-…` en la hoja **y** suena el cha-ching en tu
+   móvil. Bórrala a mano cuando lo hayas comprobado.
 
 El sonido ya viene forzado desde el código (`sound: 'cashregister'`), así que no hace
 falta tocar nada en la app.
@@ -94,8 +123,13 @@ La pestaña **Panel** te da, en soles:
 | Pedidos y soles del mes | El acumulado |
 | **COBRADO de verdad (entregados)** | El dinero que existe |
 | Pendientes por entregar | Lo que está en la calle |
+| **Por cobrar en la puerta** | Lo que el motorizado debe cobrar: el total **menos los adelantos** ya pagados |
 | Ticket medio | Si el pack de 2 está funcionando |
 | Tasa de entrega / anulación | **La métrica que decide si el negocio aguanta** |
+
+En provincia el cliente adelanta el envío (`CONFIG.ADELANTO_PROVINCIA`) y paga el resto al
+recoger. Ese importe queda en la columna **Adelanto S/**, y por eso "pendiente por entregar"
+y "por cobrar en la puerta" no son el mismo número: cobrar de más en la puerta es un reclamo.
 
 ### Por qué "pedidos" y "cobrado" están separados
 
@@ -183,7 +217,24 @@ Tres cosas que hace este mensaje: confirma que el pedido existe (baja la ansieda
 `insert here district name` sin sustituir, a un cliente real. Si usas variables en la
 plantilla, **haz un pedido de prueba tú mismo y léelo entero** antes de gastar en tráfico.
 
-## 6 · Comprobar que funciona
+## 7 · Comprobar que funciona
+
+Sin salir del repo, y sin desplegar nada:
+
+```bash
+node landing-cuchillo/test/probar-backend.js   # el receptor, con Google simulado
+node landing-cuchillo/test/probar-api.mjs      # la función intermediaria
+```
+
+El primero comprueba lo que no se ve hasta que hay varios pedidos a la vez: que dos clientes
+distintos no se pisen la fila, que la ampliación por upsell actualice en vez de duplicar, que
+el adelanto quede guardado y que las suscripciones no ensucien los pedidos.
+
+El segundo comprueba que el token nunca salga del servidor, que un token enviado desde fuera
+se descarte, que el spam se frene y —lo más importante— que **si Apps Script está caído el
+cliente no vea ningún error** y siga su camino a WhatsApp.
+
+Y el circuito completo, ya con la hoja montada:
 
 1. Abre la landing, rellena el formulario y pulsa **Realizar pedido**.
 2. Debe pasar todo esto:
@@ -193,6 +244,13 @@ plantilla, **haz un pedido de prueba tú mismo y léelo entero** antes de gastar
 
 Si no aparece la fila: abre el editor de Apps Script → **Ejecuciones**, ahí se ve el error.
 La causa más común es haber dejado el acceso en "Solo yo" al implementar.
+
+## 8 · Las dos hojas
+
+| Pestaña | Qué guarda |
+|---|---|
+| **Pedidos** | Un pedido por fila. La columna *Estado* es la que tú actualizas |
+| **Suscriptores** | Los correos del formulario del pie. Se crea sola con la primera suscripción |
 
 ---
 

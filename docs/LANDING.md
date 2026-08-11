@@ -6,13 +6,16 @@ mismo orden de bloques, mismo formulario COD. Un archivo HTML, sin dependencias 
 sin build.
 
 - **Página:** [`index.html`](index.html)
-- **Backend de pedidos:** [`backend/`](backend/) — Sheets + "cha-ching" + panel en soles
+- **Backend de pedidos:** [`backend/`](backend/) — Sheets + "cha-ching" + panel en soles,
+  con [`api/pedido.mjs`](api/pedido.mjs) de intermediario para que ningún secreto viaje en el HTML
 - **Creativos:** [`../PROWIN/PROMPTS-CREATIVOS.md`](../PROWIN/PROMPTS-CREATIVOS.md)
 - **Tests:** 44 casos · **Compliance:** `node test/compliance-check.js`
 - **Peso en móvil:** ~190 KB (HTML + 4 Poppins de 30 KB + imágenes WebP)
 
 ```bash
 node landing-cuchillo/test/compliance-check.js    # bloquea si hay riesgo o plantillas
+node landing-cuchillo/test/probar-backend.js      # el receptor de pedidos (Google simulado)
+node landing-cuchillo/test/probar-api.mjs         # la función que guarda el secreto
 start landing-cuchillo/test/test-funcional.html   # el título de la pestaña es el informe
 ```
 
@@ -231,5 +234,7 @@ Playwright, viewport 390×844:
 - [ ] **Más fotos para la galería.** Ahora solo hay una y por eso está oculta. En cuanto
       pongas `medidas.jpg` y las de uso en `img/`, añádelas al array `FOTOS`
 - [ ] Generar los creativos de [`PROMPTS-CREATIVOS.md`](../PROWIN/PROMPTS-CREATIVOS.md)
-- [ ] Montar el Apps Script de [`backend/`](backend/) y probar el cha-ching
+- [ ] Montar el Apps Script de [`backend/`](backend/) y probar el cha-ching — el código y su
+      test (`node landing-cuchillo/test/probar-backend.js`) ya están; falta crear la hoja,
+      desplegar la Web App y pegar `PEDIDOS.url` + `token` en `CONFIG`
 - [ ] Confirmar el nombre de marca: **YUNQUE** es propuesta mía, no está registrada

@@ -87,7 +87,10 @@ window.CONFIG = {
   ].join('\n'),
 
   // Registro en Google Sheets + aviso con sonido de caja. Ver backend/README.md
-  PEDIDOS: { url: '', token: '' },
+  // Apunta a NUESTRA función (api/pedido.js), no a Google: así la URL y el
+  // token del receptor se quedan en el servidor y no en esta página, que es
+  // pública. Sin desplegar en Vercel esto no hace nada y la venta sigue igual.
+  PEDIDOS: { url: '/api/pedido' },
 
   // Prueba social. Pon los números REALES o déjalos vacíos para ocultarlos.
   RESENAS_NOTA:  '',   // ej: '4.8'
@@ -1389,7 +1392,6 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   function registrarPedido(datos){
     var cfg = C.PEDIDOS;
     if (!cfg || !cfg.url) return;
-    datos.token = cfg.token || '';
     var cuerpo = JSON.stringify(datos);
     try {
       var blob = new Blob([cuerpo], {type:'text/plain;charset=UTF-8'});
@@ -1405,11 +1407,14 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       campana: q.get('utm_campaign') || q.get('utm_content') || ''
     };
   }
+  // Tiene que ser único: si dos clientes comparten número, el backend toma el
+  // segundo por una ampliación del primero y sobrescribe su fila. Una ranura
+  // cada ~9 s; el backend desempata además por celular.
   function numeroPedido(){
     var d = new Date();
     var dia = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
     var seg = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-    return (C.NUM_PEDIDO_DESDE || 1000) + dia * 100 + Math.floor(seg / 900);
+    return (C.NUM_PEDIDO_DESDE || 1000) + dia * 10000 + Math.floor(seg * 10000 / 86400);
   }
 
   var pedido = null;
@@ -1529,9 +1534,10 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     e.preventDefault();
     var campo = $('#news');
     if (!campo.value.trim() || campo.value.indexOf('@') < 0){ campo.focus(); return; }
-    // Sin lista de correo todavía: se guarda con el mismo backend que los pedidos.
-    registrarPedido({ pedido: 'NEWSLETTER', nombre: campo.value.trim(), total: 0,
-                      pack: 'suscripción', origen: origen().origen });
+    // Sin lista de correo todavía: mismo backend, pero marcado como suscripción
+    // para que vaya a su propia hoja y no se cuele entre los pedidos.
+    registrarPedido({ tipo: 'suscripcion', correo: campo.value.trim(),
+                      origen: origen().origen });
     campo.value = '';
     $('#news-ok').hidden = false;
   });
