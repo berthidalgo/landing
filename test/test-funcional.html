@@ -170,12 +170,14 @@ document.getElementById('f').addEventListener('load', function(){
 
   chk('El héroe usa hero.webp/jpg',
       D.querySelector('.hero-img img').getAttribute('src').indexOf('hero') > -1);
-  chk('La galería enseña las 3 fotos que hay',
-      D.querySelectorAll('.galeria img').length === 3,
+  chk('La galería enseña las 8 fotos',
+      D.querySelectorAll('.galeria img').length === 8,
       D.querySelectorAll('.galeria img').length + ' fotos');
-  chk('Quedan 2 slots por fotografiar',
-      D.querySelectorAll('.galeria .foto-pendiente').length === 2,
+  chk('Ya no quedan slots pendientes',
+      D.querySelectorAll('.galeria .foto-pendiente').length === 0,
       D.querySelectorAll('.galeria .foto-pendiente').length + ' slots');
+  chk('La ficha muestra la foto de medidas',
+      !!D.querySelector('img[src*="medidas"]'));
 
   chk('El antes/después es imagen, no texto',
       visible(D.querySelector('[data-comparativa]')) &&

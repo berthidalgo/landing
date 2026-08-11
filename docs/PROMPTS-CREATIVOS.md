@@ -38,24 +38,36 @@ Es lo primero que ve alguien que viene de TikTok. Si esta falla, el resto da igu
 > **Negative:** no text, no watermark, no logos, no hands, no blood, no raw red meat, no
 > tactical or military props, no outdoor or camping setting, no dark moody horror lighting.
 
-## 2 · `g1.jpg` … `g5.jpg` — galería · 1:1
+## 2 · La galería se genera sola
 
-Cinco vistas. La galería está **oculta** hasta que haya al menos dos.
+**No hay que fotografiar nada extra para la galería.** Son las miniaturas de las piezas
+de esta lista, y las crea `procesar-imagenes.py` en 160 px.
 
-| Archivo | Qué debe mostrar |
-|---|---|
-| `g1.jpg` | El cuchillo completo sobre fondo claro y limpio (catálogo) |
-| `g2.jpg` | **La foto de medidas** que ya tienes, con las cotas 20 cm y 8.5 cm |
-| `g3.jpg` | Macro del hueco de agarre con dos dedos dentro |
-| `g4.jpg` | Cortando: tomate, calabaza o carne |
-| `g5.jpg` | El paquete: cuchillo + funda protectora |
+```bash
+# 1. Deja los originales en landing-cuchillo/originales/
+# 2. Ejecuta:
+python landing-cuchillo/procesar-imagenes.py
+```
 
-Para `g1`:
+Reconoce por nombre de archivo: `hero`, `agarre`, `uso`, `medidas`, `funda`,
+`antes-despues`. Recorta la marca de agua del generador si la detecta, exporta WebP + JPG
+y te imprime el `FOTOS = [...]` listo para pegar.
 
-> Clean product photo of a forged kitchen cleaver with a finger-hole in the blade and
-> wooden handle, lying flat on a light grey seamless background. Overhead top-down shot,
-> even soft studio light, minimal shadows, catalogue style, square 1:1.
-> **Negative:** no text, no watermark, no hands, no props.
+### `medidas` — **no la generes por IA**
+
+Los generadores **escriben mal los números**: te van a poner "8.5cm" como "B.Scm" o una
+cota que no corresponde. Y una medida equivocada en la ficha es una devolución.
+
+Usa la foto del proveedor que ya tienes, o coge una foto limpia y **pon las flechas y los
+números en Canva**. Cinco minutos y los números son correctos.
+
+### `funda` — el paquete completo
+
+> Overhead flat-lay product photo of a hand-forged kitchen cleaver with a wooden handle
+> lying next to its black protective blade sheath on a clean light grey seamless
+> background. Both items neatly arranged with a small gap between them. Soft even studio
+> light, minimal shadows, catalogue style, sharp focus, square 1:1.
+> **Negative:** no text, no watermark, no hands, no people, no props, no packaging boxes.
 
 ## 3 · `agarre.jpg` — el argumento entero · 1:1
 
