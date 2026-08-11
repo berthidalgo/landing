@@ -61,11 +61,41 @@ Para `g1`:
 
 El hueco de agarre es lo único que diferencia este cuchillo de otros cuarenta.
 
-> Extreme macro close-up of the oval finger-hole in a forged kitchen knife blade, with two
-> fingers hooked through it mid-cut. Focus on the transition between the polished edge
-> bevel and the dark hammered forge finish. Warm rim light, blurred wooden kitchen
-> background, shallow depth of field, 1:1.
-> **Negative:** no text, no watermark, no blood, no raw red meat.
+> ⚠️ **No pidas dedos metidos en el hueco.** Es donde la IA falla siempre: dedos de más,
+> articulaciones imposibles, uñas raras. Y una mano deforme mata la credibilidad justo en
+> la foto que más tiene que convencer. **El protagonista es el acero, no la mano.**
+
+### A · Macro dramático — el que recomiendo
+
+> Extreme macro photograph of the oval finger-hole in a hand-forged kitchen cleaver blade.
+> Dramatic rim lighting from behind catches the polished edge bevel, contrasting against
+> the dark hammered forge texture of the blade face. Tiny water droplets on the steel.
+> Deep black background with soft bokeh, shallow depth of field, the hole filling a third
+> of the frame. Studio macro photography, cinematic, ultra sharp, high contrast. Square 1:1.
+> **Negative:** no hands, no fingers, no people, no text, no watermark, no blood, no
+> raw red meat.
+
+### B · El cuchillo colgado del hueco
+
+Enseña para qué sirve el agujero sin necesidad de una mano.
+
+> Product photo of a hand-forged kitchen cleaver hanging from its oval finger-hole on a
+> dark iron hook against a rustic kitchen wall. Warm side light rakes across the hammered
+> steel texture, wooden handle in shadow. Moody, dark, editorial food-magazine style,
+> shallow depth of field. Square 1:1.
+> **Negative:** no hands, no people, no text, no watermark.
+
+### C · En pleno corte, sin mostrar la mano
+
+> Low-angle action shot of a hand-forged kitchen cleaver with an oval finger-hole slicing
+> through a ripe tomato on a walnut board, blade caught mid-motion, tomato slice falling.
+> Only the blade and the board are in frame, cropped above the handle. Warm kitchen light,
+> water droplets, motion blur on the falling slice, shallow depth of field. Square 1:1.
+> **Negative:** no hands, no fingers, no people, no text, no watermark, no blood.
+
+> **Y si de todas formas quieres la mano:** la foto de verdad la haces tú cuando te llegue
+> el producto. Tu propia mano en el hueco, con el móvil, sale mejor que cualquier IA — y
+> además es real, que es lo que vende en contraentrega.
 
 ## 4 · `antes-despues.jpg` — la comparativa · 4:5
 

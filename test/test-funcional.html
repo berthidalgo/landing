@@ -157,22 +157,31 @@ document.getElementById('f').addEventListener('load', function(){
   chk('No hay textos de plantilla [EJEMPLO]',
       D.body.innerText.indexOf('[EJEMPLO') === -1);
 
-  /* ── 7.bis Huecos de imagen ─────────────────────────────────── */
-  var huecos = D.querySelectorAll('[data-hueco], [data-hueco-video], [data-hueco-comparativa]');
-  chk('Hay huecos marcados para las imágenes', huecos.length >= 5,
-      huecos.length + ' huecos');
-  chk('Los huecos se ven mientras faltan fotos',
-      [].every.call(huecos, function(h){ return visible(h); }));
-  chk('La galería muestra los slots pendientes',
-      D.querySelectorAll('.galeria .foto-pendiente').length === 4,
+  /* ── 7.bis Imágenes ─────────────────────────────────────────── */
+  // Las lazy aún no han entrado en pantalla; esas las verifica correr_tests.py
+  // tras hacer scroll por toda la página.
+  var imgs = [].slice.call(D.images).filter(function(i){
+    return visible(i) && i.getAttribute('loading') !== 'lazy';
+  });
+  chk('Las imágenes de arriba cargan', imgs.length > 0 &&
+      imgs.every(function(i){ return i.naturalWidth > 0; }),
+      imgs.filter(function(i){ return !i.naturalWidth; })
+          .map(function(i){ return i.getAttribute('src'); }).join(', ') || 'todas OK');
+
+  chk('El héroe usa hero.webp/jpg',
+      D.querySelector('.hero-img img').getAttribute('src').indexOf('hero') > -1);
+  chk('La galería enseña las 3 fotos que hay',
+      D.querySelectorAll('.galeria img').length === 3,
+      D.querySelectorAll('.galeria img').length + ' fotos');
+  chk('Quedan 2 slots por fotografiar',
+      D.querySelectorAll('.galeria .foto-pendiente').length === 2,
       D.querySelectorAll('.galeria .foto-pendiente').length + ' slots');
-  chk('Cada hueco dice qué archivo falta',
-      [].every.call(D.querySelectorAll('.foto-pendiente code, .cinta-hueco code'),
-                    function(c){ return c.textContent.trim().length > 3; }));
-  chk('Hay hueco para el antes/después',
-      visible(D.querySelector('[data-hueco-comparativa]')));
-  chk('Mientras tanto se ve la versión en texto',
-      visible(D.querySelector('[data-vs-texto]')));
+
+  chk('El antes/después es imagen, no texto',
+      visible(D.querySelector('[data-comparativa]')) &&
+      !visible(D.querySelector('[data-vs-texto]')));
+  chk('Sigue marcado el hueco del vídeo',
+      visible(D.querySelector('[data-hueco-video]')));
 
   /* ── 8. Fidelidad a la plantilla de referencia ──────────────── */
   var cs = w.getComputedStyle;

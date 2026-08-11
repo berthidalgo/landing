@@ -57,7 +57,7 @@ window.CONFIG = {
 
   // Comparativa antes/después. Si pones la imagen aquí, sustituye al bloque
   // de texto: una foto real del corte convence más que una lista.
-  COMPARATIVA: { imagen: '' },   // ej: 'img/antes-despues.jpg'
+  COMPARATIVA: { imagen: 'img/antes-despues.webp' },
 
   // Enseña los recuadros punteados con el nombre del archivo que falta.
   // Ponlo en false el día que lances: en producción no deben verse.
@@ -561,17 +561,14 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <figure class="hero-img" style="margin:0">
     <picture>
-      <source srcset="img/producto.webp" type="image/webp">
-      <img src="img/producto.jpg" width="800" height="800" fetchpriority="high"
+      <source srcset="img/hero.webp" type="image/webp">
+      <img src="img/hero.jpg" width="900" height="900" fetchpriority="high"
            alt="Cuchillo de cocina forjado con hoja curva, hueco de agarre y mango de madera sobre una tabla.">
     </picture>
     <div class="pastillas">
       <span class="pastilla pastilla-v">🚚 ENVÍO GRATIS HOY</span>
       <span class="pastilla pastilla-n">📦 STOCK LIMITADO</span>
     </div>
-    <p class="cinta-hueco" data-hueco hidden>
-      Foto provisional del proveedor · sustitúyela por <code>img/hero.jpg</code>
-    </p>
   </figure>
 
   <div class="wrap hero-pie">
@@ -705,12 +702,11 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <li><span class="tick" aria-hidden="true">✓</span> Viene con funda para guardarlo seguro</li>
   </ul>
 
-  <div class="foto-pendiente" data-hueco hidden>
-    <span class="ico" aria-hidden="true">🤏</span>
-    <b>El macro del hueco de agarre</b>
-    <span>Dos dedos dentro de la hoja, en pleno corte</span>
-    <code>img/agarre.jpg</code>
-  </div>
+  <picture>
+    <source srcset="img/agarre.webp" type="image/webp">
+    <img src="img/agarre.jpg" width="900" height="900" loading="lazy"
+         alt="Detalle del hueco de agarre en la hoja forjada.">
+  </picture>
 
   <h2 style="margin:1.75rem 0 0">Con cuchillo común<br>o con este</h2>
 
@@ -777,12 +773,11 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <div><i aria-hidden="true">🧼</i><b>Fácil de limpiar</b></div>
   </div>
 
-  <div class="foto-pendiente" data-hueco hidden>
-    <span class="ico" aria-hidden="true">🍳</span>
-    <b>El cuchillo en una cocina real</b>
-    <span>Manos peruanas cortando cebolla, luz de tarde</span>
-    <code>img/uso.jpg</code>
-  </div>
+  <picture>
+    <source srcset="img/uso.webp" type="image/webp">
+    <img src="img/uso.jpg" width="900" height="900" loading="lazy"
+         alt="El cuchillo en uso sobre una tabla de cocina.">
+  </picture>
 
   <h3>Características:</h3>
   <ul>
@@ -1151,11 +1146,11 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   }
 
   /* ── Galería ─────────────────────────────────────────────────── */
-  // Añade aquí las fotos según las vayas generando (ver PROMPTS-CREATIVOS.md).
-  var FOTOS = ['img/producto-sm.webp'];
-  // Las que faltan, con el nombre exacto que espera la landing.
-  var FOTOS_PENDIENTES = ['g2.jpg — medidas', 'g3.jpg — agarre', 'g4.jpg — cortando',
-                          'g5.jpg — con funda'];
+  // Miniaturas de la galería. Las genera procesar-imagenes.py desde
+  // landing-cuchillo/originales/ — no las hagas a mano.
+  var FOTOS = ['img/hero-sm.webp', 'img/agarre-sm.webp', 'img/uso-sm.webp'];
+  // Añade aquí lo que aún falte por fotografiar.
+  var FOTOS_PENDIENTES = ['medidas — las cotas', 'funda — el paquete'];
 
   var gal = $('[data-galeria]');
   FOTOS.forEach(function(src, i){
