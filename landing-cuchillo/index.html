@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuchillo Ergonómico Forjado – Hoja Curva 20 cm con Agarre Integrado | YUNQUE</title>
+<meta name="description" content="Cuchillo de cocina forjado con agarre integrado en la hoja. Envío gratis a todo el Perú y pagas al recibir.">
+<meta name="theme-color" content="#ffffff">
+<link rel="preload" href="fonts/Poppins-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Poppins-700.woff2" as="font" type="font/woff2" crossorigin>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   CONFIGURACIÓN — todo lo editable vive aquí.
+   ═══════════════════════════════════════════════════════════════════ */
+window.CONFIG = {
+  MARCA:     'YUNQUE',
+  PRODUCTO:  'Cuchillo Ergonómico Forjado – Hoja Curva 20 cm',
+
+  WHATSAPP:  '51999999999',        // ← TU número, formato 51XXXXXXXXX
+  PIXEL_ID:  '',                   // ← Meta · Administrador de eventos
+  TIKTOK_ID: '',                   // ← TikTok Ads · píxel
+
+  PRECIO_ANTES: 120,               // precio tachado (ancla). 0 lo oculta
+
+  PACKS: [
+    { id: 1, cant: 1, titulo: '1 unidad',   precio:  69, antes:   0, etiqueta: '' },
+    { id: 2, cant: 2, titulo: '2 unidades', precio:  89, antes: 138, etiqueta: '¡Más vendido!' },
+    // ↓ PROPUESTO, no confirmado. Cambia el precio o borra la línea.
+    { id: 3, cant: 3, titulo: '3 unidades', precio: 119, antes: 207, etiqueta: '¡Mega Oferta!' }
+  ],
+
+  UPSELL: { activo: true, nombre: 'Piedra afiladora de doble grano', precio: 29 },
+
+  POST_UPSELL: {
+    activo: true,
+    titulo: '¡Excelente decisión!',
+    texto:  'Un filo forjado dura años, pero solo si lo reavivas cada cierto tiempo. Añade la tabla de bambú y te llega en el mismo paquete, sin costo de envío extra.',
+    nombre: 'Tabla de picar de bambú · 38 × 26 cm',
+    antes:  69,
+    precio: 39,
+    minutos: 5           // al llegar a 0 la oferta se retira DE VERDAD
+  },
+
+  NUM_PEDIDO_DESDE: 1040,
+
+  // Registro en Google Sheets + aviso con sonido de caja. Ver backend/README.md
+  PEDIDOS: { url: '', token: '' },
+
+  // Prueba social. Pon los números REALES o déjalos vacíos para ocultarlos.
+  RESENAS_NOTA:  '',   // ej: '4.8'
+  RESENAS_TOTAL: ''    // ej: '1,240'
+};
+</script>
+
+<style>
+/* ── Poppins, la misma familia que usa la plantilla de referencia ── */
+@font-face{font-family:'Poppins';src:url('fonts/Poppins-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Poppins';src:url('fonts/Poppins-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Poppins';src:url('fonts/Poppins-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Poppins';src:url('fonts/Poppins-900.woff2') format('woff2');font-weight:900;font-display:swap}
+
+:root{
+  --tinta:#121212;      --tinta-90:rgba(18,18,18,.9);  --gris:#565656;
+  --morado:#6D388B;     --verde:#00D084;   --verde-osc:#00A76A;
+  --verde-2:#35CB5E;    --naranja:#FF6900; --amarillo:#FDBC00;
+  --turquesa:#CCFBF1;   --turquesa-b:#14B8A6;
+  --f3:#F3F3F3;         --linea:#E4E4E4;   --blanco:#fff;
+  --r:12px;             --r-sm:8px;
+  --ancho:min(100% - 1.5rem, 34rem);
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--blanco);color:var(--tinta-90);
+  font:400 15px/1.55 'Poppins',system-ui,sans-serif;
+  overflow-x:hidden;padding-bottom:5.25rem;
+}
+img{max-width:100%;height:auto;display:block}
+p{margin:0 0 1rem}
+h1,h2,h3{color:var(--tinta);margin:0;line-height:1.2}
+h1{font-size:24.75px;font-weight:900}
+h2{font-size:26px;font-weight:900;text-align:center;text-transform:uppercase;line-height:1.15}
+h3{font-size:17.6px;font-weight:700}
+.wrap{width:var(--ancho);margin-inline:auto}
+.num{font-variant-numeric:tabular-nums}
+:where(a,button,input,select,summary):focus-visible{outline:3px solid var(--morado);outline-offset:2px}
+.estrellas{color:var(--amarillo);letter-spacing:.5px}
+
+/* ── Cabecera ───────────────────────────────────────────────────── */
+.cab{display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  padding:.6rem 1rem;border-bottom:1px solid var(--linea);background:var(--blanco);
+  position:sticky;top:0;z-index:40}
+.cab-logo{font-weight:900;font-size:26px;letter-spacing:-.02em;color:var(--tinta)}
+.cab-ico{width:44px;height:44px;display:grid;place-content:center;background:none;
+  border:0;padding:0;cursor:pointer;color:var(--tinta);margin:-8px 0}
+
+/* ── Héroe (creativo maquetado, como el banner de la referencia) ── */
+.hero{background:linear-gradient(180deg,#EFEDE9 0%,#E3DFD8 100%);padding-bottom:1rem}
+.hero-barra{background:var(--tinta);color:#fff;text-align:center;padding:.5rem 1rem;
+  font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  gap:.5rem;flex-wrap:wrap}
+.hero-tit{text-align:center;padding:1.1rem 1rem .5rem}
+.hero-h{font-size:27px;font-weight:900;line-height:1.15;color:var(--tinta);margin:0}
+.hero-h em{font-style:normal;color:var(--verde-osc)}
+.hero-tit p{margin:.5rem 0 0;font-size:14px;color:var(--gris)}
+.hero-img{position:relative}
+.hero-img img{width:100%;aspect-ratio:1;object-fit:cover}
+.pastillas{position:absolute;left:.75rem;bottom:.75rem;display:grid;gap:.4rem;justify-items:start}
+.pastilla{display:inline-flex;align-items:center;gap:.35rem;color:#fff;font-size:12.5px;
+  font-weight:700;padding:.4rem .7rem;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.22)}
+.pastilla-v{background:var(--verde-osc)}
+.pastilla-n{background:var(--naranja)}
+.hero-pie{display:flex;align-items:center;gap:.6rem;padding:.85rem 1rem 0}
+.hero-pie .btn-mini{background:#1F5C2E;color:#fff;font-family:inherit;font-weight:700;
+  font-size:14px;padding:.85rem 1.1rem;border-radius:99px;border:0;white-space:nowrap;
+  min-height:44px;cursor:pointer}
+.hero-pie small{font-size:11px;font-weight:700;color:var(--tinta);line-height:1.25}
+
+/* ── Galería ────────────────────────────────────────────────────── */
+.galeria{display:flex;gap:.4rem;overflow-x:auto;padding:.75rem 0;scrollbar-width:none}
+.galeria::-webkit-scrollbar{display:none}
+.galeria img{width:66px;height:66px;object-fit:cover;border:1px solid var(--linea);
+  border-radius:6px;flex:none}
+.galeria img.sel{border:2px solid var(--tinta)}
+
+/* ── Bloque de compra ───────────────────────────────────────────── */
+.badge-top{display:inline-block;border:1.5px solid var(--morado);color:var(--morado);
+  font-size:13.2px;font-weight:700;padding:.35rem .8rem;border-radius:var(--r-sm);
+  margin-bottom:.6rem}
+.calif{display:flex;align-items:center;gap:.4rem;margin:.4rem 0 .6rem;font-size:15px;
+  color:var(--gris)}
+.precio-fila{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem}
+.precio{font-size:24.75px;font-weight:900;color:var(--morado)}
+.precio-antes{font-size:18px;font-weight:700;color:var(--gris);text-decoration:line-through}
+.wa-chip{margin-left:auto;display:inline-flex;align-items:center;gap:.35rem;
+  background:var(--verde-2);color:#fff;font-size:13px;font-weight:700;
+  padding:.7rem .85rem;border-radius:var(--r-sm);text-decoration:none;min-height:44px}
+
+/* ── Botón principal ────────────────────────────────────────────── */
+.btn{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;border:0;border-radius:var(--r);cursor:pointer;background:var(--verde);
+  color:#fff;font-family:inherit;font-size:18px;font-weight:700;line-height:1.2;
+  padding:.85rem 1rem;text-align:center;text-decoration:none;
+  box-shadow:0 2px 0 rgba(0,0,0,.06);transition:background .12s ease}
+.btn:hover{background:var(--verde-osc)}
+.btn:active{transform:translateY(1px)}
+.btn small{font-size:15px;font-weight:500;opacity:.95;margin-top:.1rem}
+.btn-lin{background:#fff;color:var(--tinta);border:1.5px solid var(--linea);font-size:15px}
+.btn-lin:hover{background:var(--f3)}
+
+/* ── Caja gris de envío ─────────────────────────────────────────── */
+.envios{background:var(--f3);border-radius:var(--r);padding:.9rem 1rem;margin:1rem 0}
+.envios div{display:flex;gap:.6rem;padding:.4rem 0;font-size:14px;align-items:flex-start}
+.envios b{color:var(--tinta)}
+.envios svg{flex:none;margin-top:.15rem}
+
+/* ── Packs ──────────────────────────────────────────────────────── */
+.packs{display:grid;gap:.6rem;margin:1rem 0}
+.pack{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:.7rem;
+  align-items:center;width:100%;text-align:left;cursor:pointer;background:#fff;
+  border:1.5px solid var(--linea);border-radius:var(--r);padding:.7rem;
+  font-family:inherit;font-size:15px;color:var(--tinta)}
+.pack[aria-checked="true"]{border:2px solid var(--turquesa-b);background:var(--turquesa)}
+.pack img{width:52px;height:52px;object-fit:cover;border-radius:6px}
+.pack-tit{display:block;font-weight:700;line-height:1.25}
+.pack-etiq{display:inline-block;margin-top:.3rem;color:#fff;font-size:12.5px;font-weight:700;
+  padding:.15rem .5rem;border-radius:5px;background:var(--naranja)}
+.pack:nth-child(3) .pack-etiq{background:var(--verde-2)}
+.pack-precio{text-align:right;white-space:nowrap}
+.pack-precio s{display:block;font-size:13.5px;color:var(--gris)}
+.pack-precio b{font-size:17.6px;font-weight:700;color:var(--tinta)}
+
+/* ── Acordeones ─────────────────────────────────────────────────── */
+details{border-bottom:1px solid var(--linea)}
+summary{cursor:pointer;padding:.9rem 2rem .9rem 0;position:relative;font-weight:700;
+  list-style:none;font-size:15px;color:var(--tinta)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'⌄';position:absolute;right:.4rem;top:.55rem;font-size:19px;
+  color:var(--gris)}
+details[open] summary::after{content:'⌃';top:.85rem}
+details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
+
+/* ── Lista de ventajas con emoji ────────────────────────────────── */
+.ventajas{list-style:none;margin:1.1rem 0;padding:0;font-size:15px}
+.ventajas li{display:flex;gap:.55rem;padding:.28rem 0;align-items:center}
+.ventajas b{color:var(--tinta)}
+.tira{display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;background:var(--f3);
+  border-radius:var(--r-sm);padding:.65rem 1rem;font-size:14px;font-weight:700;
+  color:var(--tinta);margin-bottom:1.25rem}
+
+/* ── Reseñas ────────────────────────────────────────────────────── */
+.resenas{border-top:1px solid var(--linea);padding-top:1rem}
+.resena p{margin:0 0 .35rem;font-size:15px;color:var(--tinta-90)}
+.resena span{font-size:14px;color:var(--gris)}
+.resena b{color:var(--tinta);font-weight:500}
+.puntos{display:flex;gap:.35rem;justify-content:center;margin:.9rem 0 0}
+.punto{width:8px;height:8px;border-radius:50%;background:#CFCFCF;border:0;padding:0;
+  cursor:pointer}
+.punto[aria-current="true"]{background:var(--tinta)}
+
+/* ── Contenido largo ────────────────────────────────────────────── */
+.contenido{padding:1.75rem 0 .5rem}
+.contenido h2{margin-bottom:1.1rem}
+.contenido img{border-radius:var(--r);margin-bottom:1.1rem}
+.contenido h3{margin:1.4rem 0 .5rem}
+.contenido ul{margin:0 0 1rem;padding-left:1.1rem}
+.contenido li{margin-bottom:.55rem}
+.contenido ol{margin:0 0 1rem;padding-left:1.2rem}
+.contenido ol li{margin-bottom:.4rem}
+.dato{background:var(--f3);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:1rem}
+.dato div{display:flex;justify-content:space-between;gap:1rem;padding:.3rem 0;font-size:14px;
+  border-bottom:1px solid var(--linea)}
+.dato div:last-child{border-bottom:0}
+.dato b{color:var(--tinta)}
+
+/* ── Beneficios con check verde ─────────────────────────────────── */
+.beneficios{list-style:none;margin:0 0 1.4rem;padding:0}
+.beneficios li{display:flex;gap:.55rem;align-items:flex-start;padding:.32rem 0;
+  font-size:15px;color:var(--tinta-90)}
+.beneficios .tick{flex:none;width:20px;height:20px;border-radius:4px;background:var(--verde-2);
+  color:#fff;display:grid;place-content:center;font-size:13px;font-weight:700;margin-top:1px}
+
+/* ── Rótulo destacado entre bloques ─────────────────────────────── */
+.rotulo{text-align:center;font-style:italic;font-weight:900;font-size:21px;
+  color:var(--tinta);line-height:1.25;margin:1.25rem 0 1.5rem}
+
+/* ── Hueco de imagen pendiente ──────────────────────────────────── */
+.foto-pendiente{display:grid;place-content:center;gap:.3rem;text-align:center;
+  aspect-ratio:1;background:repeating-linear-gradient(45deg,#F7F7F7,#F7F7F7 10px,#F1F1F1 10px,#F1F1F1 20px);
+  border:2px dashed #CFCFCF;border-radius:var(--r);color:var(--gris);
+  font-size:13px;padding:1rem;margin-bottom:1.1rem}
+.foto-pendiente b{color:var(--tinta);font-size:14px}
+.foto-pendiente code{font-family:ui-monospace,monospace;font-size:12px;color:var(--morado)}
+
+/* ── Widget de reseñas ──────────────────────────────────────────── */
+.resenas-widget{text-align:center;border-top:1px solid var(--linea);padding:1.75rem 0 .5rem;
+  margin-top:1.5rem}
+.resenas-widget p{color:var(--gris);margin-bottom:.4rem}
+.resenas-widget a{color:#B98A00;font-weight:700;text-decoration:none;
+  display:inline-block;padding:.7rem 0;min-height:44px}
+
+/* ── Barra fija ─────────────────────────────────────────────────── */
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;
+  border-top:1px solid var(--linea);box-shadow:0 -2px 12px rgba(0,0,0,.08);
+  padding:.6rem .9rem calc(.6rem + env(safe-area-inset-bottom));
+  display:grid;grid-template-columns:auto 1fr;gap:.75rem;align-items:center}
+.barra-precio b{display:block;font-size:19px;font-weight:900;color:var(--morado);line-height:1.1}
+.barra-precio span{font-size:11.5px;color:var(--gris)}
+.barra .btn{font-size:16px;padding:.8rem 1rem;min-height:46px}
+.barra .btn small{font-size:12px}
+
+/* ── Modal ──────────────────────────────────────────────────────── */
+.modal{position:fixed;inset:0;z-index:60;display:none;background:rgba(0,0,0,.55)}
+.modal.abierto{display:block}
+.modal-caja{position:absolute;inset:auto 0 0 0;max-height:94dvh;overflow-y:auto;
+  background:#fff;border-radius:14px 14px 0 0;-webkit-overflow-scrolling:touch}
+.modal-cab{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--linea);
+  padding:.9rem 3rem .75rem 1rem;z-index:2;text-align:center}
+.modal-cab h2{font-size:17.6px;font-weight:700;text-transform:none}
+.modal-cab p{margin:.35rem 0 0;font-size:12.5px;color:var(--gris)}
+.cerrar{position:absolute;top:.6rem;right:.6rem;width:2rem;height:2rem;background:none;
+  border:0;color:var(--gris);font-size:1.4rem;line-height:1;cursor:pointer}
+.modal-cuerpo{padding:1rem}
+.campo{margin-bottom:.75rem}
+.campo label{display:block;font-size:13.5px;font-weight:700;color:var(--tinta);
+  margin-bottom:.25rem}
+.campo .req{color:#D33}
+.campo input,.campo select{width:100%;padding:.7rem .75rem;font:inherit;font-size:15px;
+  border:1px solid #CFCFCF;border-radius:var(--r-sm);background:#fff;color:var(--tinta)}
+.campo input:focus,.campo select:focus{border-color:var(--morado)}
+.campo input[aria-invalid="true"],.campo select[aria-invalid="true"]{border-color:#D33;
+  background:#FDF4F4}
+.error{display:none;color:#D33;font-size:12.5px;margin-top:.25rem}
+.error.visible{display:block}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.sub{font-size:14px;font-weight:700;color:var(--tinta);margin:1.1rem 0 .5rem}
+.envio-op{display:flex;justify-content:space-between;align-items:center;
+  border:1px solid var(--linea);border-radius:var(--r-sm);padding:.75rem;font-size:14px}
+.envio-op b{color:var(--tinta)}
+.envio-op span{color:var(--verde-osc);font-weight:700}
+.resumen{border:1px solid var(--linea);border-radius:var(--r-sm);padding:.8rem;
+  margin-top:.9rem;font-size:14px;background:#FAFAFA}
+.resumen div{display:flex;justify-content:space-between;padding:.25rem 0}
+.resumen .desc{color:#D33}
+.resumen .total{border-top:1px solid var(--linea);margin-top:.35rem;padding-top:.5rem;
+  font-size:17.6px;font-weight:700;color:var(--tinta)}
+.upsell{display:flex;gap:.6rem;align-items:flex-start;border:2px dashed var(--verde-2);
+  border-radius:var(--r-sm);padding:.75rem;background:#F2FCF6;margin-top:.9rem;cursor:pointer}
+.upsell input{margin:.15rem 0 0;width:1.1rem;height:1.1rem;accent-color:var(--verde-2);flex:none}
+.upsell span{font-size:14px;line-height:1.4}
+.upsell b{color:var(--verde-osc)}
+.modal .btn{margin-top:1rem}
+.tras-btn{text-align:center;font-size:12.5px;color:var(--gris);margin:.6rem 0 0}
+
+/* ── Post-venta ─────────────────────────────────────────────────── */
+#postventa{text-align:center}
+#postventa h3{font-size:19px;margin-bottom:.5rem}
+.pv-ok{font-size:13px;color:var(--verde-osc);font-weight:700;margin-bottom:.5rem}
+.pv-texto{font-size:14px;color:var(--gris);text-align:left}
+.pv-oferta{border:1.5px solid var(--linea);border-radius:var(--r);padding:.9rem;
+  margin:1rem 0;text-align:left}
+.pv-reloj{background:#FDF2F2;border-radius:var(--r-sm);padding:.5rem;text-align:center;
+  font-size:13.5px;font-weight:700;color:#D33;margin:0 0 .8rem}
+.pv-reloj b{font-size:17px;display:block}
+.pv-nombre{font-weight:700;color:var(--tinta);margin:0 0 .4rem;font-size:15px}
+.pv-precio{display:flex;align-items:baseline;gap:.6rem;margin:0 0 .9rem}
+.pv-precio s{font-size:14px;color:var(--gris)}
+.pv-precio b{font-size:22px;font-weight:900;color:var(--morado)}
+#postventa .btn-lin{margin-top:.6rem}
+
+/* ── Pie (morado, como el de la plantilla de referencia) ────────── */
+.onda{display:block;width:100%;height:48px;margin-bottom:-1px}
+footer{background:var(--morado);color:rgba(255,255,255,.85);padding:.5rem 0 2rem;font-size:14px}
+footer .marca-pie{text-align:center;font-size:30px;font-weight:900;color:#fff;
+  margin-bottom:1.75rem;letter-spacing:-.02em}
+footer h3{color:#fff;font-size:16px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.02em;margin-bottom:.6rem}
+footer a{color:rgba(255,255,255,.9);text-decoration:none;display:block;padding:.55rem 0;
+  min-height:44px}
+footer a:hover{color:#fff;text-decoration:underline}
+footer .bloque{margin-bottom:1.75rem}
+footer .contacto b{color:#fff}
+footer .contacto p{margin:0 0 .3rem}
+.suscribe input{width:100%;padding:.85rem .9rem;font:inherit;font-size:15px;color:#fff;
+  background:transparent;border:1px solid rgba(255,255,255,.55);border-radius:var(--r-sm)}
+.suscribe input::placeholder{color:rgba(255,255,255,.7)}
+.suscribe button{width:100%;margin-top:.6rem;padding:.9rem;background:#fff;color:var(--morado);
+  border:0;border-radius:var(--r-sm);font-family:inherit;font-size:16px;font-weight:700;
+  letter-spacing:.04em;cursor:pointer}
+.pagos{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;
+  border-top:1px solid rgba(255,255,255,.25);padding-top:1.5rem;margin-top:.5rem}
+.pagos span{background:#fff;border-radius:4px;padding:.35rem .55rem;font-size:11.5px;
+  font-weight:900;color:#1A1A6C;letter-spacing:-.02em;min-width:44px;text-align:center}
+footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
+  margin-top:1.25rem;line-height:1.8}
+
+@media (min-width:34rem){ .hero-tit h1{font-size:32px} }
+</style>
+</head>
+<body>
+
+<!-- ═══ CABECERA ═══════════════════════════════════════════════════ -->
+<header class="cab">
+  <button class="cab-ico" aria-label="Menú">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <span class="cab-logo" data-marca>YUNQUE</span>
+  <button class="cab-ico" aria-label="Carrito" data-abrir>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+  </button>
+</header>
+
+<!-- ═══ HÉROE ══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-barra">
+    <span class="estrellas" aria-hidden="true">★★★★★</span>
+    <span data-clientes>+100 CLIENTES SATISFECHOS</span>
+  </div>
+
+  <div class="hero-tit">
+    <!-- El <h1> real es el nombre del producto, más abajo: esto es el rótulo del creativo. -->
+    <p class="hero-h">Corta la carne <em>sin pelearte con ella</em></p>
+    <p>El agarre va en la hoja, no en el mango: la fuerza baja recta sobre el corte.</p>
+  </div>
+
+  <figure class="hero-img" style="margin:0">
+    <picture>
+      <source srcset="img/producto.webp" type="image/webp">
+      <img src="img/producto.jpg" width="800" height="800" fetchpriority="high"
+           alt="Cuchillo de cocina forjado con hoja curva, hueco de agarre y mango de madera sobre una tabla.">
+    </picture>
+    <div class="pastillas">
+      <span class="pastilla pastilla-v">🚚 ENVÍO GRATIS HOY</span>
+      <span class="pastilla pastilla-n">📦 STOCK LIMITADO</span>
+    </div>
+  </figure>
+
+  <div class="wrap hero-pie">
+    <button class="btn-mini" data-abrir>PRUÉBALO HOY MISMO</button>
+    <small>🚚 ENVÍO<br>RÁPIDO</small>
+    <small>🛡 CALIDAD<br>GARANTIZADA</small>
+  </div>
+</section>
+
+<!-- ═══ BLOQUE DE COMPRA ═══════════════════════════════════════════ -->
+<div class="wrap">
+  <div class="galeria" data-galeria></div>
+
+  <span class="badge-top">MÁS VENDIDO | ÚLTIMAS UNIDADES</span>
+  <h1>Cuchillo Ergonómico Forjado – Hoja Curva 20 cm con Agarre Integrado</h1>
+
+  <p class="calif">
+    <span class="estrellas" aria-hidden="true">★★★★★</span>
+    <span data-calif>Producto verificado</span>
+  </p>
+
+  <div class="precio-fila">
+    <span class="precio num" data-precio-hero>S/. 69.00</span>
+    <s class="precio-antes num" data-precio-antes>S/. 120.00</s>
+    <a class="wa-chip" href="#" data-wa-link>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
+      Escríbenos
+    </a>
+  </div>
+
+  <button class="btn" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+
+  <div class="envios">
+    <div>
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+      <span><b>Envío Gratis</b> • A todo el Perú, sin mínimo de compra.</span>
+    </div>
+    <div>
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5zM3.3 7 12 12l8.7-5M12 22V12"/></svg>
+      <span><b>Enviado por <span data-marca>YUNQUE</span></b>. Lima (1 a 3 días) - Provincias (3 a 7 días)</span>
+    </div>
+    <div>
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span><b>Compra Segura</b>. Pagas recién cuando lo tienes en la mano.</span>
+    </div>
+  </div>
+
+  <p class="sub" id="packs">Elige la cantidad a llevar:</p>
+  <div class="packs" role="radiogroup" aria-label="Elige la cantidad" data-packs></div>
+
+  <button class="btn" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+
+  <div style="margin-top:1.25rem">
+    <details>
+      <summary>☑ Envíos Seguros</summary>
+      <p>Despachamos en 24 horas. Lima llega en 1 a 3 días y provincias en 3 a 7 días hábiles.
+        Te avisamos por WhatsApp cuando tu pedido sale.</p>
+    </details>
+    <details>
+      <summary>☑ Garantía al 100%</summary>
+      <p>Tienes 7 días desde que lo recibes. Si llega dañado o no es lo que esperabas,
+        lo cambiamos sin vueltas.</p>
+    </details>
+    <details>
+      <summary>☑ ¿Qué incluye?</summary>
+      <p>El cuchillo forjado de 20 cm y su funda protectora para guardarlo con seguridad.</p>
+    </details>
+  </div>
+
+  <ul class="ventajas">
+    <li>🔪 <span><b>Hoja forjada</b> de una sola pieza</span></li>
+    <li>👌 <span><b>Agarre integrado</b> en la hoja</span></li>
+    <li>🚚 <span><b>Envío gratis</b> a todo el Perú</span></li>
+    <li>💵 <span><b>Pagas al recibir</b>, nada por adelantado</span></li>
+  </ul>
+
+  <div class="tira"><span>🛡 Pago Contraentrega</span><span>🚚 Envío Gratis</span></div>
+
+  <!-- ⚠️ EJEMPLOS: sustituir por reseñas reales antes de publicar. -->
+  <div class="resenas">
+    <div class="resena" data-resena>
+      <p>[EJEMPLO — sustituir por reseña real]</p>
+      <span><b>[Nombre]</b> de [Distrito] <span class="estrellas">★★★★★</span></span>
+    </div>
+    <div class="puntos" data-puntos></div>
+  </div>
+</div>
+
+<!-- ═══ CONTENIDO LARGO ════════════════════════════════════════════ -->
+<div class="wrap contenido">
+  <h2>¡El cuchillo que te faltaba!</h2>
+
+  <picture>
+    <source srcset="img/producto.webp" type="image/webp">
+    <img src="img/producto.jpg" width="800" height="800" loading="lazy"
+         alt="Detalle de la hoja forjada y el mango de madera con remaches.">
+  </picture>
+
+  <h3>Beneficios:</h3>
+  <ul class="beneficios">
+    <li><span class="tick" aria-hidden="true">✓</span> Corta carne con hueso sin astillarla</li>
+    <li><span class="tick" aria-hidden="true">✓</span> Tu muñeca deja de hacer toda la fuerza</li>
+    <li><span class="tick" aria-hidden="true">✓</span> Pica verduras el doble de rápido</li>
+    <li><span class="tick" aria-hidden="true">✓</span> Machaca ajo con el plano de la hoja</li>
+    <li><span class="tick" aria-hidden="true">✓</span> Reemplaza tres cuchillos del cajón</li>
+    <li><span class="tick" aria-hidden="true">✓</span> Mantiene el filo mucho más tiempo</li>
+    <li><span class="tick" aria-hidden="true">✓</span> Viene con funda para guardarlo seguro</li>
+  </ul>
+
+  <!-- Sustituye este hueco por la foto y borra la clase foto-pendiente. -->
+  <div class="foto-pendiente">
+    <b>Falta una foto</b>
+    <span>Comparativa: el agarre normal contra el agarre en la hoja</span>
+    <code>img/agarre.jpg</code>
+  </div>
+
+  <p class="rotulo">Así se corta cuando la mano<br>va encima del filo</p>
+
+  <div class="foto-pendiente">
+    <b>Falta una foto</b>
+    <span>Manos cortando: carne, tomate y calabaza</span>
+    <code>img/uso.jpg</code>
+  </div>
+
+  <h3>Características:</h3>
+  <ul>
+    <li><b>Agarre integrado:</b> el hueco en la hoja te deja meter los dedos y trabajar con
+      la mano encima del filo. La fuerza del brazo baja recta sobre lo que cortas, en vez
+      de hacer palanca desde la muñeca.</li>
+    <li><b>Hoja curva de 8.5 cm:</b> el filo entra por un punto y va abriendo el corte al
+      balancearse. Pasa el tomate sin reventarlo y separa el pollo por la articulación.</li>
+    <li><b>Acero forjado:</b> hoja ancha y pesada. No necesitas apretar: la dejas caer y
+      corta. Es lo que hace un carnicero todo el día sin cansarse.</li>
+    <li><b>Mango de madera con remaches:</b> tres remaches de acero fijan el mango a la
+      espiga. No se afloja con el uso ni con el lavado.</li>
+    <li><b>Funda incluida:</b> viene con protector para guardarlo en el cajón sin riesgo.</li>
+  </ul>
+
+  <h2 style="margin:1.75rem 0 1.1rem">Modo de uso</h2>
+  <ol>
+    <li>Mete los dedos índice y medio en el hueco de la hoja.</li>
+    <li>Apoya el pulgar en el lomo para dirigir el corte.</li>
+    <li>Deja caer el peso: no hace falta empujar.</li>
+    <li>Lávalo a mano y sécalo. No lo metas al lavavajillas.</li>
+  </ol>
+
+  <div class="foto-pendiente">
+    <b>Falta la foto de medidas</b>
+    <span>La del plano con las cotas de 20 cm y 8.5 cm</span>
+    <code>img/medidas.jpg</code>
+  </div>
+
+  <h3>Especificaciones:</h3>
+  <div class="dato">
+    <div><span>Largo total</span><b class="num">20 cm</b></div>
+    <div><span>Ancho de hoja</span><b class="num">8.5 cm</b></div>
+    <div><span>Material de la hoja</span><b>Acero forjado</b></div>
+    <div><span>Mango</span><b>Madera con remaches</b></div>
+    <div><span>Incluye</span><b>Funda protectora</b></div>
+  </div>
+
+  <h3>Materiales:</h3>
+
+  <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Acero forjado</h3>
+  <p>La hoja se forja en caliente en vez de troquelarse de una plancha. Eso reordena el grano
+    del acero y le da a la pieza una densidad que se nota al levantarla: el peso trabaja a
+    tu favor y el filo aguanta muchos más cortes antes de pedir piedra.</p>
+
+  <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Madera con triple remache</h3>
+  <p>El mango va sujeto a la espiga con tres remaches de acero pasados de lado a lado. Es la
+    unión que no se afloja con los años ni con el agua caliente, a diferencia de los mangos
+    de plástico pegados que terminan girando en la mano.</p>
+
+  <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Funda protectora</h3>
+  <p>Incluida. Guarda el filo cubierto dentro del cajón: protege la hoja del roce con otros
+    cubiertos y, sobre todo, protege tu mano al buscarlo a ciegas.</p>
+
+  <h3 id="faq">Preguntas frecuentes:</h3>
+  <details><summary>¿De verdad pago cuando lo recibo?</summary>
+    <p>Sí. Haces el pedido con tus datos, te lo llevamos a tu dirección y recién ahí pagas.
+      Si no te convence al verlo, no lo recibes.</p></details>
+  <details><summary>¿Cuánto demora en llegar?</summary>
+    <p>En Lima, entre 24 y 48 horas. En provincias, de 2 a 5 días hábiles. Te avisamos por
+      WhatsApp cuando sale tu pedido.</p></details>
+  <details><summary>¿Viene afilado?</summary>
+    <p>Sí, viene con filo de fábrica y listo para usar. Con el uso hay que reavivarlo: por eso
+      ofrecemos la piedra afiladora al hacer el pedido.</p></details>
+  <details><summary>¿Se puede lavar en lavavajillas?</summary>
+    <p>Mejor no. El mango es de madera y la hoja de acero forjado: lávalo a mano y sécalo
+      después. Así te dura años.</p></details>
+  <details><summary>¿Es muy pesado para una mano de mujer?</summary>
+    <p>Pesa, y esa es la gracia: el peso hace el corte por ti. Al ir agarrado desde el hueco
+      de la hoja, la muñeca trabaja mucho menos que con un cuchillo normal.</p></details>
+  <details><summary>¿Hacen factura?</summary>
+    <p>Sí. Escríbenos por WhatsApp con tus datos de facturación cuando hagas el pedido.</p></details>
+
+  <div style="margin-top:1.5rem">
+    <button class="btn" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+  </div>
+
+  <div class="resenas-widget">
+    <p>Todavía no hay reseñas publicadas.</p>
+    <p><a href="#" data-wa-link>Sé el primero en escribir una</a></p>
+  </div>
+</div>
+
+<svg class="onda" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
+  <path fill="#6D388B" d="M0 24C240 0 480 0 720 14s480 34 720 10v24H0z"/>
+</svg>
+
+<footer>
+  <div class="wrap">
+    <p class="marca-pie" data-marca>YUNQUE</p>
+
+    <div class="bloque contacto">
+      <h3>Atención al cliente</h3>
+      <p><b>WhatsApp:</b> <span data-wa-num></span></p>
+      <a href="#" data-wa-link>Escríbenos ahora</a>
+    </div>
+
+    <div class="bloque">
+      <h3>Enlaces</h3>
+      <a href="#packs">Comprar</a>
+      <a href="#faq">Preguntas frecuentes</a>
+      <a href="#">Política de reembolso y devoluciones</a>
+      <a href="#">Libro de reclamaciones</a>
+    </div>
+
+    <div class="bloque suscribe">
+      <h3>Suscríbete</h3>
+      <p>Recibe nuestras novedades y promociones.</p>
+      <form id="form-news">
+        <label for="news" style="position:absolute;left:-9999px">Correo electrónico</label>
+        <input id="news" type="email" placeholder="Correo electrónico" autocomplete="email">
+        <button type="submit">SUSCRIBIRME</button>
+        <p id="news-ok" hidden style="margin:.6rem 0 0;color:#fff;font-size:13px">
+          ¡Listo! Te escribiremos cuando haya novedades.</p>
+      </form>
+    </div>
+
+    <div class="pagos" aria-label="Medios de pago aceptados">
+      <span>VISA</span><span>MASTER</span><span>AMEX</span><span>YAPE</span><span>EFECTIVO</span>
+    </div>
+
+    <p class="legal">
+      Utensilio de cocina. Manténgase fuera del alcance de los niños.<br>
+      © 2026 <span data-marca>YUNQUE</span> · Todos los derechos reservados.
+    </p>
+  </div>
+</footer>
+
+<!-- ═══ BARRA FIJA ═════════════════════════════════════════════════ -->
+<div class="barra">
+  <div class="barra-precio"><b class="num" data-precio-barra>S/. 69.00</b><span>Envío gratis</span></div>
+  <button class="btn" data-abrir>COMPRAR AHORA</button>
+</div>
+
+<!-- ═══ MODAL DE PEDIDO ════════════════════════════════════════════ -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-tit">
+  <div class="modal-caja">
+    <div class="modal-cab">
+      <h2 id="modal-tit">Completa tus datos para finalizar tu pedido</h2>
+      <p>🚚 Envío Gratis · 🔒 Pago Contra Entrega</p>
+      <button class="cerrar" data-cerrar aria-label="Cerrar el formulario">✕</button>
+    </div>
+
+    <form class="modal-cuerpo" id="form" novalidate>
+      <div class="campo">
+        <label for="cel">Celular con WhatsApp <span class="req">*</span></label>
+        <input id="cel" name="cel" type="tel" inputmode="numeric" autocomplete="tel"
+               placeholder="9XXXXXXXX" maxlength="9" required>
+        <p class="error" id="e-cel">Escribe tu número de 9 dígitos, empezando por 9.</p>
+      </div>
+      <div class="campo">
+        <label for="nom">Nombre completo <span class="req">*</span></label>
+        <input id="nom" name="nom" type="text" autocomplete="name" placeholder="Nombre y apellido" required>
+        <p class="error" id="e-nom">Necesitamos tu nombre para la entrega.</p>
+      </div>
+      <div class="dos">
+        <div class="campo">
+          <label for="dep">Provincia <span class="req">*</span></label>
+          <select id="dep" name="dep" required></select>
+          <p class="error" id="e-dep">Elige tu provincia.</p>
+        </div>
+        <div class="campo">
+          <label for="ciu">Ciudad o distrito <span class="req">*</span></label>
+          <input id="ciu" name="ciu" type="text" placeholder="Ej: Los Olivos" required>
+          <p class="error" id="e-ciu">Falta tu distrito o ciudad.</p>
+        </div>
+      </div>
+      <div class="campo">
+        <label for="dir">Dirección completa <span class="req">*</span></label>
+        <input id="dir" name="dir" type="text" autocomplete="street-address"
+               placeholder="Ej: Av. Arequipa 123, Dpto 402, Urb. Flores" required>
+        <p class="error" id="e-dir">Escribe la calle y el número.</p>
+      </div>
+      <div class="campo">
+        <label for="ref">Referencias de la dirección <span class="req">*</span></label>
+        <input id="ref" name="ref" type="text"
+               placeholder="Ej: entre las calles, frente a…, al lado de…" required>
+        <p class="error" id="e-ref">Una referencia ayuda al repartidor a encontrarte.</p>
+      </div>
+
+      <p class="sub">Elige la cantidad a llevar:</p>
+      <div class="packs" role="radiogroup" aria-label="Cantidad" data-packs></div>
+
+      <p class="sub">Opciones de envío</p>
+      <div class="envio-op"><b>Envío gratis</b><span>Gratis</span></div>
+
+      <label class="upsell" data-upsell hidden>
+        <input type="checkbox" id="up">
+        <span data-upsell-txt></span>
+      </label>
+
+      <div class="resumen">
+        <div><span>Subtotal</span><span class="num" data-r-sub></span></div>
+        <div class="desc" data-r-desc-fila><span>Descuento</span><span class="num" data-r-desc></span></div>
+        <div data-r-up-fila hidden><span data-r-up-nom></span><span class="num" data-r-up></span></div>
+        <div><span>Envío</span><span>Gratis</span></div>
+        <div class="total"><span>Total</span><b class="num" data-r-total></b></div>
+      </div>
+
+      <button class="btn" type="submit">
+        Realizar Pedido y Pagar al Recibir
+        <small data-btn-total></small>
+      </button>
+      <p class="tras-btn">No pagas nada ahora · Confirmamos por WhatsApp</p>
+    </form>
+
+    <!-- Post-purchase upsell: el pedido YA está registrado cuando se ve esto. -->
+    <div class="modal-cuerpo" id="postventa" hidden>
+      <p class="pv-ok">✓ Pedido <b data-pv-num></b> registrado</p>
+      <h3 data-pv-titulo></h3>
+      <p data-pv-texto class="pv-texto"></p>
+
+      <div class="pv-oferta">
+        <p class="pv-reloj">La oferta se retira en <b data-pv-reloj>5:00</b></p>
+        <p class="pv-nombre" data-pv-nombre></p>
+        <p class="pv-precio">
+          <s class="num" data-pv-antes></s>
+          <b class="num" data-pv-precio></b>
+        </p>
+        <button class="btn" type="button" data-pv-si>AGREGARLO AL PEDIDO</button>
+      </div>
+
+      <button class="btn btn-lin" type="button" data-pv-no>No gracias, completar mi pedido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var C = window.CONFIG;
+  var $  = function(s,c){ return (c||document).querySelector(s); };
+  var $$ = function(s,c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); };
+  /** Formato de precio idéntico al de la plantilla de referencia: S/. 89.00 */
+  var sol = function(n){ return 'S/. ' + Number(n).toFixed(2); };
+
+  var packs = C.PACKS || [];
+  var sel   = packs.length > 1 ? packs[1] : packs[0];   // el "más vendido"
+  var up    = false;
+
+  var API = window.__LANDING__ = {
+    navegar: function(url){ window.location.href = url; },
+    get sel(){ return sel; },
+    get up(){ return up; }
+  };
+
+  /* ── Píxeles ─────────────────────────────────────────────────── */
+  function meta(ev, data){ if (window.fbq) window.fbq('track', ev, data || {}); }
+  function tok(ev, data){ if (window.ttq) window.ttq.track(ev, data || {}); }
+  function evento(ev, data){ meta(ev, data); tok(ev === 'Lead' ? 'SubmitForm' : ev, data); }
+
+  if (C.PIXEL_ID) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', C.PIXEL_ID); window.fbq('track','PageView');
+    window.fbq('track','ViewContent',{content_name:C.PRODUCTO, currency:'PEN', value:packs[0].precio});
+  }
+  if (C.TIKTOK_ID) {
+    !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=['page','track',
+    'identify','instances','debug','on','off','once','ready','alias','group','enableCookie',
+    'disableCookie'];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(
+    Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)
+    ttq.setAndDefer(ttq,ttq.methods[i]);ttq.load=function(e){var i='https://analytics.tiktok.com/i18n/pixel/events.js';
+    ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;
+    ttq._o=ttq._o||{};ttq._o[e]={};var o=d.createElement('script');o.type='text/javascript';
+    o.async=!0;o.src=i+'?sdkid='+e+'&lib='+t;var a=d.getElementsByTagName('script')[0];
+    a.parentNode.insertBefore(o,a)};ttq.load(C.TIKTOK_ID);ttq.page()}(window,document,'ttq');
+  }
+
+  /* ── Marca y prueba social ───────────────────────────────────── */
+  $$('[data-marca]').forEach(function(e){ e.textContent = C.MARCA; });
+  $('[data-wa-num]').textContent = '+' + C.WHATSAPP;
+
+  // Solo se enseñan cifras si son reales: si no hay, se dice otra cosa.
+  if (C.RESENAS_NOTA && C.RESENAS_TOTAL){
+    $('[data-calif]').textContent = C.RESENAS_NOTA + '/5 (' + C.RESENAS_TOTAL + ' Calificaciones)';
+    $('[data-clientes]').textContent = '+' + C.RESENAS_TOTAL + ' CLIENTES SATISFECHOS';
+  } else {
+    $('[data-clientes]').textContent = 'ENVÍO GRATIS · PAGAS AL RECIBIR';
+  }
+  if (C.PRECIO_ANTES > 0) $('[data-precio-antes]').textContent = sol(C.PRECIO_ANTES);
+  else $('[data-precio-antes]').hidden = true;
+
+  /* ── Galería ─────────────────────────────────────────────────── */
+  var FOTOS = ['img/producto-sm.webp'];
+  var gal = $('[data-galeria]');
+  FOTOS.forEach(function(src, i){
+    var im = document.createElement('img');
+    im.src = src; im.alt = 'Vista ' + (i+1) + ' del cuchillo';
+    im.loading = 'lazy'; im.width = 66; im.height = 66;
+    if (i === 0) im.className = 'sel';
+    gal.appendChild(im);
+  });
+  if (FOTOS.length < 2) gal.hidden = true;
+
+  /* ── Packs ───────────────────────────────────────────────────── */
+  function pintarPacks(){
+    $$('[data-packs]').forEach(function(cont){
+      if (cont.dataset.listo) return;
+      packs.forEach(function(p){
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'pack'; b.dataset.id = p.id;
+        b.setAttribute('role','radio');
+        b.setAttribute('aria-checked', String(p.id === sel.id));
+        b.innerHTML =
+          '<img src="img/producto-sm.webp" alt="" width="52" height="52" loading="lazy">' +
+          '<span><span class="pack-tit">' + p.titulo + '</span>' +
+          (p.etiqueta ? '<span class="pack-etiq">' + p.etiqueta + '</span>' : '') + '</span>' +
+          '<span class="pack-precio">' +
+            (p.antes > p.precio ? '<s class="num">' + sol(p.antes) + '</s>' : '') +
+            '<b class="num">' + sol(p.precio) + '</b>' +
+          '</span>';
+        b.addEventListener('click', function(){ elegir(p); });
+        cont.appendChild(b);
+      });
+      cont.dataset.listo = '1';
+    });
+    marcar();
+  }
+  function marcar(){
+    $$('[data-packs] .pack').forEach(function(b){
+      b.setAttribute('aria-checked', String(Number(b.dataset.id) === sel.id));
+    });
+  }
+  function elegir(p){
+    sel = p; marcar(); refrescar();
+    evento('AddToCart', {content_name:p.titulo, currency:'PEN', value:p.precio});
+  }
+
+  /* ── Totales ─────────────────────────────────────────────────── */
+  function refrescar(){
+    var extra = (up && C.UPSELL && C.UPSELL.activo) ? C.UPSELL.precio : 0;
+    var base  = sel.antes > sel.precio ? sel.antes : sel.precio;
+    var desc  = base - sel.precio;
+    var total = sel.precio + extra;
+
+    $('[data-precio-hero]').textContent  = sol(packs[0].precio);
+    $('[data-precio-barra]').textContent = sol(sel.precio);
+    $('[data-r-sub]').textContent   = sol(base);
+    $('[data-r-desc]').textContent  = desc ? '−' + sol(desc) : sol(0);
+    $('[data-r-desc-fila]').hidden  = !desc;
+    $('[data-r-total]').textContent = sol(total);
+    $('[data-btn-total]').textContent = sol(total);
+
+    var fila = $('[data-r-up-fila]');
+    fila.hidden = !extra;
+    if (extra){
+      $('[data-r-up-nom]').textContent = C.UPSELL.nombre;
+      $('[data-r-up]').textContent = sol(extra);
+    }
+  }
+
+  if (C.UPSELL && C.UPSELL.activo && C.UPSELL.precio > 0){
+    $('[data-upsell]').hidden = false;
+    $('[data-upsell-txt]').innerHTML =
+      '🔥 Añade <b>' + C.UPSELL.nombre + '</b> por solo <b>' + sol(C.UPSELL.precio) + '</b>';
+    $('#up').addEventListener('change', function(e){ up = e.target.checked; refrescar(); });
+  }
+
+  /* ── Provincias ──────────────────────────────────────────────── */
+  var DEPS = ['Lima','Amazonas','Áncash','Apurímac','Arequipa','Ayacucho','Cajamarca','Callao',
+    'Cusco','Huancavelica','Huánuco','Ica','Junín','La Libertad','Lambayeque','Loreto',
+    'Madre de Dios','Moquegua','Pasco','Piura','Puno','San Martín','Tacna','Tumbes','Ucayali'];
+  $('#dep').innerHTML = '<option value="">Elige…</option>' +
+    DEPS.map(function(d){ return '<option>' + d + '</option>'; }).join('');
+
+  /* ── Modal ───────────────────────────────────────────────────── */
+  var modal = $('#modal'), ultimoFoco = null;
+  function abrir(){
+    ultimoFoco = document.activeElement;
+    modal.classList.add('abierto');
+    document.body.style.overflow = 'hidden';
+    $('#cel').focus({preventScroll:true});
+    evento('InitiateCheckout', {content_name:sel.titulo, currency:'PEN', value:sel.precio});
+  }
+  function cerrar(){
+    modal.classList.remove('abierto');
+    document.body.style.overflow = '';
+    if (ultimoFoco) ultimoFoco.focus();
+  }
+  $$('[data-abrir]').forEach(function(b){ b.addEventListener('click', abrir); });
+  $$('[data-cerrar]').forEach(function(b){ b.addEventListener('click', cerrar); });
+  modal.addEventListener('click', function(e){ if (e.target === modal) cerrar(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && modal.classList.contains('abierto')) cerrar();
+  });
+
+  /* ── Validación ──────────────────────────────────────────────── */
+  var REGLAS = {
+    cel: function(v){ return /^9\d{8}$/.test(v.replace(/\s/g,'')); },
+    nom: function(v){ return v.trim().length >= 3; },
+    dep: function(v){ return v !== ''; },
+    ciu: function(v){ return v.trim().length >= 2; },
+    dir: function(v){ return v.trim().length >= 5; },
+    ref: function(v){ return v.trim().length >= 3; }
+  };
+  function validarCampo(id){
+    var el = $('#' + id), ok = REGLAS[id](el.value);
+    el.setAttribute('aria-invalid', String(!ok));
+    $('#e-' + id).classList.toggle('visible', !ok);
+    return ok;
+  }
+  Object.keys(REGLAS).forEach(function(id){
+    $('#' + id).addEventListener('blur', function(){ validarCampo(id); });
+  });
+  $('#cel').addEventListener('input', function(e){
+    e.target.value = e.target.value.replace(/\D/g,'').slice(0,9);
+  });
+
+  /* ── Registro del pedido ─────────────────────────────────────── */
+  function registrarPedido(datos){
+    var cfg = C.PEDIDOS;
+    if (!cfg || !cfg.url) return;
+    datos.token = cfg.token || '';
+    var cuerpo = JSON.stringify(datos);
+    try {
+      var blob = new Blob([cuerpo], {type:'text/plain;charset=UTF-8'});
+      if (navigator.sendBeacon && navigator.sendBeacon(cfg.url, blob)) return;
+      fetch(cfg.url, {method:'POST', body:cuerpo, keepalive:true, mode:'no-cors',
+                      headers:{'Content-Type':'text/plain;charset=UTF-8'}});
+    } catch (err) { /* la venta nunca se bloquea por el registro */ }
+  }
+  function origen(){
+    var q = new URLSearchParams(location.search);
+    return {
+      origen:  q.get('utm_source') || (document.referrer ? 'ref' : 'directo'),
+      campana: q.get('utm_campaign') || q.get('utm_content') || ''
+    };
+  }
+  function numeroPedido(){
+    var d = new Date();
+    var dia = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+    var seg = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+    return (C.NUM_PEDIDO_DESDE || 1000) + dia * 100 + Math.floor(seg / 900);
+  }
+
+  var pedido = null;
+
+  function mensajeWhatsApp(){
+    var extras = pedido.extras.length ? pedido.extras.join(' + ') : '';
+    return [
+      '👋 Hola ' + C.MARCA + ', quiero confirmar mi pedido #' + pedido.num,
+      '',
+      'Producto: ' + C.PRODUCTO + ' — ' + pedido.pack,
+      extras ? 'Además: ' + extras : '',
+      'Total a pagar al recibir: ' + sol(pedido.total),
+      '',
+      'Nombre: ' + pedido.nombre,
+      'Dirección: ' + pedido.direccion + ', ' + pedido.ciudad + ', ' + pedido.departamento,
+      'Referencia: ' + pedido.referencia,
+      '',
+      '¿Cuándo me estaría llegando?'
+    ].filter(Boolean).join('\n');
+  }
+  function irAWhatsApp(){
+    API.navegar('https://wa.me/' + C.WHATSAPP + '?text=' + encodeURIComponent(mensajeWhatsApp()));
+  }
+  function enviarAlBackend(){
+    registrarPedido({
+      pedido: pedido.num, nombre: pedido.nombre, celular: pedido.celular,
+      departamento: pedido.departamento, ciudad: pedido.ciudad,
+      direccion: pedido.direccion, referencia: pedido.referencia,
+      pack: pedido.pack, unidades: pedido.unidades,
+      adicional: pedido.extras.join(' + '), total: pedido.total,
+      origen: pedido.origen, campana: pedido.campana,
+      dispositivo: navigator.userAgent.slice(0, 120)
+    });
+  }
+
+  $('#form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = Object.keys(REGLAS).map(validarCampo).every(Boolean);
+    if (!ok){ $('[aria-invalid="true"]').focus(); return; }
+
+    var extra = up ? C.UPSELL.precio : 0;
+    var org = origen();
+    pedido = {
+      num: numeroPedido(),
+      nombre: $('#nom').value.trim(), celular: $('#cel').value,
+      departamento: $('#dep').value, ciudad: $('#ciu').value.trim(),
+      direccion: $('#dir').value.trim(), referencia: $('#ref').value.trim(),
+      pack: sel.titulo, unidades: sel.cant,
+      extras: extra ? [C.UPSELL.nombre] : [],
+      total: sel.precio + extra,
+      origen: org.origen, campana: org.campana
+    };
+
+    // El pedido queda guardado AQUÍ, antes del upsell.
+    enviarAlBackend();
+    evento('Lead', {content_name:sel.titulo, currency:'PEN', value:pedido.total});
+
+    if (C.POST_UPSELL && C.POST_UPSELL.activo) mostrarPostventa();
+    else irAWhatsApp();
+  });
+
+  /* ── Post-purchase upsell ────────────────────────────────────── */
+  function mostrarPostventa(){
+    var u = C.POST_UPSELL;
+    $('#form').hidden = true;
+    $('#postventa').hidden = false;
+    $('[data-pv-num]').textContent    = '#' + pedido.num;
+    $('[data-pv-titulo]').textContent = u.titulo;
+    $('[data-pv-texto]').textContent  = u.texto;
+    $('[data-pv-nombre]').textContent = u.nombre;
+    $('[data-pv-antes]').textContent  = u.antes ? sol(u.antes) : '';
+    $('[data-pv-precio]').textContent = sol(u.precio);
+    $('.modal-caja').scrollTop = 0;
+    evento('ViewContent', {content_name:'post-upsell', currency:'PEN', value:u.precio});
+
+    var quedan = (u.minutos || 5) * 60;
+    var reloj = $('[data-pv-reloj]');
+    var tic = setInterval(function(){
+      quedan--;
+      var m = Math.floor(quedan / 60), s = quedan % 60;
+      reloj.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      if (quedan <= 0){
+        clearInterval(tic);
+        $('.pv-oferta').remove();
+        $('[data-pv-no]').textContent = 'Continuar con mi pedido';
+      }
+    }, 1000);
+
+    $('[data-pv-si]').addEventListener('click', function(){
+      pedido.extras.push(u.nombre);
+      pedido.total += u.precio;
+      clearInterval(tic);
+      enviarAlBackend();
+      evento('AddToCart', {content_name:u.nombre, currency:'PEN', value:u.precio});
+      irAWhatsApp();
+    });
+    $('[data-pv-no]').addEventListener('click', function(){
+      clearInterval(tic);
+      irAWhatsApp();
+    });
+  }
+
+  /* ── Suscripción del pie ─────────────────────────────────────── */
+  $('#form-news').addEventListener('submit', function(e){
+    e.preventDefault();
+    var campo = $('#news');
+    if (!campo.value.trim() || campo.value.indexOf('@') < 0){ campo.focus(); return; }
+    // Sin lista de correo todavía: se guarda con el mismo backend que los pedidos.
+    registrarPedido({ pedido: 'NEWSLETTER', nombre: campo.value.trim(), total: 0,
+                      pack: 'suscripción', origen: origen().origen });
+    campo.value = '';
+    $('#news-ok').hidden = false;
+  });
+
+  /* ── WhatsApp suelto ─────────────────────────────────────────── */
+  $$('[data-wa-link]').forEach(function(a){
+    a.href = 'https://wa.me/' + C.WHATSAPP +
+      '?text=' + encodeURIComponent('Hola, tengo una consulta sobre el ' + C.PRODUCTO);
+  });
+
+  /* ── Arranque ────────────────────────────────────────────────── */
+  pintarPacks();
+  refrescar();
+  API.elegir = elegir; API.validarCampo = validarCampo; API.refrescar = refrescar;
+  API.setUp = function(v){ up = v; $('#up').checked = v; refrescar(); };
+})();
+</script>
+</body>
+</html>

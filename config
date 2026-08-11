@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[user]
+	name = berthidalgo
+	email = albert.hidata@gmail.com
+[branch "claude/bioayur-campaign-planning-5ijda7"]
+	vscode-merge-base = origin/claude/bioayur-campaign-planning-5ijda7

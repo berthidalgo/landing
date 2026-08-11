@@ -1,0 +1,137 @@
+<!doctype html><meta charset="utf-8"><title>esperando</title>
+<!-- Abre este archivo en el navegador: el <title> se convierte en el informe. -->
+<iframe id="f" src="../index.html" style="width:390px;height:844px;border:0"></iframe>
+<script>
+document.getElementById('f').addEventListener('load', function(){
+ setTimeout(function(){
+  var w = this.contentWindow, D = w.document, r = [];
+  function chk(nombre, cond, detalle){
+    r.push((cond ? 'PASA' : 'FALLA') + ' :: ' + nombre + (detalle ? ' (' + detalle + ')' : ''));
+  }
+  function visible(el){ return el && w.getComputedStyle(el).display !== 'none'; }
+  var API = w.__LANDING__;
+
+  var total    = D.querySelector('[data-r-total]');
+  var sub      = D.querySelector('[data-r-sub]');
+  var descFila = D.querySelector('[data-r-desc-fila]');
+  var desc     = D.querySelector('[data-r-desc]');
+  var upFila   = D.querySelector('[data-r-up-fila]');
+  var barra    = D.querySelector('[data-precio-barra]');
+  var up       = D.getElementById('up');
+  var packs    = D.querySelectorAll('#form [data-packs] .pack');
+
+  /* ── 1. Estado inicial ──────────────────────────────────────── */
+  chk('Se pintan 3 packs en el formulario', packs.length === 3, packs.length + ' packs');
+  chk('Arranca con el pack "Más vendido"', total.textContent === 'S/. 89.00', total.textContent);
+  chk('Subtotal ancla en S/. 138.00', sub.textContent === 'S/. 138.00', sub.textContent);
+  chk('Muestra el descuento de S/. 49.00', desc.textContent === '−S/. 49.00', desc.textContent);
+  chk('Precio unitario en la ficha',
+      D.querySelector('[data-precio-hero]').textContent === 'S/. 69.00',
+      D.querySelector('[data-precio-hero]').textContent);
+  chk('Barra fija refleja el pack elegido', barra.textContent === 'S/. 89.00', barra.textContent);
+  chk('Fila del upsell oculta al inicio', !visible(upFila));
+
+  /* ── 2. Upsell del formulario ───────────────────────────────── */
+  up.checked = true; up.dispatchEvent(new w.Event('change'));
+  chk('Upsell marcado: fila visible', visible(upFila));
+  chk('Upsell marcado: 89 + 29 = 118', total.textContent === 'S/. 118.00', total.textContent);
+  up.checked = false; up.dispatchEvent(new w.Event('change'));
+  chk('Upsell desmarcado: vuelve a S/. 89.00', total.textContent === 'S/. 89.00', total.textContent);
+  chk('Upsell desmarcado: fila oculta otra vez', !visible(upFila));
+
+  /* ── 3. Cambio de pack ──────────────────────────────────────── */
+  packs[0].click();
+  chk('Pack de 1: total S/. 69.00', total.textContent === 'S/. 69.00', total.textContent);
+  chk('Pack de 1: sin fila de descuento', !visible(descFila));
+  chk('Pack de 1: la barra baja a S/. 69.00', barra.textContent === 'S/. 69.00', barra.textContent);
+
+  packs[2].click();
+  chk('Pack de 3: total S/. 119.00', total.textContent === 'S/. 119.00', total.textContent);
+  chk('Pack de 3: descuento de S/. 88.00', desc.textContent === '−S/. 88.00', desc.textContent);
+  chk('Pack de 3: aria-checked se mueve', packs[2].getAttribute('aria-checked') === 'true'
+      && packs[0].getAttribute('aria-checked') === 'false');
+
+  packs[1].click();
+
+  /* ── 4. Validación del formulario ───────────────────────────── */
+  var destino = null;
+  API.navegar = function(url){ destino = url; };
+
+  D.getElementById('nom').value = 'María Quispe';
+  D.getElementById('cel').value = '12345';
+  D.getElementById('dep').value = 'Lima';
+  D.getElementById('ciu').value = 'Los Olivos';
+  D.getElementById('dir').value = 'Av. Siempre Viva 123';
+  D.getElementById('ref').value = 'Portón verde';
+  D.getElementById('form').dispatchEvent(new w.Event('submit', {cancelable:true}));
+
+  chk('Celular inválido bloquea el envío', destino === null);
+  chk('Celular inválido marca el campo',
+      D.getElementById('cel').getAttribute('aria-invalid') === 'true');
+  chk('Celular inválido muestra el mensaje',
+      D.getElementById('e-cel').classList.contains('visible'));
+
+  D.getElementById('ref').value = '';
+  D.getElementById('cel').value = '987654321';
+  D.getElementById('form').dispatchEvent(new w.Event('submit', {cancelable:true}));
+  chk('Referencia vacía también bloquea', destino === null);
+
+  D.getElementById('ref').value = 'Portón verde';
+  D.getElementById('form').dispatchEvent(new w.Event('submit', {cancelable:true}));
+
+  /* ── 5. Post-purchase upsell ────────────────────────────────── */
+  var pv = D.getElementById('postventa');
+  chk('Datos válidos NO saltan aún a WhatsApp', destino === null);
+  chk('Se muestra la pantalla de post-venta', visible(pv));
+  chk('El formulario queda oculto', !visible(D.getElementById('form')));
+  chk('Se muestra el número de pedido',
+      /^#\d{4,}$/.test(D.querySelector('[data-pv-num]').textContent),
+      D.querySelector('[data-pv-num]').textContent);
+  chk('La oferta muestra el precio rebajado',
+      D.querySelector('[data-pv-precio]').textContent === 'S/. 39.00',
+      D.querySelector('[data-pv-precio]').textContent);
+
+  D.querySelector('[data-pv-no]').click();
+  chk('"No gracias" lleva a WhatsApp',
+      destino && destino.indexOf('https://wa.me/') === 0, String(destino).slice(0, 24));
+
+  var msg = decodeURIComponent(String(destino));
+  chk('El mensaje lleva el total a cobrar', msg.indexOf('Total a pagar al recibir: S/. 89.00') > -1);
+  chk('El mensaje lleva el número de pedido', /#\d{4,}/.test(msg));
+  chk('El mensaje lleva la dirección', msg.indexOf('Av. Siempre Viva 123') > -1);
+  chk('El mensaje lleva la referencia', msg.indexOf('Portón verde') > -1);
+  chk('El mensaje pregunta por la entrega', msg.indexOf('¿Cuándo me estaría llegando?') > -1);
+  chk('El mensaje NO incluye el upsell rechazado', msg.indexOf('Tabla de picar') === -1);
+
+  /* ── 6. Modal ───────────────────────────────────────────────── */
+  var modal = D.getElementById('modal');
+  D.querySelector('[data-abrir]').click();
+  chk('El botón abre el formulario', modal.classList.contains('abierto'));
+  D.dispatchEvent(new w.KeyboardEvent('keydown', {key:'Escape'}));
+  chk('Escape cierra el formulario', !modal.classList.contains('abierto'));
+
+  /* ── 7. Teléfono: solo dígitos ──────────────────────────────── */
+  var cel = D.getElementById('cel');
+  cel.value = '9ab8-765 4321';
+  cel.dispatchEvent(new w.Event('input'));
+  chk('El campo de celular filtra a 9 dígitos', cel.value === '987654321', cel.value);
+
+  /* ── 8. Fidelidad a la plantilla de referencia ──────────────── */
+  var cs = w.getComputedStyle;
+  var btn = D.querySelector('.btn');
+  chk('Tipografía Poppins', cs(D.body).fontFamily.indexOf('Poppins') > -1,
+      cs(D.body).fontFamily.split(',')[0]);
+  chk('CTA verde #00D084', cs(btn).backgroundColor === 'rgb(0, 208, 132)',
+      cs(btn).backgroundColor);
+  chk('CTA con radio de 12px', cs(btn).borderRadius === '12px', cs(btn).borderRadius);
+  chk('Precio en morado #6D388B',
+      cs(D.querySelector('.precio')).color === 'rgb(109, 56, 139)',
+      cs(D.querySelector('.precio')).color);
+  chk('Pack elegido en turquesa',
+      cs(D.querySelector('#form .pack[aria-checked="true"]')).backgroundColor === 'rgb(204, 251, 241)',
+      cs(D.querySelector('#form .pack[aria-checked="true"]')).backgroundColor);
+
+  document.title = 'T|' + r.join('|');
+ }.bind(this), 900);
+});
+</script>
