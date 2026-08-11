@@ -75,10 +75,10 @@ window.CONFIG = {
     poster:  'img/demo-poster.webp'
   },
 
-  // Segundo vídeo, más abajo: el largo, para quien quiere ver más.
-  // No lleva bucle: se queda en el póster hasta que lo pulsan.
+  // Segundo vídeo, más abajo: mismo comportamiento, con su propio bucle.
   VIDEO2: {
     activo: true,
+    bucle:   'img/bucle2.mp4',
     archivo: 'img/demo2.mp4',
     poster:  'img/demo2-poster.webp'
   },
@@ -1150,20 +1150,48 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     if (!caja || !cfg || !cfg.activo || !cfg.archivo) return;
     caja.hidden = false;
     var poster = cfg.poster || '';
+    var visto = false;
 
-    caja.innerHTML = (cfg.bucle
-      ? '<video src="' + cfg.bucle + '" poster="' + poster + '" muted loop ' +
-        'playsinline autoplay preload="metadata" aria-label="' + etiqueta + '"></video>'
-      : '<img src="' + poster + '" alt="' + etiqueta + '" loading="lazy">') +
-      '<button type="button" class="video-play" data-ver>▶ ' +
-      (cfg.bucle ? 'Ver el vídeo completo' : 'Ver el vídeo') + '</button>';
+    // De entrada solo hay una imagen. El bucle no se descarga hasta que el
+    // bloque se acerca a la pantalla, así que a quien no baja hasta aquí no le
+    // cuesta un solo byte de vídeo.
+    caja.innerHTML = '<img src="' + poster + '" alt="' + etiqueta + '" loading="lazy">' +
+      '<button type="button" class="video-play" data-ver>▶ Ver el vídeo completo</button>';
 
-    caja.querySelector('[data-ver]').addEventListener('click', function(){
+    function ponerBucle(){
+      var img = caja.querySelector('img');
+      if (!cfg.bucle || visto || !img) return;
+      var v = document.createElement('video');
+      v.src = cfg.bucle; v.poster = poster;
+      v.muted = true; v.loop = true; v.autoplay = true; v.preload = 'auto';
+      v.playsInline = true;
+      v.setAttribute('playsinline', '');       // iOS antiguo lo exige en el atributo
+      v.setAttribute('aria-label', etiqueta);
+      img.replaceWith(v);
+      var p = v.play();                        // en iOS puede rechazar: no pasa nada
+      if (p && p.catch) p.catch(function(){});
+    }
+
+    // Delegado: el contenido de la caja se reemplaza, el listener sobrevive.
+    caja.addEventListener('click', function(e){
+      if (!e.target.closest('[data-ver]')) return;
+      visto = true;
       caja.innerHTML = '<video src="' + cfg.archivo + '" poster="' + poster +
         '" controls autoplay muted loop playsinline preload="auto" ' +
         'aria-label="' + etiqueta + '"></video>';
       evento('ViewContent', { content_name: 'video' });
     });
+
+    if ('IntersectionObserver' in window){
+      var obs = new IntersectionObserver(function(entradas){
+        if (!entradas[0].isIntersecting) return;
+        obs.disconnect();
+        ponerBucle();
+      }, { rootMargin: '400px' });
+      obs.observe(caja);
+    } else {
+      ponerBucle();
+    }
   }
   montarVideo($('[data-video]'), C.VIDEO,
     'El cuchillo cortando carne y verduras');
