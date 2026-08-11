@@ -32,7 +32,8 @@ window.CONFIG = {
   // Provincia paga un adelanto para cubrir el envío de la agencia.
   // 0 = contraentrega puro en todo el país.
   ADELANTO_PROVINCIA: 20,
-  SIN_ADELANTO: ['Lima', 'Callao'],   // dónde NO se pide adelanto
+  // Dónde repartes tú y cobras contra entrega. El resto va por agencia.
+  SIN_ADELANTO: ['Lima Metropolitana', 'Callao'],
 
   PACKS: [
     { id: 1, cant: 1, titulo: '1 unidad',   precio:  69, antes:   0, etiqueta: '' },
@@ -54,6 +55,10 @@ window.CONFIG = {
     minutos: 5           // al llegar a 0 la oferta se retira DE VERDAD
   },
 
+  // Comparativa antes/después. Si pones la imagen aquí, sustituye al bloque
+  // de texto: una foto real del corte convence más que una lista.
+  COMPARATIVA: { imagen: '' },   // ej: 'img/antes-despues.jpg'
+
   // Enseña los recuadros punteados con el nombre del archivo que falta.
   // Ponlo en false el día que lances: en producción no deben verse.
   MOSTRAR_HUECOS: true,
@@ -72,13 +77,13 @@ window.CONFIG = {
   RESENAS_NOTA:  '',   // ej: '4.8'
   RESENAS_TOTAL: '',   // ej: '1,240'
 
-  // Reseñas de clientes. Sustituye estas tres por reales:
-  // el compliance bloquea la publicación mientras digan [EJEMPLO].
-  RESENAS: [
-    { texto: '[EJEMPLO — sustituir por reseña real]', nombre: '[Nombre]', lugar: '[Distrito]', hace: '' },
-    { texto: '[EJEMPLO — sustituir por reseña real]', nombre: '[Nombre]', lugar: '[Distrito]', hace: '' },
-    { texto: '[EJEMPLO — sustituir por reseña real]', nombre: '[Nombre]', lugar: '[Distrito]', hace: '' }
-  ]
+  // Reseñas REALES de tus clientes. Vacío = se muestra el bloque de
+  // "sé de los primeros" en su lugar, que es lo honesto mientras no las tengas.
+  // Inventarlas es publicidad engañosa (INDECOPI) y además se nota.
+  // Cómo conseguirlas en 3 días: README.md, sección "Las primeras reseñas".
+  //   { texto:'Corta muy bien y se siente firme en la mano. Llegó rápido.',
+  //     nombre:'M. G.', lugar:'Los Olivos', hace:'hace 2 horas' }
+  RESENAS: []
 };
 </script>
 
@@ -301,6 +306,18 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .punto{width:8px;height:8px;border-radius:50%;background:#CFCFCF;border:0;padding:0;
   cursor:pointer}
 .punto[aria-current="true"]{background:var(--tinta)}
+
+/* ── Sustituto honesto de las reseñas ───────────────────────────── */
+.primeros{border-top:1px solid var(--linea);padding-top:1.25rem;margin-top:.5rem}
+.primeros h3{font-size:22px;font-weight:900;text-transform:uppercase;line-height:1.15;
+  margin-bottom:.6rem}
+.primeros p{font-size:14.5px;color:var(--gris)}
+.primeros b{color:var(--tinta)}
+.primeros ul{list-style:none;margin:1rem 0;padding:0}
+.primeros li{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;
+  font-size:14px;color:var(--tinta-90);line-height:1.4}
+.primeros-pie{font-size:13.5px;font-style:italic;border-left:3px solid var(--turquesa-b);
+  padding-left:.75rem;margin:0}
 
 /* ── Contenido largo ────────────────────────────────────────────── */
 .contenido{padding:1.75rem 0 .5rem}
@@ -642,7 +659,24 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <div class="tira"><span>🛡 Pago Contraentrega</span><span>🚚 Envío Gratis</span></div>
 
   <!-- Se pintan desde CONFIG.RESENAS -->
-  <div class="resenas" data-resenas></div>
+  <div class="resenas" data-resenas hidden></div>
+
+  <!-- Mientras no haya reseñas reales, esto ocupa su lugar. -->
+  <div class="primeros" data-primeros hidden>
+    <h3>Acabamos de lanzarlo<br>en el Perú</h3>
+    <p>Todavía no tenemos reseñas publicadas, y no vamos a inventarlas. Lo que sí
+      te damos es que <b>el riesgo lo asumimos nosotros</b>:</p>
+    <ul>
+      <li><span aria-hidden="true">💵</span> <span>Pagas cuando lo tienes en la mano.
+        Si al verlo no te convence, no lo recibes.</span></li>
+      <li><span aria-hidden="true">↩️</span> <span>7 días para cambiarlo si llega dañado
+        o no es lo que esperabas.</span></li>
+      <li><span aria-hidden="true">💬</span> <span>Un WhatsApp real donde te
+        respondemos, antes y después de comprar.</span></li>
+    </ul>
+    <p class="primeros-pie">¿Lo pides y nos cuentas qué tal? A los primeros clientes
+      les preguntamos qué les pareció.</p>
+  </div>
 </div>
 
 <!-- ═══ CONTENIDO LARGO ════════════════════════════════════════════ -->
@@ -674,7 +708,19 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </div>
 
   <h2 style="margin:1.75rem 0 0">Con cuchillo común<br>o con este</h2>
-  <div class="vs">
+
+  <!-- Si CONFIG.COMPARATIVA.imagen tiene ruta, aparece aquí y el bloque de
+       texto de abajo se oculta. -->
+  <img data-comparativa hidden alt="Comparación: el corte con un cuchillo común frente al corte con este cuchillo.">
+
+  <div class="foto-pendiente" data-hueco-comparativa hidden>
+    <span class="ico" aria-hidden="true">⚔️</span>
+    <b>Aquí va el antes / después</b>
+    <span>Cuchillo común aplastando el tomate<br>frente a este cortándolo limpio</span>
+    <code>img/antes-despues.jpg</code>
+  </div>
+
+  <div class="vs" data-vs-texto>
     <div class="vs-lado malo">
       <h4>Antes</h4>
       <span class="quien">con un cuchillo común</span>
@@ -1077,19 +1123,26 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     st.innerHTML = '🔥 Quedan <b class="num">' + C.STOCK + '</b> unidades disponibles';
   }
 
-  /* ── Reseñas ─────────────────────────────────────────────────── */
+  /* ── Reseñas ─────────────────────────────────────────────────────
+     Con reseñas reales se enseñan; sin ellas, el bloque de "acabamos de
+     lanzar". Nunca las dos, y nunca reseñas inventadas. */
   var cajaRes = $('[data-resenas]');
-  (C.RESENAS || []).forEach(function(r){
-    var d = document.createElement('div');
-    d.className = 'resena';
-    d.innerHTML =
-      '<span class="estrellas" aria-label="5 de 5 estrellas">★★★★★</span>' +
-      '<p>' + r.texto + '</p>' +
-      '<span><b>' + r.nombre + '</b>' + (r.lugar ? ' de ' + r.lugar : '') +
-      (r.hace ? ' · ' + r.hace : '') + '</span>';
-    cajaRes.appendChild(d);
-  });
-  if (!(C.RESENAS || []).length) cajaRes.hidden = true;
+  var listaRes = C.RESENAS || [];
+  if (listaRes.length){
+    cajaRes.hidden = false;
+    listaRes.forEach(function(r){
+      var d = document.createElement('div');
+      d.className = 'resena';
+      d.innerHTML =
+        '<span class="estrellas" aria-label="5 de 5 estrellas">★★★★★</span>' +
+        '<p>' + r.texto + '</p>' +
+        '<span><b>' + r.nombre + '</b>' + (r.lugar ? ' de ' + r.lugar : '') +
+        (r.hace ? ' · ' + r.hace : '') + '</span>';
+      cajaRes.appendChild(d);
+    });
+  } else {
+    $('[data-primeros]').hidden = false;
+  }
 
   /* ── Vídeo de demostración ───────────────────────────────────── */
   if (C.VIDEO && C.VIDEO.activo && C.VIDEO.archivo){
@@ -1130,11 +1183,22 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     gal.hidden = true;   // una sola foto no es una galería
   }
 
+  /* ── Comparativa: imagen si la hay, texto si no ──────────────── */
+  var hayComparativa = C.COMPARATIVA && C.COMPARATIVA.imagen;
+  if (hayComparativa){
+    var ic = $('[data-comparativa]');
+    ic.src = C.COMPARATIVA.imagen;
+    ic.loading = 'lazy';
+    ic.hidden = false;
+    $('[data-vs-texto]').hidden = true;   // no se enseñan las dos versiones
+  }
+
   // Los avisos de "falta imagen" solo existen mientras se monta la página.
   if (C.MOSTRAR_HUECOS){
     $$('[data-hueco]').forEach(function(e){ e.hidden = false; });
     // El del vídeo, solo si no hay vídeo ya puesto.
     if (!(C.VIDEO && C.VIDEO.activo)) $('[data-hueco-video]').hidden = false;
+    if (!hayComparativa) $('[data-hueco-comparativa]').hidden = false;
   }
 
   /* ── Packs ───────────────────────────────────────────────────── */
@@ -1245,15 +1309,19 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
      reparto propio; el resto, sus ciudades principales. "Otro" siempre al
      final: una dirección mal escrita cuesta una entrega fallida. */
   var UBIGEO = {
-    'Lima': ['Ancón','Ate','Barranco','Breña','Carabayllo','Chaclacayo','Chorrillos',
-      'Cieneguilla','Comas','El Agustino','Independencia','Jesús María','La Molina',
-      'La Victoria','Lima (Cercado)','Lince','Los Olivos','Lurigancho-Chosica','Lurín',
-      'Magdalena del Mar','Miraflores','Pachacámac','Pucusana','Pueblo Libre',
-      'Puente Piedra','Punta Hermosa','Punta Negra','Rímac','San Bartolo','San Borja',
-      'San Isidro','San Juan de Lurigancho','San Juan de Miraflores','San Luis',
-      'San Martín de Porres','San Miguel','Santa Anita','Santa María del Mar','Santa Rosa',
-      'Santiago de Surco','Surquillo','Villa El Salvador','Villa María del Triunfo',
-      'Cañete','Huaral','Huacho','Barranca'],
+    // Los 43 distritos de la provincia de Lima: reparto propio, contraentrega.
+    'Lima Metropolitana': ['Ancón','Ate','Barranco','Breña','Carabayllo','Chaclacayo',
+      'Chorrillos','Cieneguilla','Comas','El Agustino','Independencia','Jesús María',
+      'La Molina','La Victoria','Lima (Cercado)','Lince','Los Olivos',
+      'Lurigancho (Chosica)','Lurín','Magdalena del Mar','Miraflores','Pachacámac',
+      'Pucusana','Pueblo Libre','Puente Piedra','Punta Hermosa','Punta Negra','Rímac',
+      'San Bartolo','San Borja','San Isidro','San Juan de Lurigancho',
+      'San Juan de Miraflores','San Luis','San Martín de Porres','San Miguel',
+      'Santa Anita','Santa María del Mar','Santa Rosa','Santiago de Surco','Surquillo',
+      'Villa El Salvador','Villa María del Triunfo'],
+    // Lima región: Barranca está a 200 km. Va por agencia, como cualquier provincia.
+    'Lima Provincias': ['Barranca','Supe','Paramonga','Huacho','Huaura','Chancay','Huaral',
+      'Canta','Matucana','San Vicente de Cañete','Imperial','Mala','Asia','Oyón','Yauyos'],
     'Callao': ['Bellavista','Callao','Carmen de La Legua','La Perla','La Punta','Mi Perú',
       'Ventanilla'],
     'Amazonas': ['Chachapoyas','Bagua','Bagua Grande','Jaén (frontera)','Lamud'],

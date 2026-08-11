@@ -18,6 +18,45 @@ start landing-cuchillo/test/test-funcional.html   # el título de la pestaña es
 
 ---
 
+## ⭐ Las primeras reseñas
+
+No tienes clientes todavía, así que **`CONFIG.RESENAS` está vacío a propósito** y en su
+lugar sale el bloque *"Acabamos de lanzarlo en el Perú"*, que convierte la falta de
+reseñas en el argumento del riesgo cero.
+
+**No las inventes.** Además de ser publicidad engañosa —sancionable por INDECOPI—, se
+notan: nombres genéricos, todas de cinco estrellas y ninguna con foto. Un comprador de
+contraentrega desconfía por defecto, y una reseña falsa detectada mata la venta.
+
+### Cómo tener tres reales en tres días
+
+1. **Los primeros 5 pedidos son tu inventario de reseñas.** Ya tienes su WhatsApp: el
+   pedido entra por ahí.
+2. **Escríbeles 24 h después de la entrega**, ni antes ni una semana después:
+
+   > ¡Hola [nombre]! ¿Ya lo probaste? 😊
+   > Somos nuevos y tu opinión nos ayuda muchísimo.
+   > ¿Me cuentas en una línea qué tal cortó? Y si puedes, mándame una foto
+   > del cuchillo en tu cocina.
+
+3. **Pide permiso explícito** para publicarla: *"¿Te parece si la publico en la página con
+   tu nombre y distrito?"*. Basta el "sí" por WhatsApp.
+4. **Cópiala tal cual**, con sus faltas y su forma de hablar. Una reseña que dice
+   *"llegó rapidito, corta bien la carne"* convence más que una redactada.
+
+```js
+RESENAS: [
+  { texto: 'Corta muy bien y se siente firme en la mano. Llegó rápido.',
+    nombre: 'M. G.', lugar: 'Los Olivos', hace: 'hace 2 días' }
+]
+```
+
+Con una sola reseña real ya se muestra el bloque de reseñas y desaparece el de
+lanzamiento. `hace` es opcional pero **la marca temporal es lo que hace creíble** la
+reseña: es el detalle que usan Kenku e ImportBlueStore.
+
+---
+
 ## 🚨 Antes de pautar
 
 `compliance-check.js` falla a propósito hasta que hagas estas tres cosas:

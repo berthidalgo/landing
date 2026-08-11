@@ -67,7 +67,39 @@ El hueco de agarre es lo único que diferencia este cuchillo de otros cuarenta.
 > background, shallow depth of field, 1:1.
 > **Negative:** no text, no watermark, no blood, no raw red meat.
 
-## 4 · `uso.jpg` — en una cocina peruana · 1:1
+## 4 · `antes-despues.jpg` — la comparativa · 4:5
+
+La pieza más persuasiva de la competencia. Es una imagen partida en dos con un "VS" en
+medio. Mientras no la tengas, la landing muestra una versión en texto; en cuanto la subas,
+la sustituye sola.
+
+> Split-screen comparison image, vertical 4:5, divided by a diagonal golden line with a
+> circular "VS" badge in the centre. **Left half, cooler and duller:** a thin ordinary
+> kitchen knife squashing a tomato on a wooden board, uneven torn slices, tomato juice
+> spilled. **Right half, warm and bright:** a wide forged cleaver with an oval finger-hole
+> in the blade cutting a tomato into perfectly even thin slices, clean board. Dark
+> background, dramatic side lighting, professional food photography, high detail.
+> **Negative:** no text, no watermark, no hands in gloves, no blood, no raw red meat, no
+> weapons context.
+
+Luego súbela como `img/antes-despues.jpg` y en `CONFIG`:
+
+```js
+COMPARATIVA: { imagen: 'img/antes-despues.jpg' },
+```
+
+**Si le añades texto tú mismo** (con Canva, por ejemplo), usa exactamente estas etiquetas,
+que son las que ya están validadas en el bloque de texto:
+
+| Antes · con un cuchillo común | Después · con el nuestro |
+|---|---|
+| Cortes irregulares | Cortes parejos |
+| Aplastas el tomate | Rebanadas limpias |
+| La muñeca hace la fuerza | El peso hace la fuerza |
+| Serruchas la carne | Separas por la articulación |
+| Cambias de cuchillo tres veces | Uno solo para todo |
+
+## 5 · `uso.jpg` — en una cocina peruana · 1:1
 
 > Warm lifestyle photo: a woman's hands, mid-forties, fingers resting inside the
 > finger-hole of a wide forged kitchen cleaver while slicing a red onion on a wooden board.

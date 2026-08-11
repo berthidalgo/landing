@@ -50,7 +50,9 @@ const EXIGIDOS = [
 const PLANTILLAS = [
   { que: 'reseñas de ejemplo sin sustituir', re: /\[EJEMPLO/i },
   { que: 'nombres de reseña sin sustituir', re: /\[Nombre\]|\[Distrito\]/i },
-  { que: 'WhatsApp de ejemplo', re: /51999999999/ }
+  { que: 'WhatsApp de ejemplo', re: /51999999999/ },
+  // Los recuadros "falta img/x.jpg" son para montar la página, no para el cliente.
+  { que: 'recuadros de imagen pendiente visibles', re: /MOSTRAR_HUECOS:\s*true/ }
 ];
 
 const normalizar = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();

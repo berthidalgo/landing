@@ -56,7 +56,7 @@ document.getElementById('f').addEventListener('load', function(){
   var dep = D.getElementById('dep');
   chk('Distrito bloqueado sin provincia', ciu.disabled);
 
-  dep.value = 'Lima'; dep.dispatchEvent(new w.Event('change'));
+  dep.value = 'Lima Metropolitana'; dep.dispatchEvent(new w.Event('change'));
   chk('Lima: el distrito se desbloquea', !ciu.disabled);
   chk('Lima: aparecen sus distritos', ciu.options.length > 40, ciu.options.length + ' opciones');
   chk('Lima: incluye Los Olivos',
@@ -71,11 +71,19 @@ document.getElementById('f').addEventListener('load', function(){
 
   /* ── 3.ter Adelanto de provincia ────────────────────────────── */
   var aviso = D.querySelector('[data-adelanto]');
-  dep.value = 'Lima'; dep.dispatchEvent(new w.Event('change'));
-  chk('Lima: sin aviso de adelanto', !visible(aviso));
-  chk('Lima: el envío sigue gratis',
+  dep.value = 'Lima Metropolitana'; dep.dispatchEvent(new w.Event('change'));
+  chk('Lima Metropolitana: sin aviso de adelanto', !visible(aviso));
+  chk('Lima Metropolitana: el envío sigue gratis',
       D.querySelector('[data-envio-val]').textContent === 'Gratis',
       D.querySelector('[data-envio-val]').textContent);
+
+  // Barranca está a 200 km: va por agencia aunque el nombre diga "Lima".
+  dep.value = 'Lima Provincias'; dep.dispatchEvent(new w.Event('change'));
+  chk('Lima Provincias SÍ pide adelanto', visible(aviso));
+  chk('Lima Provincias incluye Barranca',
+      [].some.call(ciu.options, function(o){ return o.value === 'Barranca'; }));
+  chk('Rímac es Lima Metropolitana, no Provincias',
+      ![].some.call(ciu.options, function(o){ return o.value === 'Rímac'; }));
 
   dep.value = 'Piura'; dep.dispatchEvent(new w.Event('change'));
   chk('Provincia: avisa del adelanto', visible(aviso));
@@ -85,7 +93,7 @@ document.getElementById('f').addEventListener('load', function(){
       D.querySelector('[data-envio-val]').textContent.indexOf('20.00') > -1,
       D.querySelector('[data-envio-val]').textContent);
 
-  dep.value = 'Lima'; dep.dispatchEvent(new w.Event('change'));
+  dep.value = 'Lima Metropolitana'; dep.dispatchEvent(new w.Event('change'));
 
   /* ── 4. Validación del formulario ───────────────────────────── */
   var destino = null;
@@ -93,7 +101,7 @@ document.getElementById('f').addEventListener('load', function(){
 
   D.getElementById('nom').value = 'María Quispe';
   D.getElementById('cel').value = '12345';
-  dep.value = 'Lima'; dep.dispatchEvent(new w.Event('change'));
+  dep.value = 'Lima Metropolitana'; dep.dispatchEvent(new w.Event('change'));
   ciu.value = 'Los Olivos';
   D.getElementById('dir').value = 'Av. Siempre Viva 123';
   D.getElementById('ref').value = 'Portón verde';
@@ -139,8 +147,16 @@ document.getElementById('f').addEventListener('load', function(){
   cel.dispatchEvent(new w.Event('input'));
   chk('El campo de celular filtra a 9 dígitos', cel.value === '987654321', cel.value);
 
+  /* ── 7.ter Reseñas honestas ─────────────────────────────────── */
+  chk('Sin reseñas reales, no se inventan',
+      !visible(D.querySelector('[data-resenas]')));
+  chk('En su lugar sale el bloque de lanzamiento',
+      visible(D.querySelector('[data-primeros]')));
+  chk('Ya no hay textos de plantilla [EJEMPLO]',
+      D.body.innerText.indexOf('[EJEMPLO') === -1);
+
   /* ── 7.bis Huecos de imagen ─────────────────────────────────── */
-  var huecos = D.querySelectorAll('[data-hueco], [data-hueco-video]');
+  var huecos = D.querySelectorAll('[data-hueco], [data-hueco-video], [data-hueco-comparativa]');
   chk('Hay huecos marcados para las imágenes', huecos.length >= 5,
       huecos.length + ' huecos');
   chk('Los huecos se ven mientras faltan fotos',
@@ -149,8 +165,12 @@ document.getElementById('f').addEventListener('load', function(){
       D.querySelectorAll('.galeria .foto-pendiente').length === 4,
       D.querySelectorAll('.galeria .foto-pendiente').length + ' slots');
   chk('Cada hueco dice qué archivo falta',
-      [].every.call(D.querySelectorAll('[data-hueco] code, [data-hueco-video] code'),
+      [].every.call(D.querySelectorAll('.foto-pendiente code, .cinta-hueco code'),
                     function(c){ return c.textContent.trim().length > 3; }));
+  chk('Hay hueco para el antes/después',
+      visible(D.querySelector('[data-hueco-comparativa]')));
+  chk('Mientras tanto se ve la versión en texto',
+      visible(D.querySelector('[data-vs-texto]')));
 
   /* ── 8. Fidelidad a la plantilla de referencia ──────────────── */
   var cs = w.getComputedStyle;
