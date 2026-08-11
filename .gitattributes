@@ -1,0 +1,10 @@
+# Normaliza los finales de línea a LF en el repositorio.
+# Sin esto, sincronizar desde Windows marca todos los archivos como
+# modificados en cada despliegue y genera commits vacíos de solo CRLF.
+* text=auto eol=lf
+
+# Binarios: que git no los toque.
+*.woff2 binary
+*.webp  binary
+*.jpg   binary
+*.png   binary
