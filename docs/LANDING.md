@@ -228,13 +228,44 @@ Playwright, viewport 390×844:
 - Sin scroll horizontal · 0 elementos desbordados · 0 objetivos táctiles bajo 44px
 - Un solo `<h1>`, `lang="es-PE"`, todas las imágenes con `alt`, ningún texto bajo 11.5px
 
+## 🎬 Los vídeos
+
+Material del proveedor, preparado para web. Los másteres (`img/vid1.mp4`, `img/vid2.mp4`,
+29 MB entre los dos) están **fuera de git**: se regeneran desde el original.
+
+| Archivo | De | Peso | Cómo se sirve |
+|---|---|---|---|
+| `bucle.mp4` | vid1, 6 s | **609 KB** | Arranca solo, sin sonido, en bucle. Es el gancho |
+| `demo.mp4` | vid1, 15 s | 2,0 MB | Solo al pulsar "Ver el vídeo completo" |
+| `demo2.mp4` | vid2, 44 s | 5,5 MB | Más abajo, solo al pulsar |
+
+Al abrir la página se descargan **688 KB** de vídeo (el bucle y los pósters); el resto
+llega únicamente si el visitante lo pide. Sin esto, una landing de 190 KB pasaría a 29 MB.
+
+```bash
+# Recomprimir un máster nuevo (necesita ffmpeg)
+ffmpeg -i vid1.mp4 -vf "scale=640:1138:flags=lanczos" -c:v libx264 -crf 32 \
+  -preset slow -pix_fmt yuv420p -movflags +faststart -an demo.mp4
+```
+
+A `vid2` se le **eliminó la marca de agua** «TIỆN ÍCH KORA» (una tienda vietnamita) con el
+filtro `delogo`: Meta y TikTok degradan la entrega del material con logotipo de otra
+plataforma.
+
+> ⚠️ **Riesgo asumido, anotado a propósito:** el cuchillo de los vídeos **no es el mismo
+> modelo** que el de las fotos — no tiene el hueco en la hoja, que es el argumento central
+> de la página. Decisión del CEO (material del proveedor). Si aparecen rechazos en la
+> puerta o quejas de "no es el que vi", esta es la primera causa a mirar.
+
 ## Pendiente
 
 - [ ] WhatsApp y reseñas reales (lo bloquea el compliance)
 - [ ] **Más fotos para la galería.** Ahora solo hay una y por eso está oculta. En cuanto
       pongas `medidas.jpg` y las de uso en `img/`, añádelas al array `FOTOS`
 - [ ] Generar los creativos de [`PROMPTS-CREATIVOS.md`](../PROWIN/PROMPTS-CREATIVOS.md)
-- [ ] Montar el Apps Script de [`backend/`](backend/) y probar el cha-ching — el código y su
-      test (`node landing-cuchillo/test/probar-backend.js`) ya están; falta crear la hoja,
-      desplegar la Web App y pegar `PEDIDOS.url` + `token` en `CONFIG`
+- [x] Backend de pedidos **funcionando y verificado en producción**: landing → `/api/pedido`
+      (función de Vercel, guarda el secreto) → Apps Script → hoja *Pedidos YUNQUE*
+- [ ] **El aviso con sonido todavía no suena**: falta elegir Pushover o Telegram y añadir
+      sus propiedades al Apps Script ([`backend/README.md`](backend/README.md) §3)
+- [ ] Ejecutar `crearPanel` una vez en el editor de Apps Script
 - [ ] Confirmar el nombre de marca: **YUNQUE** es propuesta mía, no está registrada
