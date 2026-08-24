@@ -21,9 +21,19 @@
  *  una falla, la otra sigue, y el cliente llega a WhatsApp igual.
  *
  *    ORIGENES_PERMITIDOS  https://tu-tienda.myshopify.com,https://tudominio.com
+ *    META_CAPI_TOKEN      token de Conversions API (Events Manager → HIDATA
+ *                         CAPI → Configuración → Conversions API)
+ *
+ *  Y un tercer destino: el evento "Lead" a la Conversions API de Meta. Es el
+ *  registro server-side que complementa al Pixel del navegador — en Shopify la
+ *  página usa {% layout none %}, así que ningún tracking del tema se ejecuta, y
+ *  el Pixel solo pierde eventos por bloqueadores, Safari/iOS y pestañas que se
+ *  cierran antes de que dispare. El id de evento viaja desde el navegador para
+ *  que Meta deduplique: un Lead, no dos.
  */
 
 import { crearPedidoShopify } from './_shopify.mjs';
+import { createHash } from 'node:crypto';
 
 /**
  * La landing ya no está en el mismo dominio que esta función: vive en el
@@ -97,6 +107,73 @@ function limpiar(datos) {
   return salida;
 }
 
+/* ── Conversions API de Meta ─────────────────────────────────────────
+   Nada de esto toca la hoja de Sheets ni el mensaje de WhatsApp: si falla,
+   solo queda un log. La venta nunca se bloquea por un evento de tracking. */
+
+const META_PIXEL_ID = '4244873702429153';   // HIDATA CAPI — no es secreto, es
+                                             // solo el identificador del dataset
+
+function sha256Hex(texto) {
+  return createHash('sha256').update(texto).digest('hex');
+}
+
+/** Perú guarda el celular como 9 dígitos locales; CAPI exige E.164 sin '+'. */
+function telefonoHasheado(celular) {
+  const digitos = String(celular || '').replace(/\D/g, '');
+  if (!digitos) return null;
+  const e164 = digitos.length === 9 ? '51' + digitos : digitos;
+  return sha256Hex(e164);
+}
+
+async function enviarConversionsAPI(datos, ip) {
+  const token = process.env.META_CAPI_TOKEN;
+  if (!token || datos.tipo === 'suscripcion') return;
+
+  const ph = telefonoHasheado(datos.celular);
+  const userData = {};
+  if (ip && ip !== 'sin-ip') userData.client_ip_address = ip;
+  if (datos.ua) userData.client_user_agent = String(datos.ua).slice(0, 300);
+  if (datos.fbp) userData.fbp = String(datos.fbp).slice(0, 300);
+  if (datos.fbc) userData.fbc = String(datos.fbc).slice(0, 300);
+  if (ph) userData.ph = [ph];
+
+  const total = typeof datos.total === 'number' ? datos.total : Number(datos.total);
+
+  const evento = {
+    event_name: 'Lead',
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: 'website',
+    user_data: userData
+  };
+  if (datos.event_id) evento.event_id = String(datos.event_id).slice(0, 100);
+  if (datos.url) evento.event_source_url = String(datos.url).slice(0, 300);
+  if (Number.isFinite(total) || datos.pack) {
+    evento.custom_data = {
+      currency: 'PEN',
+      ...(Number.isFinite(total) ? { value: total } : {}),
+      ...(datos.pack ? { content_name: String(datos.pack).slice(0, 100) } : {})
+    };
+  }
+
+  try {
+    const resp = await fetch(
+      `https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events?access_token=${encodeURIComponent(token)}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: [evento] })
+      }
+    );
+    if (!resp.ok) {
+      const texto = await resp.text();
+      console.error('Meta CAPI rechazó el evento — HTTP ' + resp.status + ' · ' + texto.slice(0, 300));
+    }
+  } catch (err) {
+    console.error('No se pudo enviar el evento a Meta CAPI: ' + err);
+  }
+}
+
 export default async function handler(req, res) {
   permitirOrigen(req, res);
   if (req.method === 'OPTIONS') return res.status(204).end();
@@ -159,7 +236,11 @@ export default async function handler(req, res) {
   const [hoja, shopify] = await Promise.allSettled([
     guardarEnHoja(),
     esSuscripcion ? Promise.resolve({ ok: false, motivo: 'no es un pedido' })
-                  : crearPedidoShopify(datos)
+                  : crearPedidoShopify(datos),
+    // Tracking, no registro: se traga sus propios errores y nunca decide el
+    // resultado de la respuesta. Un Lead perdido cuesta atribución; un pedido
+    // perdido cuesta la venta.
+    enviarConversionsAPI(datos, ip)
   ]);
 
   const enHoja = hoja.status === 'fulfilled' && hoja.value === true;
