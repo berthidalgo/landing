@@ -22,6 +22,7 @@ const PUSHOVER_USER  = P.getProperty('PUSHOVER_USER');    // opcional
 const PUSHOVER_TOKEN = P.getProperty('PUSHOVER_TOKEN');   // opcional
 const TELEGRAM_TOKEN = P.getProperty('TELEGRAM_TOKEN');   // opcional
 const TELEGRAM_CHAT  = P.getProperty('TELEGRAM_CHAT');    // opcional
+const AVISO_CORREO   = P.getProperty('AVISO_CORREO');     // opcional — ver notificar()
 
 // WhatsApp Business Cloud API — para escribirle TÚ al cliente (opcional).
 // Sin esto, el cliente te escribe a ti y tú respondes con el mensaje de
@@ -214,6 +215,24 @@ function notificar(d, esAmpliacion) {
       });
     } catch (err) { console.error('Telegram: ' + err); }
   }
+
+  // Gmail — SIEMPRE se manda, sin configurar nada. MailApp usa la cuenta de
+  // Google que ya es dueña de este script (la misma que autorizó el acceso
+  // a la hoja), así que funciona de fábrica: cero cuentas nuevas, cero
+  // tokens, cero coste. AVISO_CORREO solo hace falta si quieres que el
+  // aviso llegue a un correo DISTINTO al del dueño del script.
+  //
+  // El sonido genérico de Gmail no es un cha-ching, pero se consigue gratis
+  // en dos minutos: Gmail (móvil) → crea un filtro que busque "Pedido #" en
+  // el asunto → aplícale una etiqueta ("Ventas") → en Ajustes de esa
+  // etiqueta, ponle un sonido de notificación propio. Sin tocar este script.
+  try {
+    MailApp.sendEmail({
+      to: AVISO_CORREO || Session.getEffectiveUser().getEmail(),
+      subject: titulo,
+      body: cuerpo
+    });
+  } catch (err) { console.error('Correo: ' + err); }
 }
 
 // ─── Escribirle al cliente (WhatsApp Cloud API) ────────────────────
@@ -313,21 +332,11 @@ function crearPanel() {
   p.setColumnWidth(2, 150);
 }
 
-/**
- * Prueba de extremo a extremo sin tocar la landing: recorre el mismo camino
- * que un pedido real (escribe la fila y dispara el cha-ching).
- * Deja una fila marcada PRUEBA en la hoja — bórrala luego a mano.
- */
+/** Prueba de extremo a extremo sin tocar la landing. */
 function probar() {
-  const respuesta = doPost({ postData: { contents: JSON.stringify({
-    token: TOKEN,
-    pedido: 'PRUEBA-' + Math.floor(Math.random() * 10000),
-    nombre: 'Pedido de prueba', celular: '987654321',
-    departamento: 'Lima', ciudad: 'Los Olivos',
-    direccion: 'Av. Prueba 123', referencia: 'Portón azul',
-    pack: '2 unidades', unidades: 2, adicional: '',
-    total: 89, adelanto: 0,
-    origen: 'prueba manual', dispositivo: 'editor de Apps Script'
-  }) } });
-  console.log(respuesta.getContent());
+  notificar({
+    pedido: 1041, total: 89, pack: '2 unidades', nombre: 'Prueba Prueba',
+    celular: '987654321', ciudad: 'Los Olivos', departamento: 'Lima',
+    direccion: 'Av. Prueba 123', origen: 'prueba manual'
+  }, false);
 }

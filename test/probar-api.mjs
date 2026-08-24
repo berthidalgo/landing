@@ -28,15 +28,22 @@ globalThis.fetch = async (url, opciones) => {
 };
 
 const respuestaFalsa = () => {
-  const r = { codigo: 0, cuerpo: null };
+  const r = { codigo: 0, cuerpo: null, cabeceras: {} };
   r.status = (c) => { r.codigo = c; return r; };
   r.json = (o) => { r.cuerpo = o; return r; };
+  // La landing ya no vive en el mismo dominio que la función, así que el
+  // handler pone cabeceras de CORS. El res de Vercel siempre tiene estos
+  // dos métodos; el simulado también tiene que tenerlos.
+  r.setHeader = (k, v) => { r.cabeceras[k] = v; return r; };
+  r.end = () => r;
   return r;
 };
 
-const llamar = async (cuerpo, metodo = 'POST', ip = '1.2.3.4') => {
+const llamar = async (cuerpo, metodo = 'POST', ip = '1.2.3.4', origen = null) => {
   const res = respuestaFalsa();
-  await handler({ method: metodo, headers: { 'x-forwarded-for': ip }, body: cuerpo }, res);
+  const headers = { 'x-forwarded-for': ip };
+  if (origen) headers.origin = origen;
+  await handler({ method: metodo, headers, body: cuerpo }, res);
   return res;
 };
 
