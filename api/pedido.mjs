@@ -1,7 +1,7 @@
 /**
  * ══════════════════════════════════════════════════════════════════
  *  INTERMEDIARIO landing → Google Sheets   (función de Vercel)
- * ══════════════════════════════════════════════════════════════════
+ * ════════════════════════════════════════════════════════════
  *
  *  Existe por una razón: que el secreto del receptor NO viaje en el HTML
  *  público. El navegador del cliente habla con esta función, y solo esta
@@ -14,7 +14,21 @@
  *  Variables de entorno (Vercel → Settings → Environment Variables):
  *    PEDIDOS_URL    https://script.google.com/macros/s/…/exec
  *    PEDIDOS_TOKEN  el mismo TOKEN de las propiedades del Apps Script
+ *    META_CAPI_TOKEN  token de acceso de Conversions API (Events Manager →
+ *                     HIDATA CAPI → Configuración → Conversions API). Sin
+ *                     esto el bloque de abajo simplemente no hace nada.
+ *
+ *  Además de reenviar el pedido a Sheets, esta función manda el mismo
+ *  evento "Lead" a la Conversions API de Meta — el registro server-side
+ *  que complementa al Pixel del navegador (la página usa {% layout none %}
+ *  en Shopify, así que ningún tracking del tema se ejecuta ahí; y el Pixel
+ *  del navegador solo, sin esto, se pierde eventos por bloqueadores de
+ *  anuncios, Safari/iOS y usuarios que cierran la pestaña antes de que el
+ *  pixel dispare). El id de evento viaja desde el navegador (pedido.idEvento)
+ *  para que Meta deduplique: un Lead, no dos.
  */
+
+import { createHash } from 'node:crypto';
 
 const MAX_BYTES = 4000;          // un pedido real ronda los 500 bytes
 const VENTANA_MS = 60_000;
@@ -65,6 +79,73 @@ function limpiar(datos) {
   return salida;
 }
 
+/* ── Conversions API de Meta ─────────────────────────────────────────
+   Nada de esto toca la hoja de Sheets ni el mensaje de WhatsApp: si falla,
+   solo queda un log. La venta nunca se bloquea por un evento de tracking. */
+
+const META_PIXEL_ID = '4244873702429153';   // HIDATA CAPI — no es secreto, es
+                                             // solo el identificador del dataset
+
+function sha256Hex(texto) {
+  return createHash('sha256').update(texto).digest('hex');
+}
+
+/** Perú guarda el celular como 9 dígitos locales; CAPI exige E.164 sin '+'. */
+function telefonoHasheado(celular) {
+  const digitos = String(celular || '').replace(/\D/g, '');
+  if (!digitos) return null;
+  const e164 = digitos.length === 9 ? '51' + digitos : digitos;
+  return sha256Hex(e164);
+}
+
+async function enviarConversionsAPI(datos, ip) {
+  const token = process.env.META_CAPI_TOKEN;
+  if (!token || datos.tipo === 'suscripcion') return;
+
+  const ph = telefonoHasheado(datos.celular);
+  const userData = {};
+  if (ip && ip !== 'sin-ip') userData.client_ip_address = ip;
+  if (datos.ua) userData.client_user_agent = String(datos.ua).slice(0, 300);
+  if (datos.fbp) userData.fbp = String(datos.fbp).slice(0, 300);
+  if (datos.fbc) userData.fbc = String(datos.fbc).slice(0, 300);
+  if (ph) userData.ph = [ph];
+
+  const total = typeof datos.total === 'number' ? datos.total : Number(datos.total);
+
+  const evento = {
+    event_name: 'Lead',
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: 'website',
+    user_data: userData
+  };
+  if (datos.event_id) evento.event_id = String(datos.event_id).slice(0, 100);
+  if (datos.url) evento.event_source_url = String(datos.url).slice(0, 300);
+  if (Number.isFinite(total) || datos.pack) {
+    evento.custom_data = {
+      currency: 'PEN',
+      ...(Number.isFinite(total) ? { value: total } : {}),
+      ...(datos.pack ? { content_name: String(datos.pack).slice(0, 100) } : {})
+    };
+  }
+
+  try {
+    const resp = await fetch(
+      `https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events?access_token=${encodeURIComponent(token)}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: [evento] })
+      }
+    );
+    if (!resp.ok) {
+      const texto = await resp.text();
+      console.error('Meta CAPI rechazó el evento — HTTP ' + resp.status + ' · ' + texto.slice(0, 300));
+    }
+  } catch (err) {
+    console.error('No se pudo enviar el evento a Meta CAPI: ' + err);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ ok: false, error: 'método no permitido' });
@@ -92,14 +173,15 @@ export default async function handler(req, res) {
   const carga = limpiar(datos);
   carga.token = process.env.PEDIDOS_TOKEN || '';
 
-  try {
-    const respuesta = await fetch(destino, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-      body: JSON.stringify(carga)
-    });
+  // Sheets y Meta CAPI van en paralelo — uno es el registro del pedido, el
+  // otro es tracking; ninguno debe esperar al otro, y ninguno debe tumbar
+  // la respuesta al cliente si falla.
+  const registroSheets = fetch(destino, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify(carga)
+  }).then(async (respuesta) => {
     const texto = await respuesta.text();
-
     // No basta con el código HTTP: Apps Script responde 200 aunque rechace el
     // pedido (token inválido, por ejemplo) y lo dice solo en el cuerpo. Sin
     // mirar dentro, un token mal puesto se traduce en ventas que nadie registra
@@ -107,16 +189,23 @@ export default async function handler(req, res) {
     let cuerpo = null;
     try { cuerpo = JSON.parse(texto); } catch { /* no vino JSON */ }
     const registrado = respuesta.ok && cuerpo !== null && cuerpo.ok === true;
-
     if (!registrado) {
       console.error('EL PEDIDO NO SE REGISTRÓ — HTTP ' + respuesta.status +
                     ' · respuesta: ' + texto.slice(0, 300));
     }
-    // Pase lo que pase, el cliente sigue su camino a WhatsApp: la venta nunca
-    // se rompe por un fallo de registro.
-    return res.status(200).json({ ok: registrado });
-  } catch (err) {
-    console.error('No se pudo registrar el pedido: ' + err);
+    return registrado;
+  });
+
+  const [resultadoSheets] = await Promise.allSettled([
+    registroSheets,
+    enviarConversionsAPI(datos, ip)
+  ]);
+
+  // Pase lo que pase, el cliente sigue su camino a WhatsApp: la venta nunca
+  // se rompe por un fallo de registro ni de tracking.
+  if (resultadoSheets.status === 'rejected') {
+    console.error('No se pudo registrar el pedido: ' + resultadoSheets.reason);
     return res.status(200).json({ ok: false });
   }
+  return res.status(200).json({ ok: resultadoSheets.value });
 }
