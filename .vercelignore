@@ -3,3 +3,8 @@ test/
 backend/
 docs/
 *.md
+
+# La conversion a Shopify es codigo fuente, no contenido servido: se versiona
+# aqui para poder consultarla, pero Vercel no tiene por que publicarla.
+shopify/
+build-shopify.mjs
