@@ -67,9 +67,9 @@ window.CONFIG = {
   //     justo en el mas caro, que es donde mas cuesta comprometerse.
   // El ancla de los packs es real: 138 y 207 son 2 y 3 unidades a S/69.
   PACKS: [
-    { id: 1, cant: 1, titulo: '1 unidad',   precio:  69, antes:   0, etiqueta: 'Envío gratis' },
-    { id: 2, cant: 2, titulo: '2 unidades', precio:  89, antes: 138, etiqueta: 'El que más se lleva' },
-    { id: 3, cant: 3, titulo: '3 unidades', precio: 105, antes: 207, etiqueta: 'Pagas en casa' }
+    { id: 1, cant: 1, titulo: '1 unidad',   precio:  79, antes:   0, etiqueta: 'Envío gratis' },
+    { id: 2, cant: 2, titulo: '2 unidades', precio:  99, antes: 158, etiqueta: 'El que más se lleva' },
+    { id: 3, cant: 3, titulo: '3 unidades', precio: 115, antes: 237, etiqueta: 'Pagas en casa' }
   ],
 
   // ⚠️ DESACTIVADOS a propósito: no vendemos ningún complemento todavía.
@@ -759,20 +759,28 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
    dentro de un panel: ocupa el hueco que antes se veía vacío, se lee como una
    pieza y no como texto derramado, y no añade un borde de color al azar. */
 .destacado{background:linear-gradient(165deg,#F8FBF9,#EEF6F1);
-  border:1px solid #DDEBE3;border-radius:16px;padding:.95rem 1rem 1.05rem}
-.destacado .kicker{margin:0 0 .4rem}
+  border:1px solid #DDEBE3;border-left:4px solid var(--verde-2);border-radius:12px;
+  padding:.95rem 1rem 1.05rem 1rem;box-shadow:0 6px 18px rgba(15,116,67,.08)}
+.destacado .kicker{margin:0 0 .4rem;display:flex;align-items:center;gap:.35rem}
+.destacado .kicker i{font-style:normal;font-size:15px;line-height:1}
 .destacado .guia{margin:0}
 .contenido > .destacado + *{margin-top:var(--ritmo)}
-/* La frase que nombra la pérdida de autonomía. Va sola, a cuerpo grande y
-   sin caja: metida en un párrafo se pierde, y es la que hace que quien la
-   lee se reconozca. */
-.remate{font-size:17.5px;line-height:1.4;font-weight:600;color:var(--tinta);
-  text-align:center;text-wrap:balance;padding:0 .35rem}
-.remate b{font-weight:800;color:var(--pena-a)}
+/* La frase que nombra la pérdida de autonomía, y su alivio pegado en la
+   misma respiración. Antes era texto plano centrado sobre blanco: se perdía
+   entre dos bloques con caja. Ahora es una tarjeta de dos tonos que usa el
+   MISMO lenguaje visual que las tarjetas duelo-mal/duelo-bien de justo
+   debajo (rosa pálido arriba, verde oscuro abajo), así toda la sección sube
+   de tensión en vez de alternar texto suelto con tarjetas. */
+.remate{border-radius:14px;overflow:hidden;box-shadow:0 10px 26px rgba(18,18,18,.1)}
+.remate p{margin:0;display:flex;align-items:flex-start;gap:.6rem;
+  padding:.9rem 1.05rem;font-size:16px;line-height:1.4;text-wrap:pretty}
+.remate p i{font-style:normal;font-size:23px;line-height:1.15;flex:none}
+.remate p span{flex:1;min-width:0}
+.remate-dolor{background:linear-gradient(155deg,#FEF4F2,#FBE6E1);color:#7A2C1E;font-weight:600}
+.remate-dolor b{font-weight:800;color:var(--pena-a)}
 /* El alivio, pegado al golpe. La regla de toda la página: ningún dolor
    se enuncia sin que la salida venga en la misma respiración. */
-.remate-luz{display:block;margin-top:.55rem;padding-top:.55rem;
-  border-top:2px solid var(--verde-2);color:var(--verde-txt);font-weight:800}
+.remate-alivio{background:linear-gradient(155deg,#0F7443,#0A4E2D);color:#fff;font-weight:700}
 /* Resaltado por debajo de la línea base, no negrita suelta: la frase clave
    se ve antes de leerla, que es todo lo que se le pide a un párrafo en móvil. */
 .guia b,.marca{font-weight:800;color:var(--tinta);padding:0 .06em;
@@ -1091,14 +1099,14 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </p>
 
   <div class="precio-fila">
-    <span class="precio num" data-precio-hero>S/. 69.00</span>
+    <span class="precio num" data-precio-hero>S/. 79.00</span>
     <s class="precio-antes num" data-precio-antes>S/. 129.90</s>
     <span class="badge-oferta" data-badge-oferta hidden>⏱ OFERTA LIMITADA</span>
   </div>
 
   <p class="stock" data-stock hidden></p>
 
-  <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
+  <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
 
   
 
@@ -1115,7 +1123,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <p class="sub" id="packs">Elige la cantidad a llevar:</p>
   <div class="packs" role="radiogroup" aria-label="Elige la cantidad" data-packs></div>
 
-  <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
+  <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
 
   
 
@@ -1148,7 +1156,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </picture>
 
   <div class="destacado">
-    <span class="kicker">El mecanismo</span>
+    <span class="kicker"><i aria-hidden="true">🔍</i>El mecanismo</span>
     <p class="guia">Llevas años echándole la culpa a tu pulso. No es tu pulso: en un
     cuchillo normal el mango va <span class="mal">detrás del filo</span>, así que cada corte lo
     haces girando la muñeca, como una palanca. Aquí la mano entra <b>dentro de la hoja</b> y
@@ -1157,11 +1165,14 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
 <!-- Una idea por lado y una frase de remate. El párrafo corrido que había
        antes no lo leía nadie: en móvil, un bloque de texto sin forma se salta. -->
-  <p class="remate">Y no es solo el rato de picar: terminas, sueltas el cuchillo
-    y <b>ya no puedes ni cerrar bien la mano</b>. Un día acabas pidiéndole a
-    alguien de la casa que corte por ti.
-    <span class="remate-luz">Con el peso del acero haciendo la fuerza, terminas
-    de cocinar con la mano entera.</span></p>
+  <div class="remate">
+    <p class="remate-dolor"><i aria-hidden="true">😣</i><span>Y no es solo el rato de
+      picar: terminas, sueltas el cuchillo y <b>ya no puedes ni cerrar bien la
+      mano</b>. Un día acabas pidiéndole a alguien de la casa que corte por
+      ti.</span></p>
+    <p class="remate-alivio"><i aria-hidden="true">✅</i><span>Con el peso del acero
+      haciendo la fuerza, terminas de cocinar con la mano entera.</span></p>
+  </div>
 
   <div class="duelo">
     <div class="duelo-col duelo-mal">
@@ -1189,7 +1200,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <div class="cierre">
     <h2>Que cocinar<br><em>deje de dolerte</em></h2>
     <p>La mano va <b>por encima</b> del filo, no al lado. Por eso no resbala hacia ti.</p>
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Sin adelantos: pagas al recibirlo</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Sin adelantos: pagas al recibirlo</small></button>
   </div>
 
 
@@ -1206,7 +1217,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
          alt="A la izquierda, un tomate reventado por un cuchillo común. A la derecha, rodajas limpias con este cuchillo.">
   </picture>
   <div class="destacado">
-    <span class="kicker">La prueba</span>
+    <span class="kicker"><i aria-hidden="true">🍅</i>La prueba</span>
     <p class="guia">Misma tabla, misma mano, mismo tomate. A la izquierda se aplasta y
     suelta el jugo en la tabla. A la derecha sale en rodajas parejas <b>a la primera</b>.
     Lo único que cambia es dónde está tu mano.</p>
@@ -1225,9 +1236,9 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </div>
 
   <div class="cierre">
-    <h2>Todo esto<br><em>por S/ 69</em></h2>
+    <h2>Todo esto<br><em>por S/ 79</em></h2>
     <p>Hoja forjada, mango con triple remache y funda incluida.</p>
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Pídelo ahora, paga en la puerta</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Pídelo ahora, paga en la puerta</small></button>
   </div>
 
 
@@ -1243,7 +1254,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <div class="cierre">
     <h2>Lo viste.<br><em>Ahora pídelo</em></h2>
     <p>No hay técnica que aprender. Apoyas el filo, dejas caer el peso, y ya está cortado.</p>
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
   </div>
 
 
@@ -1269,7 +1280,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <div class="cierre">
     <h2>Así de fácil<br><em>es usarlo</em></h2>
     <p>Cuatro pasos y ninguno es fuerza. Si no es lo que esperabas, 7 días para devolverlo.</p>
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Y si no te gusta, 7 días para devolverlo</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Y si no te gusta, 7 días para devolverlo</small></button>
   </div>
 
   <!-- 5 · PARA QUÉ SIRVE ─────────────────────────────────────────── -->
@@ -1291,7 +1302,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <div class="cierre">
     <h2>Uno solo.<br><em>Y ya no cambias</em></h2>
     <p>Carne con hueso, verduras y ajo con el mismo filo. Los otros tres se quedan en el cajón.</p>
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Sin adelantos: pagas al recibirlo</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Sin adelantos: pagas al recibirlo</small></button>
   </div>
 
 
@@ -1316,7 +1327,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <div class="cierre">
     <h2>Sin riesgo:<br><em>pagas al recibir</em></h2>
     <p>Lo recibes, lo abres y lo pruebas. Recién ahí sueltas el dinero.</p>
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Pídelo ahora, paga en la puerta</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Pídelo ahora, paga en la puerta</small></button>
   </div>
 
   <!-- Se pinta desde CONFIG.PROFESIONAL. Vacío = no existe: nada de un
@@ -1356,7 +1367,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <p>Sí. Escríbenos por WhatsApp con tus datos de facturación cuando hagas el pedido.</p></details>
 
   <div class="cta-faq">
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
   </div>
 
   <!-- ═══ FICHA TÉCNICA ══════════════════════════════════════════════
@@ -1375,7 +1386,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <figure class="cierre-foto" data-cierre-foto hidden></figure>
     <h2>Mañana<br><em>en tu cocina</em></h2>
     <p>Y la próxima vez que cocines para todos, terminas con la mano entera.</p>
-    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Y si no te gusta, 7 días para devolverlo</small></button>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 79</span></span><small>Y si no te gusta, 7 días para devolverlo</small></button>
   </div>
 
 
@@ -1472,7 +1483,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
 <!-- ═══ BARRA FIJA ═════════════════════════════════════════════════ -->
 <div class="barra">
-  <div class="barra-precio"><b class="num" data-precio-barra>S/. 69.00</b><span>Pagas al recibir</span></div>
+  <div class="barra-precio"><b class="num" data-precio-barra>S/. 79.00</b><span>Pagas al recibir</span></div>
   <button class="btn btn-late" data-abrir>LO QUIERO</button>
 </div>
 
