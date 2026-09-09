@@ -14,7 +14,13 @@
 <head>
 {{ content_for_header }}
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Zoom bloqueado a peticion del cliente: con la barra de compra fija, el
+     pinch descuadra lo que se ve. Dos avisos que constan a proposito:
+     1) Es una regresion de accesibilidad (WCAG 1.4.4). Quien necesite letra
+        mas grande ya no puede ampliarla. Por eso el cuerpo va a 16.5-19px.
+     2) Safari en iOS ignora `user-scalable=no` desde iOS 10, asi que esto
+        solo surte efecto en Android. En iPhone el pinch seguira funcionando. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Cuchillo Ergonómico Forjado – Hoja Curva 20 cm con Agarre Integrado | Maestros del Corte</title>
 <meta name="description" content="Cuchillo de cocina forjado con agarre integrado en la hoja. Envío gratis a todo el Perú y pagas al recibir.">
 <meta name="theme-color" content="#ffffff">
@@ -225,6 +231,10 @@ window.CONFIG = {
 [hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%}
 body{
+  /* Quita el zoom por doble toque y, de paso, el retardo de 300 ms que
+     algunos navegadores dejan en el clic esperando ese segundo toque.
+     Esto si funciona en iOS, a diferencia de `user-scalable=no`. */
+  touch-action:manipulation;
   margin:0;background:var(--blanco);color:var(--tinta-90);
   font:400 16.5px/1.6 'Poppins',system-ui,sans-serif;
   overflow-x:hidden;padding-bottom:5.25rem;
