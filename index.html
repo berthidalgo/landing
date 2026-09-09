@@ -179,7 +179,21 @@ window.CONFIG = {
   // Cómo conseguirlas en 3 días: README.md, sección "Las primeras reseñas".
   //   { texto:'Corta muy bien y se siente firme en la mano. Llegó rápido.',
   //     nombre:'M. G.', lugar:'Los Olivos', hace:'hace 2 días' }
-  RESENAS: []
+  RESENAS: [],
+
+  // Testimonio de un profesional (chef, carnicero, cocinero de negocio).
+  // Pesa más que una reseña de cliente porque es alguien que corta a diario
+  // y compara con más cuchillos que nadie. Igual que arriba: vacío = la
+  // sección no existe. Se llena regalando el cuchillo a un cocinero real de
+  // tu zona, una semana de uso, y su frase + su foto CON permiso por
+  // escrito. Nunca un nombre inventado ni una foto de banco de imágenes:
+  // es exactamente lo que hacen los tres competidores peritados y es lo
+  // primero que un cliente desconfiado detecta.
+  // Ejemplo de cómo se llena (la foto va dentro de la carpeta de imágenes,
+  // igual que el resto): PROFESIONAL = { foto, nombre, oficio, texto,
+  // verificado }. El campo foto lleva el nombre del archivo con su carpeta
+  // delante, tal como las demás fotos de esta página.
+  PROFESIONAL: null
 };
 </script>
 
@@ -481,6 +495,30 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .resena p{margin:.25rem 0 .35rem;font-size:15px;color:var(--tinta-90)}
 .resena span{font-size:13.5px;color:var(--gris)}
 .resena b{color:var(--tinta);font-weight:700}
+
+/* ── Testimonio profesional ──────────────────────────────────────
+   Vive fuera de .contenido (a sangre completa como el resto del cuerpo
+   largo), entre la garantía y la FAQ: es el último empujón de confianza
+   antes de las dudas finales. Deliberadamente distinto de una tarjeta de
+   reseña de cliente (foto grande, marco con fondo de marca) para que se
+   lea como una voz de autoridad y no como una reseña más entre otras. */
+.profesional{margin:calc(var(--ritmo) * 1.3) calc(50% - 50vw) 0;
+  width:100vw;max-width:100vw;background:linear-gradient(155deg,#242424 0%,#0B0B0B 65%,#000 100%);
+  padding:1.5rem 1.1rem 1.65rem;position:relative;overflow:hidden}
+.profesional::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 85% 100%,rgba(53,203,94,.16),transparent 60%)}
+.profesional-in{position:relative;z-index:1;max-width:32rem;margin-inline:auto;
+  display:grid;grid-template-columns:64px 1fr;gap:.85rem;align-items:start}
+.profesional-foto{width:64px;height:64px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--verde-2)}
+.profesional-cab{display:flex;align-items:baseline;gap:.4rem;flex-wrap:wrap}
+.profesional-nombre{font-weight:800;font-size:15.5px;color:#fff}
+.profesional-oficio{font-size:12.5px;color:rgba(255,255,255,.62)}
+.profesional-check{display:inline-flex;align-items:center;gap:.2rem;
+  font-size:11px;font-weight:700;color:var(--verde-2)}
+.profesional p.profesional-texto{margin:.5rem 0 0;font-size:15.5px;line-height:1.42;
+  color:rgba(255,255,255,.92);font-style:italic}
+.profesional-estrellas{color:var(--amarillo);font-size:13px;letter-spacing:1px;margin-top:.35rem;display:block}
 .puntos{display:flex;gap:.35rem;justify-content:center;margin:.9rem 0 0}
 .punto{width:8px;height:8px;border-radius:50%;background:#CFCFCF;border:0;padding:0;
   cursor:pointer}
@@ -1281,6 +1319,10 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Pídelo ahora, paga en la puerta</small></button>
   </div>
 
+  <!-- Se pinta desde CONFIG.PROFESIONAL. Vacío = no existe: nada de un
+       hueco ni un texto de relleno. -->
+  <div class="profesional" data-profesional hidden></div>
+
   <!-- 7 · LAS DUDAS ──────────────────────────────────────────────── -->
   <div class="franja">
     <h2 id="faq">Lo que <em>todos</em> preguntan</h2>
@@ -1630,6 +1672,28 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       (r.hace ? ' · ' + r.hace : '') + '</span>';
     cajaRes.appendChild(d);
   });
+
+  /* ── Testimonio profesional ─────────────────────────────────────
+     Igual que las reseñas: si CONFIG.PROFESIONAL es null, este bloque
+     nunca aparece. Nada de placeholder ni sección vacía en producción. */
+  if (C.PROFESIONAL){
+    var pr = C.PROFESIONAL;
+    var cajaPr = $('[data-profesional]');
+    cajaPr.hidden = false;
+    cajaPr.innerHTML =
+      '<div class="profesional-in">' +
+        '<img class="profesional-foto" src="' + pr.foto + '" alt="' + pr.nombre + '">' +
+        '<div>' +
+          '<div class="profesional-cab">' +
+            '<span class="profesional-nombre">' + pr.nombre + '</span>' +
+            (pr.verificado ? '<span class="profesional-check">✓ Cliente verificado</span>' : '') +
+          '</div>' +
+          '<span class="profesional-oficio">' + pr.oficio + '</span>' +
+          '<p class="profesional-texto">«' + pr.texto + '»</p>' +
+          '<span class="profesional-estrellas" aria-label="5 de 5 estrellas">★★★★★</span>' +
+        '</div>' +
+      '</div>';
+  }
 
   /* ── Vídeo de demostración ───────────────────────────────────── */
   // El vídeo pesado NO se descarga al abrir la página: primero se ve un bucle
