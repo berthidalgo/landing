@@ -731,6 +731,10 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .remate{font-size:17.5px;line-height:1.4;font-weight:600;color:var(--tinta);
   text-align:center;text-wrap:balance;padding:0 .35rem}
 .remate b{font-weight:800;color:var(--pena-a)}
+/* El alivio, pegado al golpe. La regla de toda la página: ningún dolor
+   se enuncia sin que la salida venga en la misma respiración. */
+.remate-luz{display:block;margin-top:.55rem;padding-top:.55rem;
+  border-top:2px solid var(--verde-2);color:var(--verde-txt);font-weight:800}
 /* Resaltado por debajo de la línea base, no negrita suelta: la frase clave
    se ve antes de leerla, que es todo lo que se le pide a un párrafo en móvil. */
 .guia b,.marca{font-weight:800;color:var(--tinta);padding:0 .06em;
@@ -1115,8 +1119,11 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
 <!-- Una idea por lado y una frase de remate. El párrafo corrido que había
        antes no lo leía nadie: en móvil, un bloque de texto sin forma se salta. -->
-  <p class="remate">Y lo peor no es que duela. Es que un día terminas pidiéndole
-    a alguien de la casa <b>que corte por ti</b>.</p>
+  <p class="remate">Y no es solo el rato de picar: terminas, sueltas el cuchillo
+    y <b>ya no puedes ni cerrar bien la mano</b>. Un día acabas pidiéndole a
+    alguien de la casa que corte por ti.
+    <span class="remate-luz">Con el peso del acero haciendo la fuerza, terminas
+    de cocinar con la mano entera.</span></p>
 
   <div class="duelo">
     <div class="duelo-col duelo-mal">
@@ -1129,7 +1136,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       <div class="duelo-ico" aria-hidden="true">💪</div>
       <p class="duelo-cab">Con este</p>
       <p class="duelo-txt">El brazo baja recto y el peso hace el corte.</p>
-      <span class="duelo-key">Sin palanca,<br>sin tirón</span>
+      <span class="duelo-key">Lo aguanta<br>el acero</span>
     </div>
     <span class="vs-chip" aria-hidden="true">VS</span>
   </div>

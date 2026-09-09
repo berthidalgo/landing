@@ -39,6 +39,29 @@ const PROHIBIDOS = [
   'navaja', 'mariposa'
 ];
 
+/**
+ * Riesgo sanitario. Cuando se escribio la lista de arriba el unico peligro
+ * era que Meta clasificara el producto como arma. Pero la landing pasa a
+ * venderse por el angulo del dolor de muneca, y eso abre otro frente:
+ *
+ *   - INDECOPI: atribuir a un utensilio propiedades preventivas o curativas
+ *     es publicidad enganosa. El cuchillo no previene nada.
+ *   - Meta: su politica de Atributos Personales prohibe dar por supuesta una
+ *     condicion medica del lector ("sufres de X?"). Es rechazo casi seguro,
+ *     y reincidir cuesta la cuenta.
+ *
+ * Se puede describir lo que la clienta SIENTE (le hormiguea, se le duerme la
+ * mano, al dia siguiente le cuesta abrir un frasco). Lo que no se puede es
+ * ponerle nombre clinico ni prometer que el producto lo evita.
+ */
+const PROHIBIDOS_SALUD = [
+  'tunel carpiano', 'sindrome', 'tendinitis', 'artritis', 'artrosis',
+  'lesion', 'lesiones', 'inflamacion', 'dolencia', 'patologia',
+  'diagnostico', 'tratamiento', 'rehabilitacion',
+  'previene', 'prevenir', 'cura', 'curar', 'sanar', 'alivia', 'aliviar',
+  'terapeutico', 'terapeutica', 'ortopedico', 'ortopedica'
+];
+
 /** Señales de que SÍ se presenta como utensilio de cocina. */
 const EXIGIDOS = [
   { que: 'se declara utensilio de cocina', re: /utensilio de cocina/i },
@@ -70,17 +93,22 @@ function main() {
   let fallos = 0;
 
   console.log('== Vocabulario: el producto debe leerse como cocina, no como arma ==\n');
-  for (const termino of PROHIBIDOS) {
+  const TODOS = [
+    ...PROHIBIDOS.map((t) => [t, 'termino de riesgo']),
+    ...PROHIBIDOS_SALUD.map((t) => [t, 'claim sanitario'])
+  ];
+  for (const [termino, motivo] of TODOS) {
     const t = normalizar(termino).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const patron = new RegExp('(^|[^a-z0-9])' + t + '([^a-z0-9]|$)');
     if (patron.test(aguja)) {
       const i = aguja.search(patron);
       const ctx = visible.slice(Math.max(0, i - 40), i + 50).replace(/\s+/g, ' ').trim();
-      console.log(`FALLA :: término de riesgo "${termino}" -> …${ctx}…`);
+      console.log(`FALLA :: ${motivo} "${termino}" -> …${ctx}…`);
       fallos++;
     }
   }
   if (fallos === 0) console.log(`PASA  :: ninguno de los ${PROHIBIDOS.length} términos de riesgo aparece`);
+  if (fallos === 0) console.log(`PASA  :: ninguno de los ${PROHIBIDOS_SALUD.length} términos sanitarios aparece`);
 
   console.log('\n== Señales exigidas ==\n');
   for (const { que, re } of EXIGIDOS) {
