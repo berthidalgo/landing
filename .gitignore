@@ -18,6 +18,9 @@ PROWIN/
 !img/bucle2.mp4
 !img/demo.mp4
 !img/demo2.mp4
+# Bucle propio del vídeo 1 desde que dejó de compartirlo con el héroe:
+# el héroe conserva bucle.mp4 y este es el tramo del corte de carne.
+!img/bucle1.mp4
 
 # Sistema
 .DS_Store

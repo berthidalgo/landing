@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cuchillo Ergonómico Forjado – Hoja Curva 20 cm con Agarre Integrado | YUNQUE</title>
+<title>Cuchillo Ergonómico Forjado – Hoja Curva 20 cm con Agarre Integrado | Maestros del Corte</title>
 <meta name="description" content="Cuchillo de cocina forjado con agarre integrado en la hoja. Envío gratis a todo el Perú y pagas al recibir.">
 <meta name="theme-color" content="#ffffff">
 <link rel="preload" href="fonts/Poppins-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -14,14 +14,28 @@
    CONFIGURACIÓN — todo lo editable vive aquí.
    ═══════════════════════════════════════════════════════════════════ */
 window.CONFIG = {
-  MARCA:     'YUNQUE',
+  MARCA:     'Maestros del Corte',
   PRODUCTO:  'Cuchillo Ergonómico Forjado – Hoja Curva 20 cm',
 
   WHATSAPP:  '51924104066',        // ← TU número, formato 51XXXXXXXXX
-  PIXEL_ID:  '',                   // ← Meta · Administrador de eventos
+  // VACIO A PROPOSITO. El pixel 988741907513754 lo inyecta la app
+  // "Facebook & Instagram" de Shopify, en contexto OPEN, o sea que crea
+  // window.fbq en la propia pagina. Por eso los fbq('track', ...) de mas
+  // abajo funcionan aunque el init de aqui no llegue a ejecutarse nunca.
+  // Rellenar este campo NO aporta nada (fbq ya existe) y si arriesga:
+  // inicializar dos veces el mismo pixel es el patron del "codigo base
+  // duplicado" y Meta acaba contando eventos por partida doble.
+  // Comprobacion: si algun dia desaparecen los eventos de navegador,
+  // mirar primero si esa app sigue instalada en Shopify.
+  PIXEL_ID:  '',                   // ← ver nota de arriba antes de tocar
   TIKTOK_ID: '',                   // ← TikTok Ads · píxel
 
-  PRECIO_ANTES: 129.90,            // precio tachado (ancla). 0 lo oculta
+  // A 0 A PROPOSITO. Un precio "antes" que nunca se cobro es publicidad
+  // enganosa ante INDECOPI. Los packs de 2 y 3 si llevan ancla real
+  // (S/138 y S/207 = 2 y 3 unidades a S/69), y esa se puede sostener.
+  // Si algun dia se vende de verdad a S/129.90 durante un periodo, se
+  // vuelve a poner el numero aqui y reaparece el tachado.
+  PRECIO_ANTES: 0,                 // precio tachado (ancla). 0 lo oculta
 
   OFERTA_LIMITADA: true,           // muestra el distintivo junto al precio
   // Unidades que te quedan DE VERDAD. 0 = no se muestra nada.
@@ -31,15 +45,25 @@ window.CONFIG = {
 
   // Provincia paga un adelanto para cubrir el envío de la agencia.
   // 0 = contraentrega puro en todo el país.
-  ADELANTO_PROVINCIA: 20,
+  ADELANTO_PROVINCIA: 40,
   // Dónde repartes tú y cobras contra entrega. El resto va por agencia.
   SIN_ADELANTO: ['Lima Metropolitana', 'Callao'],
 
+  // La escalera. Peritaje de la competencia (PLAN-LANDING-Y-ADS.md):
+  //   · Gabriel (Peru) y Lo Tengo (Colombia) usan la MISMA estructura para
+  //     este cuchillo: 69 -> 89. La segunda unidad cuesta el 29% de la primera.
+  //   · Lo Tengo anade un tercer escalon donde la tercera unidad cuesta MENOS
+  //     que la segunda. Por eso 105 y no 119: la 3a sale a S/16 y la 2a a S/20,
+  //     que es lo que hace verdadero el "mientras mas llevas, mas barata sale".
+  //   · La etiqueta de cada escalon lleva un BENEFICIO DISTINTO, no el mismo
+  //     "mas vendido" repetido (asi lo hace PractiCol, el de 327 dias vivo):
+  //     confianza en el 1, popularidad en el 2, y el argumento contra el miedo
+  //     justo en el mas caro, que es donde mas cuesta comprometerse.
+  // El ancla de los packs es real: 138 y 207 son 2 y 3 unidades a S/69.
   PACKS: [
-    { id: 1, cant: 1, titulo: '1 unidad',   precio:  69, antes:   0, etiqueta: '' },
-    { id: 2, cant: 2, titulo: '2 unidades', precio:  89, antes: 138, etiqueta: '¡Más vendido!' },
-    // ↓ PROPUESTO, no confirmado. Cambia el precio o borra la línea.
-    { id: 3, cant: 3, titulo: '3 unidades', precio: 119, antes: 207, etiqueta: '¡Mega Oferta!' }
+    { id: 1, cant: 1, titulo: '1 unidad',   precio:  69, antes:   0, etiqueta: 'Envío gratis' },
+    { id: 2, cant: 2, titulo: '2 unidades', precio:  89, antes: 138, etiqueta: 'El que más se lleva' },
+    { id: 3, cant: 3, titulo: '3 unidades', precio: 105, antes: 207, etiqueta: 'Pagas en casa' }
   ],
 
   // ⚠️ DESACTIVADOS a propósito: no vendemos ningún complemento todavía.
@@ -57,10 +81,23 @@ window.CONFIG = {
 
   // Comparativa antes/después. Si pones la imagen aquí, sustituye al bloque
   // de texto: una foto real del corte convence más que una lista.
-  COMPARATIVA: { imagen: 'img/antes-despues.webp' },
+  // VACIO A PROPOSITO: la foto del antes/despues ya abre la seccion del
+  // mecanismo, arriba del todo, que es donde mas trabaja. Aqui abajo queda el
+  // bloque de texto, que dice cosas distintas (cinco dolores concretos contra
+  // cinco soluciones) en vez de repetir la misma imagen dos veces.
+  COMPARATIVA: { imagen: 'img/vs-antes-despues.webp' },
+  /* Foto del cierre final. Las dos rutas van explícitas en vez de derivar
+     una de la otra: build-shopify.mjs convierte cada ruta en un asset_url de
+     Shopify, que termina en "?v=123" y no en la extensión, así que cualquier
+     regex sobre el nombre deja de encajar y el respaldo .jpg se pierde. */
+  CIERRE_FOTO: { webp: 'img/entrega-feliz.webp', jpg: 'img/entrega-feliz.jpg' },
 
   // Enseña los recuadros punteados con el nombre del archivo que falta.
   // Ponlo en false el día que lances: en producción no deben verse.
+  // TRUE mientras faltan las imágenes de CREATIVOS/PROMPTS-DOLORES.md: los
+  // recuadros blancos numerados enseñan dónde entra cada una y con qué
+  // proporción, para poder juzgar el ritmo de la página antes de tenerlas.
+  // A false el día de publicar: en producción no puede verse ninguno.
   MOSTRAR_HUECOS: false,
 
   // Vídeo de demostración. Es lo que más convierte en tráfico frío.
@@ -70,10 +107,16 @@ window.CONFIG = {
   // Material del proveedor, recomprimido y sin marcas de agua ajenas.
   VIDEO: {
     activo: true,
-    bucle:   'img/bucle.mp4',
+    bucle:   'img/bucle1.mp4',
     archivo: 'img/demo.mp4',
     poster:  'img/demo-poster.webp'
   },
+
+  // El bucle del héroe va aparte del de VIDEO desde que el vídeo 1 pasó al
+  // tramo de la carne: ese tramo es el mismo modelo pero con MANGO ROJO, y
+  // en el héroe —lo primero que se ve— contradiría de golpe las fotos de
+  // producto, que son de madera. Aquí sigue el tramo original.
+  HERO_BUCLE: 'img/bucle.mp4',
 
   // Segundo vídeo, más abajo: mismo comportamiento, con su propio bucle.
   VIDEO2: {
@@ -82,6 +125,18 @@ window.CONFIG = {
     archivo: 'img/demo2.mp4',
     poster:  'img/demo2-poster.webp'
   },
+
+  // El heroe arranca con el bucle del primer video en vez de la foto fija:
+  // el movimiento en lo primero que se ve es lo que frena el scroll. La foto
+  // sigue siendo el poster, asi que la pagina pinta igual de rapido que antes
+  // y no hay hueco en blanco si el video tarda o iOS bloquea el autoplay.
+  // false = vuelve la foto de siempre, sin tocar nada mas.
+  // El movimiento en lo primero que se ve es lo que frena el scroll. Va en 1:1
+  // y no en 4:5: un vertical alto se come la pantalla entera del móvil y
+  // empuja el precio y el botón fuera de la vista.
+  // La foto del producto queda de poster, así que la página pinta igual de
+  // rápido y no hay hueco en blanco si iOS bloquea el autoplay.
+  HERO_VIDEO: true,
 
   NUM_PEDIDO_DESDE: 1040,
 
@@ -105,7 +160,9 @@ window.CONFIG = {
   // Apunta a NUESTRA función (api/pedido.js), no a Google: así la URL y el
   // token del receptor se quedan en el servidor y no en esta página, que es
   // pública. Sin desplegar en Vercel esto no hace nada y la venta sigue igual.
-  PEDIDOS: { url: '/api/pedido' },
+  // Cuando la landing habla DIRECTO con el receptor (sin funcion en medio),
+  // el token tiene que viajar desde aqui: no hay nadie mas que lo anada.
+  PEDIDOS: { url: '/api/pedido', token: '' },
 
   // Prueba social. Pon los números REALES o déjalos vacíos para ocultarlos.
   RESENAS_NOTA:  '',   // ej: '4.8'
@@ -133,7 +190,23 @@ window.CONFIG = {
   --verde-2:#35CB5E;    --naranja:#FF6900; --amarillo:#FDBC00;
   --turquesa:#CCFBF1;   --turquesa-b:#14B8A6;
   --f3:#F3F3F3;         --linea:#E4E4E4;   --blanco:#fff;
+  /* Verde legible a tamaño pequeño: el #3FA34D da 3.20:1 sobre blanco y no
+     puede llevar texto (regla 2 de CLAUDE.md). Este da 7.4:1. */
+  --verde-txt:#276B31;
+  /* El lado que pierde. En gris drenado, no en rosa caramelo: el contraste
+     que vende no es rojo-contra-verde, es apagado-contra-vivo. */
+  --pena-f:#F4F4F2;     --pena-l:#E3E2DD;  --pena-t:#6B6963;  --pena-a:#A63D22;
+  --marca:rgba(53,203,94,.32);
   --r:12px;             --r-sm:8px;
+  /* Ritmo vertical del cuerpo. Una sola medida para todos los saltos entre
+     bloques: había cuatro (.85rem, .9rem, 1rem, 1.15rem) repartidas por
+     reglas distintas, y por eso unas secciones quedaban pegadas y otras
+     separadas. Las únicas excepciones son deliberadas y van juntas más
+     abajo: lo que sigue a una franja y lo que sigue a un botón. */
+  --ritmo:1.15rem;
+  /* Aire interior del panel de cierre. En variables porque la foto del cierre
+     final tiene que salirse de ese padding para seguir llegando a los bordes. */
+  --cierre-x:1.1rem;    --cierre-y:1.5rem;
   --ancho:min(100% - 1.5rem, 34rem);
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -141,15 +214,21 @@ window.CONFIG = {
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--blanco);color:var(--tinta-90);
-  font:400 15px/1.55 'Poppins',system-ui,sans-serif;
+  font:400 16.5px/1.6 'Poppins',system-ui,sans-serif;
   overflow-x:hidden;padding-bottom:5.25rem;
 }
 img{max-width:100%;height:auto;display:block}
 p{margin:0 0 1rem}
 h1,h2,h3{color:var(--tinta);margin:0;line-height:1.2}
-h1{font-size:24.75px;font-weight:900}
-h2{font-size:26px;font-weight:900;text-align:center;text-transform:uppercase;line-height:1.15}
-h3{font-size:17.6px;font-weight:700}
+/* Un titular grande frena el pulgar; uno de 26 px se lee como texto de
+   catálogo y se pasa de largo. Se usa la misma escala del héroe en toda la
+   página para que cada bloque tenga su propio gancho. */
+h1{font-size:clamp(26px,7.4vw,34px);font-weight:900;line-height:1.05;letter-spacing:-.025em}
+h2{font-size:clamp(31px,9.4vw,42px);font-weight:900;text-align:center;line-height:.98;
+  letter-spacing:-.03em;text-wrap:balance}
+h3{font-size:clamp(20px,5.6vw,24px);font-weight:800;line-height:1.15;letter-spacing:-.015em}
+/* El verde de marca no llega a 3:1 ni en titular grande; este da 7.4:1. */
+h1 em{font-style:normal;color:var(--verde-txt)}
 .wrap{width:var(--ancho);margin-inline:auto}
 .num{font-variant-numeric:tabular-nums}
 :where(a,button,input,select,summary):focus-visible{outline:3px solid var(--morado);outline-offset:2px}
@@ -161,7 +240,8 @@ h3{font-size:17.6px;font-weight:700}
 .cab{display:flex;align-items:center;justify-content:space-between;gap:.5rem;
   padding:.6rem 1rem;border-bottom:1px solid var(--linea);background:var(--blanco);
   position:sticky;top:0;z-index:40}
-.cab-logo{font-weight:900;font-size:26px;letter-spacing:-.02em;color:var(--tinta)}
+.cab-logo{font-weight:900;font-size:clamp(17px,5.4vw,26px);letter-spacing:-.02em;
+  color:var(--tinta);white-space:nowrap}
 .cab-ico{width:44px;height:44px;display:grid;place-content:center;background:none;
   border:0;padding:0;cursor:pointer;color:var(--tinta);margin:-8px 0}
 
@@ -182,12 +262,32 @@ h3{font-size:17.6px;font-weight:700}
 .hero-barra{background:var(--tinta);color:#fff;text-align:center;padding:.5rem 1rem;
   font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;
   gap:.5rem;flex-wrap:wrap}
-.hero-tit{text-align:center;padding:1.1rem 1rem .5rem}
-.hero-h{font-size:27px;font-weight:900;line-height:1.15;color:var(--tinta);margin:0}
+/* FRANJA, no sección: el titular y su línea de apoyo van pegados, sin aire
+   arriba ni abajo, para que el vídeo del producto entre en la primera pantalla.
+   Antes esto se comía media pantalla de móvil en blanco. */
+.hero-tit{text-align:center;padding:.35rem .5rem .4rem}
+.hero-h{font-size:clamp(33px,9.9vw,44px);font-weight:900;line-height:.96;
+  letter-spacing:-.035em;color:var(--tinta);margin:0;text-wrap:balance}
 .hero-h em{font-style:normal;color:var(--verde-osc)}
-.hero-tit p{margin:.5rem 0 0;font-size:14px;color:var(--gris)}
+/* `:not(.hero-h)` es obligatorio, no cosmético: `.hero-tit p` (0,1,1) gana a
+   `.hero-h` (0,1,0), y sin esto el titular se pintaba a 13 px por mucho que
+   subiéramos su font-size. Estuvo así tres revisiones.
+   Una sola línea, pegada al titular: cualquier margen aquí es pantalla que le
+   robas al producto en un móvil de 390 px. */
+.hero-tit p:not(.hero-h){margin:.15rem 0 0;font-size:13px;line-height:1.2;
+  color:var(--gris);font-weight:600;text-wrap:balance}
 .hero-img{position:relative}
-.hero-img img{width:100%;aspect-ratio:1;object-fit:cover}
+.hero-img img{width:100%;aspect-ratio:5/4;object-fit:cover}
+/* El encuadre se resuelve en el propio archivo, no aqui: el master del
+   proveedor es 9:16 con el cuchillo en el tercio inferior, asi que bucle.mp4
+   se recorta ya cuadrado sobre la tabla (ver img/originales-video/ y el
+   comando de recorte en PLAN-LANDING-Y-ADS.md). Tocar object-position aqui
+   vuelve a descuadrarlo. */
+/* Mismas medidas que la foto: al cambiar una por otro no se mueve nada. */
+/* `height:auto` no es decorativo: sin él el <video> conserva su alto intrínseco
+   (900 px) y `aspect-ratio` no llega a mandar — el bucle se comía la pantalla
+   entera del móvil y empujaba el precio fuera de la vista. */
+.hero-img video{width:100%;height:auto;aspect-ratio:5/4;object-fit:cover;display:block}
 .pastillas{position:absolute;left:.75rem;bottom:.75rem;display:grid;gap:.4rem;justify-items:start}
 .pastilla{display:inline-flex;align-items:center;gap:.35rem;color:#fff;font-size:12.5px;
   font-weight:700;padding:.4rem .7rem;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.22)}
@@ -234,7 +334,10 @@ h3{font-size:17.6px;font-weight:700}
   box-shadow:0 2px 0 rgba(0,0,0,.06);transition:background .12s ease}
 .btn:hover{background:var(--verde-osc)}
 .btn:active{transform:translateY(1px)}
-.btn small{font-size:15px;font-weight:500;opacity:.95;margin-top:.1rem}
+.btn small{font-size:14px;font-weight:500;opacity:.95;margin-top:.15rem;line-height:1.25}
+/* Un solo hijo flex: si el texto y el precio van sueltos, el botón los
+   parte en dos líneas. */
+.btn-txt{display:block;white-space:nowrap;font-size:19px;font-weight:800;letter-spacing:.01em}
 
 /* El CTA late y un brillo lo recorre: en una página de 9.000 px hace falta
    que el botón se note sin llegar a marear. */
@@ -302,11 +405,17 @@ h3{font-size:17.6px;font-weight:700}
 .vs-lado.bueno h4,.vs-lado.bueno .quien{padding-left:18px;padding-right:0}
 
 /* ── Rejilla de beneficios ──────────────────────────────────────── */
-.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1.25rem 0}
-.rejilla div{background:var(--f3);border-radius:var(--r);padding:.85rem .7rem;text-align:center}
-.rejilla i{display:grid;place-content:center;width:38px;height:38px;margin:0 auto .45rem;
-  border-radius:50%;background:#fff;font-style:normal;font-size:18px}
-.rejilla b{display:block;font-size:13px;font-weight:700;color:var(--tinta);line-height:1.3}
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin:1.25rem 0}
+/* Alineado a la izquierda, no centrado: seis cajitas con el texto centrado es
+   la firma del cartel de colegio. El icono ancla la esquina y la etiqueta
+   arranca donde el ojo ya está bajando. */
+.rejilla div{background:linear-gradient(165deg,#FAFAF9,#F1F1EF);
+  border:1px solid var(--linea);border-radius:14px;padding:.85rem .7rem .9rem;
+  text-align:center}
+.rejilla i{display:grid;place-content:center;width:44px;height:44px;margin:0 auto .5rem;
+  border-radius:50%;background:#fff;font-style:normal;font-size:23px;line-height:1;
+  box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.rejilla b{display:block;font-size:13.5px;font-weight:700;color:var(--tinta);line-height:1.3}
 
 /* ── Caja gris de envío ─────────────────────────────────────────── */
 .envios{background:var(--f3);border-radius:var(--r);padding:.9rem 1rem;margin:1rem 0}
@@ -344,6 +453,13 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .ventajas{list-style:none;margin:1.1rem 0;padding:0;font-size:15px}
 .ventajas li{display:flex;gap:.55rem;padding:.28rem 0;align-items:center}
 .ventajas b{color:var(--tinta)}
+/* Los sellos van pegados al botón, no en otra sección: en las landings de
+   alta conversión que estudiamos el CTA nunca aparece solo — siempre lleva
+   debajo la línea que quita el miedo justo en el momento de decidir. */
+.bajo-cta{display:flex;justify-content:center;align-items:center;gap:.85rem;
+  flex-wrap:wrap;margin:.5rem 0 0;font-size:12.5px;font-weight:600;
+  color:var(--gris);line-height:1.3}
+.bajo-cta span{display:inline-flex;align-items:center;gap:.25rem;white-space:nowrap}
 .tira{display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;background:var(--f3);
   border-radius:var(--r-sm);padding:.65rem 1rem;font-size:14px;font-weight:700;
   color:var(--tinta);margin-bottom:1.25rem}
@@ -361,7 +477,11 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .punto[aria-current="true"]{background:var(--tinta)}
 
 /* ── Contenido largo ────────────────────────────────────────────── */
-.contenido{padding:1.75rem 0 .5rem}
+.contenido{padding:0 0 .5rem}
+/* El padding superior valía 1.75rem y se sumaba al margen de la primera
+   franja: 44 px de blanco justo debajo del botón del hero. El primer hijo
+   pone su propia separación, la misma que tras cualquier otro botón. */
+.contenido > *:first-child{margin-top:.55rem}
 .contenido h2{margin-bottom:1.1rem}
 .contenido img{border-radius:var(--r);margin-bottom:1.1rem}
 .contenido h3{margin:1.4rem 0 .5rem}
@@ -383,7 +503,7 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
   color:#fff;display:grid;place-content:center;font-size:13px;font-weight:700;margin-top:1px}
 
 /* ── Rótulo destacado entre bloques ─────────────────────────────── */
-.rotulo{text-align:center;font-style:italic;font-weight:900;font-size:21px;
+.rotulo{font-size:19px;font-weight:700;text-align:center;font-style:italic;font-weight:900;font-size:21px;
   color:var(--tinta);line-height:1.25;margin:1.25rem 0 1.5rem}
 
 /* ── Hueco de imagen pendiente ──────────────────────────────────── */
@@ -400,6 +520,22 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
   padding:.2rem;gap:.1rem;font-size:9px}
 .galeria .foto-pendiente code{font-size:9px;padding:0;background:none}
 .galeria .foto-pendiente .ico{font-size:15px}
+/* Hueco BLANCO de maquetación: marca dónde entra cada imagen que falta y con
+   qué proporción, para poder juzgar el ritmo de la página antes de tenerlas.
+   Los prompts de cada una están en CREATIVOS/PROMPTS-DOLORES.md.
+   Se ocultan todos poniendo CONFIG.MOSTRAR_HUECOS en false. */
+.hueco{display:grid;place-content:center;gap:.4rem;text-align:center;
+  background:#fff;border:2px dashed #C9C9C9;border-radius:var(--r);
+  color:#9A9A9A;padding:1.25rem;margin:1.1rem 0}
+.hueco .n{display:inline-grid;place-content:center;width:26px;height:26px;
+  border-radius:50%;background:var(--morado);color:#fff;font-size:13px;font-weight:700;
+  justify-self:center}
+.hueco b{color:var(--tinta);font-size:15px;font-weight:700;line-height:1.25}
+.hueco small{font-size:12.5px;line-height:1.35;max-width:20rem;margin:0 auto}
+.hueco code{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--morado);
+  background:#F6F2F8;border-radius:4px;padding:.15rem .45rem;justify-self:center}
+.hueco-1x1{aspect-ratio:1}
+.hueco-4x5{aspect-ratio:4/5}
 .cinta-hueco{position:absolute;top:0;left:0;right:0;margin:0;padding:.4rem .6rem;
   background:rgba(109,56,139,.92);color:#fff;font-size:11.5px;text-align:center}
 .cinta-hueco code{font-family:ui-monospace,monospace;background:rgba(255,255,255,.2);
@@ -444,6 +580,275 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 .video-play:active{background:rgba(0,0,0,.85)}
 
 
+
+/* ══ SISTEMA VISUAL DE VENTA ═══════════════════════════════════════════
+   Cuatro piezas que se repiten para que el pulgar sepa siempre dónde está:
+   franja de titular, tabla comparativa, rejilla de ganancias y bloque VS.
+   Todas con degradado y de ancho completo: en móvil, lo que no tiene fondo
+   se lee como relleno y se pasa de largo.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Franja de titular ─────────────────────────────────────────────── */
+.franja{background:linear-gradient(155deg,#242424 0%,#0B0B0B 60%,#000 100%);
+  color:#fff;text-align:center;padding:1.15rem 1.1rem;
+  margin:1.15rem calc(50% - 50vw) .9rem;width:100vw;position:relative;overflow:hidden}
+/* Un filo de luz cruzando el fondo: da profundidad sin distraer del texto. */
+.franja::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 15% 0%,rgba(53,203,94,.20),transparent 60%)}
+.franja > *{position:relative;z-index:1}
+.franja h2{color:#fff;margin:0;text-wrap:balance}
+.franja h2 em{font-style:normal;color:var(--verde-2)}
+.franja p{margin:.4rem auto 0;font-size:16.5px;line-height:1.4;
+  color:rgba(255,255,255,.86);max-width:24rem;text-wrap:balance}
+.franja-verde{background:linear-gradient(155deg,#0F7443 0%,#0A4E2D 55%,#052E1B 100%)}
+.franja-verde::after{background:radial-gradient(120% 80% at 85% 0%,rgba(255,255,255,.16),transparent 60%)}
+
+/* ── Rejilla de ganancias ──────────────────────────────────────────────
+   Dos columnas y sin aire entre filas: siete tarjetas apiladas a lo alto
+   obligaban a hacer scroll para leer una lista. Ahora se abarca de un golpe. */
+/* Tarjeta con cabecera, no rejilla de casillas. Dos cuadrículas de seis
+   celdas seguidas (esta y la del bloque 5) se leían como la misma sección
+   repetida; en lista vertical con cabecera son dos piezas distintas. */
+.ganancias{background:#fff;border:1px solid var(--linea);border-radius:16px;
+  overflow:hidden;box-shadow:0 8px 24px rgba(18,18,18,.06)}
+.gan-cab{margin:0;background:linear-gradient(150deg,#0F7443,#0A4E2D);color:#fff;
+  font-size:14.5px;font-weight:800;letter-spacing:.01em;padding:.75rem 1rem;
+  text-align:center}
+.ganancias ul{list-style:none;margin:0;padding:0}
+.ganancias li{display:grid;grid-template-columns:38px 1fr;gap:.75rem;
+  align-items:center;padding:.7rem 1rem;border-top:1px solid #EFEFEF;
+  font-size:15px;line-height:1.3;font-weight:600;color:var(--tinta)}
+.ganancias li:first-child{border-top:0}
+.ganancias i{font-style:normal;font-size:22px;line-height:1;text-align:center}
+
+/* ── Tabla comparativa ─────────────────────────────────────────────────
+   La fórmula que repiten las cuatro landings de referencia y la de Gabriel:
+   una fila por argumento, la columna del producto destacada en oscuro y la
+   del rival apagada. Se lee en diagonal: verde a la izquierda, rojo a la
+   derecha, y la conclusión sale sola. */
+.tabla-vs{border:1px solid var(--linea);border-radius:var(--r);overflow:hidden;
+  margin:.9rem 0;background:#fff}
+.tvs-cab{display:grid;grid-template-columns:1fr 72px 72px;align-items:center;
+  background:linear-gradient(160deg,#1C1C1C,#000);color:#fff}
+.tvs-cab div{padding:.6rem .3rem;text-align:center;font-size:11.5px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.04em;line-height:1.15}
+.tvs-cab div:first-child{text-align:left;padding-left:.8rem}
+.tvs-cab .yo{background:linear-gradient(160deg,#0F7443,#0A4E2D);color:#fff}
+.tabla-vs .fila{display:grid;grid-template-columns:1fr 72px 72px;align-items:center;
+  border-top:1px solid var(--linea)}
+.tabla-vs .fila:nth-child(even){background:#FAFAFA}
+.tabla-vs .que{padding:.62rem .8rem;font-size:14px;font-weight:700;
+  color:var(--tinta);line-height:1.2}
+.tabla-vs .si,.tabla-vs .no{text-align:center;font-size:17px;font-weight:900;padding:.62rem 0}
+.tabla-vs .si{color:#0F7443;background:rgba(15,116,67,.07)}
+.tabla-vs .no{color:#C43D28}
+
+/* ── VS del mecanismo ──────────────────────────────────────────────────
+   Dos tarjetas enfrentadas con la insignia VS en medio. El emoji se queda:
+   a 30 px es lo primero que ve el pulgar al pasar, y en una landing de
+   tráfico frío eso vale más que la coherencia de un set de iconos. Lo que sí
+   cambia es el peso: el que gana lleva sombra y fondo pleno, porque con las
+   dos tarjetas iguales había que leerlas para saber cuál era la buena. */
+.duelo{display:grid;grid-template-columns:1fr 1fr;row-gap:.5rem;column-gap:1.5rem;
+  margin:.9rem 0;position:relative;align-items:stretch}
+/* Columna en flex para que el remate de cada lado quede a la misma altura:
+   con los textos de distinta longitud, las dos frases clave bailaban. */
+.duelo-col{border-radius:14px;padding:.9rem .6rem .95rem;border:2px solid;
+  display:flex;flex-direction:column;gap:.35rem}
+.duelo-mal{background:linear-gradient(160deg,#FEF4F2,#FBE6E1);border-color:#EFC3B9}
+.duelo-bien{background:linear-gradient(160deg,#0F7443,#0A4E2D);border-color:#0A4E2D;
+  color:#fff;box-shadow:0 12px 26px rgba(10,78,45,.28)}
+.duelo-ico{width:50px;height:50px;margin:0 auto .1rem;border-radius:50%;
+  display:grid;place-content:center;font-size:27px;line-height:1}
+.duelo-mal .duelo-ico{background:#fff}
+.duelo-bien .duelo-ico{background:rgba(255,255,255,.16)}
+.duelo-cab{text-align:center;font-weight:900;font-size:15.5px;line-height:1.05;
+  margin:0;letter-spacing:-.01em}
+.duelo-mal .duelo-cab{color:#A3311F}
+.duelo-bien .duelo-cab{color:#fff}
+.duelo-txt{text-align:center;font-size:13.5px;line-height:1.32;font-weight:600;margin:0}
+.duelo-mal .duelo-txt{color:#7A2C1E}
+.duelo-bien .duelo-txt{color:rgba(255,255,255,.92)}
+.duelo-key{display:block;margin-top:auto;padding-top:.55rem;text-align:center;
+  font-size:13.5px;font-weight:900;line-height:1.2;border-top:1px solid}
+.duelo-mal .duelo-key{color:#C43D28;border-color:#EFC3B9}
+.duelo-bien .duelo-key{color:var(--verde-2);border-color:rgba(255,255,255,.22)}
+.vs-chip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:32px;height:32px;border-radius:50%;background:var(--tinta);color:#fff;
+  display:grid;place-content:center;font-size:11px;font-weight:900;letter-spacing:.04em;
+  border:2px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.28)}
+
+/* ── FAQ ───────────────────────────────────────────────────────────────
+   Cada duda es una objeción de compra: se ve como tarjeta, con el signo a la
+   derecha, y no como una lista de texto suelto. */
+.faq details{border:1px solid var(--linea);border-radius:var(--r-sm);
+  background:#fff;margin:.4rem 0;overflow:hidden}
+.faq details[open]{border-color:#BFE3CF;background:linear-gradient(160deg,#F7FCF9,#fff)}
+.faq summary{list-style:none;cursor:pointer;padding:.85rem 2.4rem .85rem .9rem;
+  font-size:15.5px;font-weight:700;color:var(--tinta);line-height:1.25;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:.85rem;top:50%;
+  transform:translateY(-50%);font-size:20px;font-weight:800;color:var(--verde-osc)}
+.faq details[open] summary::after{content:"−"}
+.faq details p{margin:0;padding:0 .9rem .9rem;font-size:15px;color:var(--tinta-90)}
+
+/* ── Ritmo vertical ───────────────────────────────────────────────────
+   Un solo sistema de separación para todo el cuerpo, en vez de márgenes
+   sueltos por bloque. La página se hacía larga por aire, no por contenido.
+   La franja pega con lo que viene debajo (son la misma unidad) y lo que
+   respira es el salto ENTRE unidades. */
+/* ── Texto de cuerpo ───────────────────────────────────────────────────
+   Los párrafos que explican el mecanismo son el único texto largo de la
+   página. Con la escala por defecto (16.5 px gris) se leían como pie de foto
+   y el ojo los saltaba. Tres roles y nada más: rótulo, párrafo guía y frase
+   marcada. La jerarquía la hace el tamaño, no otra caja con borde. */
+.kicker{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--verde-txt)}
+.contenido > .kicker{margin-top:1rem;margin-bottom:.35rem}
+.guia{font-size:19px;line-height:1.46;font-weight:500;color:var(--tinta);
+  text-wrap:pretty}
+/* El filete a la izquierda quedaba como una barra suelta. El párrafo va ahora
+   dentro de un panel: ocupa el hueco que antes se veía vacío, se lee como una
+   pieza y no como texto derramado, y no añade un borde de color al azar. */
+.destacado{background:linear-gradient(165deg,#F8FBF9,#EEF6F1);
+  border:1px solid #DDEBE3;border-radius:16px;padding:.95rem 1rem 1.05rem}
+.destacado .kicker{margin:0 0 .4rem}
+.destacado .guia{margin:0}
+.contenido > .destacado + *{margin-top:var(--ritmo)}
+/* La frase que nombra la pérdida de autonomía. Va sola, a cuerpo grande y
+   sin caja: metida en un párrafo se pierde, y es la que hace que quien la
+   lee se reconozca. */
+.remate{font-size:17.5px;line-height:1.4;font-weight:600;color:var(--tinta);
+  text-align:center;text-wrap:balance;padding:0 .35rem}
+.remate b{font-weight:800;color:var(--pena-a)}
+/* Resaltado por debajo de la línea base, no negrita suelta: la frase clave
+   se ve antes de leerla, que es todo lo que se le pide a un párrafo en móvil. */
+.guia b,.marca{font-weight:800;color:var(--tinta);padding:0 .06em;
+  background:linear-gradient(transparent 70%,var(--marca) 0);
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.guia .mal{font-weight:800;color:var(--pena-a);padding:0 .06em;
+  background:linear-gradient(transparent 70%,rgba(166,61,34,.18) 0);
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+/* ── Pasos de uso, numerados ───────────────────────────────────────────────────
+   Era un <ol> con la numeración del navegador: cifras de 16 px pegadas al
+   margen. El numeral es aquí un elemento de diseño, y la lista se separa con
+   filetes en vez de con cuatro cajas más. */
+.pasos-uso li b{font-weight:400;font-size:17px;margin-right:.15rem}
+/* Respuesta al toque: en móvil no hay hover, así que el estado :active es
+   la única confirmación de que el dedo ha hecho algo. Sin esto, cada
+   tarjeta parece decorado en vez de algo con lo que se puede interactuar. */
+.faq summary,.pack,.rejilla div,.ganancias li{transition:transform .12s ease,
+  background-color .18s ease,box-shadow .18s ease}
+.faq summary:active,.pack:active{transform:scale(.985)}
+.rejilla div:active{transform:scale(.97);background:#F0F7F3}
+.faq details[open] summary{background:#F3FAF6}
+.faq details p{animation:abrir .22s ease both}
+@keyframes abrir{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .faq summary,.pack,.rejilla div,.ganancias li{transition:none}
+  .faq details p{animation:none}
+}
+.contenido ol.pasos-uso{margin:var(--ritmo) 0 0;padding-left:0;list-style:none;
+  counter-reset:paso;display:grid;gap:.15rem}
+.pasos-uso li{counter-increment:paso;display:grid;grid-template-columns:34px 1fr;
+  gap:.8rem;align-items:center;margin:0;padding:.6rem 0;font-size:15.5px;
+  line-height:1.35;color:var(--tinta);border-bottom:1px solid var(--linea)}
+.pasos-uso li:last-child{border-bottom:0}
+.pasos-uso li::before{content:counter(paso);display:grid;place-content:center;
+  width:34px;height:34px;border-radius:50%;border:2px solid var(--verde-2);
+  color:var(--verde-txt);font-size:14.5px;font-weight:900;
+  font-variant-numeric:tabular-nums}
+
+.contenido > * + *{margin-top:var(--ritmo)}
+/* Las imágenes van a sangre, de borde a borde de la pantalla, igual que las
+   franjas. Recortadas dentro del ancho de lectura se veían como estampas
+   pegadas; a pantalla completa el producto manda y la página respira menos
+   veces, que es lo que hace avanzar el pulgar. */
+.contenido picture,
+.contenido figure.garantia,
+.contenido .video-caja{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
+  width:100vw;max-width:100vw;border-radius:0}
+.contenido picture{display:block;margin-top:0;margin-bottom:0}
+.contenido > picture{margin-top:var(--ritmo)}
+/* La maqueta original daba margen inferior propio a `.contenido img` (1.1rem)
+   y a `.contenido ul` (1rem), y ganaban por especificidad a las reglas de
+   ritmo. Con el cierre pegado a lo anterior, ese margen abría una banda
+   blanca justo encima del filete verde. Se anula donde estorba. */
+.contenido > picture img{margin-bottom:0}
+.contenido > ul,
+.contenido > ol{margin-bottom:0}
+.contenido picture img{border-radius:0;width:100%;display:block}
+.contenido figure.garantia{border-radius:0}
+.contenido .video-caja{border-radius:0}
+/* La franja y su imagen son UNA unidad: van pegadas, sin ni un píxel entre
+   ellas. El titular queda como el rótulo impreso sobre la foto y el ojo baja
+   sin encontrar un vacío blanco por medio. */
+.franja{margin:1rem calc(50% - 50vw) 0}
+/* Tras un botón, la franja siguiente entra casi pegada: el botón ya cierra
+   visualmente el bloque y no hace falta un blanco que lo repita. */
+.cierre + .franja{margin-top:0}
+/* Mismo criterio dentro de la FAQ: el botón separa arriba de la última
+   pregunta, pero abajo entrega el cierre y la ficha sin banda blanca. */
+.cta-faq{margin-top:1.1rem}
+.ficha{margin-top:.75rem}
+.franja + picture,
+.franja + .video-caja,
+.franja + figure,
+.franja + .duelo{margin-top:0 !important}
+/* Un bloque de texto tras la franja entra con el ritmo normal, no con una
+   medida propia: era el último salto fuera de norma de toda la página. */
+.franja + .faq,
+.franja + .rejilla{margin-top:var(--ritmo)}
+.contenido p{margin:0}
+.contenido > p{padding:0 .1rem}
+.duelo,.ganancias,.rejilla{margin-top:var(--ritmo);margin-bottom:0}
+.contenido .video-caja,.contenido figure.garantia{margin-top:var(--ritmo);margin-bottom:0}
+.contenido ol{margin:var(--ritmo) 0 0;padding-left:1.25rem}
+.contenido ol li{margin-bottom:.5rem}
+
+/* ── Garantía sobre la foto ──────────────────────────────────────────
+   El tercio superior de garantia.jpg se generó vacío a propósito para
+   esto: el copy va en HTML, no quemado, así se puede cambiar y testear. */
+.garantia{position:relative;margin:1.15rem 0;border-radius:var(--r);overflow:hidden}
+.garantia img{display:block;width:100%}
+.garantia-txt{position:absolute;top:0;left:0;right:0;padding:1.1rem 1rem 1.6rem;
+  text-align:center;
+  background:linear-gradient(180deg,rgba(24,16,8,.62) 0%,rgba(24,16,8,.28) 62%,transparent 100%)}
+.garantia-txt b{display:block;font-size:clamp(24px,7vw,32px);font-weight:900;color:#fff;
+  line-height:1.02;letter-spacing:-.02em;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.garantia-txt span{display:block;margin-top:.3rem;font-size:15px;font-weight:600;
+  color:rgba(255,255,255,.92);text-shadow:0 2px 10px rgba(0,0,0,.6)}
+
+/* ── Cierre: dolor + botón ───────────────────────────────────────────
+   Cada uno es una oportunidad de cerrar. Un titular que nombra el dolor y,
+   pegado, el botón: quien ya se convenció no tiene que buscar dónde comprar,
+   y a quien dudaba se le recuerda por qué entró. */
+/* Era texto centrado sobre blanco, siete veces y sobre la misma superficie
+   que el resto del cuerpo: leído del tirón se reconocía como plantilla, y
+   pedir la compra es justo donde no puede parecerlo. Ahora es un panel a
+   sangre con superficie propia, así la página alterna tres planos —franja
+   negra, imagen, panel de acción— en vez de dos. El filete verde de arriba
+   hace de separador: por eso el panel entra sin margen, pegado a lo anterior. */
+.cierre{margin:0 calc(50% - 50vw);width:100vw;max-width:100vw;text-align:center;
+  padding:var(--cierre-y) var(--cierre-x) calc(var(--cierre-y) + .1rem);
+  background:linear-gradient(180deg,#F5FAF7 0%,#E5F1EA 100%);
+  border-top:3px solid var(--verde-2)}
+.contenido > .cierre,.faq > .cierre{margin-top:0}
+/* Salvo tras el botón de la FAQ: el filete verde del panel es del mismo
+   verde que el botón, así que pegados no separaban nada y la foto del
+   cierre parecía continuar el botón. Un botón nunca toca el bloque
+   siguiente. Va con `.faq >` delante para ganarle a la regla de arriba. */
+.faq > .cta-faq + .cierre{margin-top:.9rem}
+.cierre > *{max-width:32rem;margin-inline:auto}
+.cierre h2{margin:0 0 .4rem}
+/* Sobre el fondo verdoso el gris de cuerpo se apaga: este verde oscuro da 9:1. */
+.cierre p{margin:0 0 .95rem;font-size:17.5px;line-height:1.42;color:#33423A;
+  text-wrap:balance}
+/* La foto del cierre final sale del padding del panel para seguir a sangre. */
+.cierre-foto{margin:calc(var(--cierre-y) * -1) calc(var(--cierre-x) * -1) 1.1rem;
+  width:auto;max-width:none}
+.cierre-foto img{border-radius:0;width:100%;display:block;margin:0}
 /* ── Barra fija ─────────────────────────────────────────────────── */
 .barra{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;
   border-top:1px solid var(--linea);box-shadow:0 -2px 12px rgba(0,0,0,.08);
@@ -528,7 +933,7 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 /* ── Pie (morado, como el de la plantilla de referencia) ────────── */
 .onda{display:block;width:100%;height:48px;margin-bottom:-1px}
 footer{background:var(--morado);color:rgba(255,255,255,.85);padding:.5rem 0 2rem;font-size:14px}
-footer .marca-pie{text-align:center;font-size:30px;font-weight:900;color:#fff;
+footer .marca-pie{text-align:center;font-size:clamp(20px,7vw,30px);font-weight:900;color:#fff;
   margin-bottom:1.75rem;letter-spacing:-.02em}
 footer h3{color:#fff;font-size:16px;font-weight:700;text-transform:uppercase;
   letter-spacing:.02em;margin-bottom:.6rem}
@@ -561,7 +966,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   <button class="cab-ico" aria-label="Menú">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
   </button>
-  <span class="cab-logo" data-marca>YUNQUE</span>
+  <span class="cab-logo" data-marca>Maestros del Corte</span>
   <button class="cab-ico" aria-label="Carrito" data-abrir>
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
   </button>
@@ -578,19 +983,25 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 <section class="hero">
   <div class="hero-barra">
     <span class="estrellas" aria-hidden="true">★★★★★</span>
-    <span data-clientes>+100 CLIENTES SATISFECHOS</span>
+    <!-- El JS ya sustituye esto segun haya o no resenas reales. El texto de
+         respaldo dice lo mismo que el caso "sin resenas": asi no aparece una
+         cifra sin respaldo ni por un instante antes de que cargue el script. -->
+    <span data-clientes>ENVÍO GRATIS · PAGAS AL RECIBIR · GARANTÍA 7 DÍAS</span>
   </div>
 
   <div class="hero-tit">
-    <!-- El <h1> real es el nombre del producto, más abajo: esto es el rótulo del creativo. -->
-    <p class="hero-h">Corta la carne <em>sin pelearte con ella</em></p>
-    <p>El agarre va en la hoja, no en el mango: la fuerza baja recta sobre el corte.</p>
+    <!-- El <h1> real es el nombre del producto, más abajo: esto es el rótulo del creativo.
+         Nombra el dolor primero y el mecanismo justo después. Los tres competidores
+         que vimos afirman el beneficio ("corta sin esfuerzo") pero ninguno explica
+         POR QUE, y eso es lo unico que no nos pueden copiar: es verdad. -->
+    <p class="hero-h">Picar no debería <em>dolerte la muñeca</em></p>
+    <p>El agarre va <b>dentro</b> de la hoja. Empuja el brazo, no la muñeca.</p>
   </div>
 
   <figure class="hero-img" style="margin:0">
     <picture>
       <source srcset="img/hero.webp" type="image/webp">
-      <img src="img/hero.jpg" width="900" height="900" fetchpriority="high"
+      <img src="img/hero.jpg" width="1080" height="1080" fetchpriority="high"
            alt="Cuchillo de cocina forjado con hoja curva, hueco de agarre y mango de madera sobre una tabla.">
     </picture>
     <div class="pastillas">
@@ -600,12 +1011,8 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </figure>
 
   <div class="wrap hero-pie">
-    <button class="btn-mini" data-abrir>PRUÉBALO HOY MISMO</button>
-    <div class="hero-sellos">
-      <span><i aria-hidden="true">🚚</i>Envío<br>rápido</span>
-      <span><i aria-hidden="true">🛡️</i>Calidad<br>garantizada</span>
-      <span><i aria-hidden="true">💵</i>Pagas al<br>recibir</span>
-    </div>
+    <button class="btn-mini" data-abrir>QUIERO EL MÍO · PAGO AL RECIBIR</button>
+    
   </div>
 </section>
 
@@ -620,7 +1027,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </div>
 
   <span class="badge-top">MÁS VENDIDO | ÚLTIMAS UNIDADES</span>
-  <h1>Cuchillo Ergonómico Forjado – Hoja Curva 20 cm con Agarre Integrado</h1>
+  <h1>El cuchillo que se agarra <em>por dentro</em></h1>
 
   <p class="calif">
     <span class="estrellas" aria-hidden="true">★★★★★</span>
@@ -635,164 +1042,184 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   <p class="stock" data-stock hidden></p>
 
-  <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+  <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
 
-  <a class="wa-linea" href="#" data-wa-link>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
-    ¿Tienes dudas? Escríbenos por WhatsApp
-  </a>
+  
 
   <!-- Qué pasa después de pedir: baja la ansiedad del contraentrega. -->
-  <div class="pasos" aria-label="Cómo avanza tu pedido">
-    <div class="paso">
-      <i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12a9 9 0 1 1-6.2-8.5"/></svg></i>
-      <span>PEDIDO<br>RECIBIDO</span>
-    </div>
-    <div class="paso">
-      <i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7 12 12l8.7-5"/></svg></i>
-      <span>LISTO PARA<br>ENVIAR</span>
-    </div>
-    <div class="paso">
-      <i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg></i>
-      <span>EN TU<br>PUERTA</span>
-    </div>
-  </div>
+  
 
-  <div class="envios">
-    <div>
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-      <span><b>Envío Gratis en Lima</b> • A provincia por agencia, con S/ 20 de adelanto.</span>
-    </div>
-    <div>
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5zM3.3 7 12 12l8.7-5M12 22V12"/></svg>
-      <span><b>Enviado por <span data-marca>YUNQUE</span></b>. Lima (1 a 3 días) - Provincias (3 a 7 días)</span>
-    </div>
-    <div>
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      <span><b>Compra Segura</b>. En Lima pagas recién cuando lo tienes en la mano.</span>
-    </div>
-  </div>
+  <!-- El detalle de plazos, agencias y adelanto vivía aquí, entre el botón y la
+       oferta. Es letra logística: no vende, ocupa media pantalla en móvil y
+       mete un "S/ 40 de adelanto" justo antes de pedir la decisión de compra.
+       Está en la FAQ, que es donde lo busca quien tiene esa duda. Aquí queda
+       solo lo que da confianza en una línea. -->
+  
 
   <p class="sub" id="packs">Elige la cantidad a llevar:</p>
   <div class="packs" role="radiogroup" aria-label="Elige la cantidad" data-packs></div>
 
-  <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+  <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
 
-  <div style="margin-top:1.25rem">
-    <details>
-      <summary>☑ Envíos Seguros</summary>
-      <p>Despachamos en 24 horas. Lima llega en 1 a 3 días y provincias en 3 a 7 días hábiles.
-        Te avisamos por WhatsApp cuando tu pedido sale.</p>
-    </details>
-    <details>
-      <summary>☑ Garantía al 100%</summary>
-      <p>Tienes 7 días desde que lo recibes. Si llega dañado o no es lo que esperabas,
-        lo cambiamos sin vueltas.</p>
-    </details>
-    <details>
-      <summary>☑ ¿Qué incluye?</summary>
-      <p>El cuchillo forjado de 20 cm y su funda protectora para guardarlo con seguridad.</p>
-    </details>
-  </div>
+  
 
-  <ul class="ventajas">
-    <li>🔪 <span><b>Hoja forjada</b> de una sola pieza</span></li>
-    <li>👌 <span><b>Agarre integrado</b> en la hoja</span></li>
-    <li>🚚 <span><b>Envío gratis</b> a todo el Perú</span></li>
-    <li>💵 <span><b>Pagas al recibir</b>, nada por adelantado</span></li>
-  </ul>
+  
 
-  <div class="tira"><span>🛡 Pago Contraentrega</span><span>🚚 Envío Gratis</span></div>
+  
 
   <!-- Se pintan desde CONFIG.RESENAS -->
   <div class="resenas" data-resenas hidden></div>
 
 </div>
 
-<!-- ═══ CONTENIDO LARGO ════════════════════════════════════════════ -->
+<!-- ═══ CONTENIDO LARGO ════════════════════════════════════════════
+     Orden: dolor → por qué duele → prueba → cómo se usa → para qué sirve →
+     garantía → dudas. Cada bloque abre con su franja, enseña UNA imagen que
+     dice lo mismo que el titular, y cierra con un botón.
+     ═══════════════════════════════════════════════════════════════════ -->
 <div class="wrap contenido">
-  <h2>¡El cuchillo que te faltaba!</h2>
 
-  <picture>
-    <source srcset="img/cortando.webp" type="image/webp">
-    <img src="img/cortando.jpg" width="455" height="455" loading="lazy"
-         alt="El cuchillo cortando tomate en rodajas sobre una tabla de madera.">
-  </picture>
-
-  <h3>Beneficios:</h3>
-  <ul class="beneficios">
-    <li><span class="tick" aria-hidden="true">✓</span> Corta carne con hueso sin astillarla</li>
-    <li><span class="tick" aria-hidden="true">✓</span> Tu muñeca deja de hacer toda la fuerza</li>
-    <li><span class="tick" aria-hidden="true">✓</span> Pica verduras el doble de rápido</li>
-    <li><span class="tick" aria-hidden="true">✓</span> Machaca ajo con el plano de la hoja</li>
-    <li><span class="tick" aria-hidden="true">✓</span> Reemplaza tres cuchillos del cajón</li>
-    <li><span class="tick" aria-hidden="true">✓</span> Mantiene el filo mucho más tiempo</li>
-    <li><span class="tick" aria-hidden="true">✓</span> Viene con funda para guardarlo seguro</li>
-  </ul>
-
-  <picture>
-    <source srcset="img/agarre.webp" type="image/webp">
-    <img src="img/agarre.jpg" width="900" height="900" loading="lazy"
-         alt="Detalle del hueco de agarre en la hoja forjada.">
-  </picture>
-
-  <h2 style="margin:1.75rem 0 0">Con cuchillo común<br>o con este</h2>
-
-  <!-- Si CONFIG.COMPARATIVA.imagen tiene ruta, aparece aquí y el bloque de
-       texto de abajo se oculta. -->
-  <img data-comparativa hidden alt="Comparación: el corte con un cuchillo común frente al corte con este cuchillo.">
-
-  <div class="foto-pendiente" data-hueco-comparativa hidden>
-    <span class="ico" aria-hidden="true">⚔️</span>
-    <b>Aquí va el antes / después</b>
-    <span>Cuchillo común aplastando el tomate<br>frente a este cortándolo limpio</span>
-    <code>img/antes-despues.jpg</code>
+  <!-- 1 · EL DOLOR ────────────────────────────────────────────────── -->
+  <div class="franja">
+    <h2>No es tu pulso.<br>Es <em>dónde agarras</em></h2>
+    <p>Y por eso duele después de picar un rato.</p>
   </div>
 
-  <div class="vs" data-vs-texto>
-    <div class="vs-lado malo">
-      <h4>Antes</h4>
-      <span class="quien">con un cuchillo común</span>
-      <ul>
-        <li><span class="mk" aria-hidden="true">✕</span> Cortes irregulares</li>
-        <li><span class="mk" aria-hidden="true">✕</span> Aplastas el tomate</li>
-        <li><span class="mk" aria-hidden="true">✕</span> La muñeca hace la fuerza</li>
-        <li><span class="mk" aria-hidden="true">✕</span> Serruchas la carne</li>
-        <li><span class="mk" aria-hidden="true">✕</span> Cambias de cuchillo tres veces</li>
-      </ul>
-    </div>
-    <div class="vs-lado bueno">
-      <h4>Después</h4>
-      <span class="quien">con <span data-marca>YUNQUE</span></span>
-      <ul>
-        <li><span class="mk" aria-hidden="true">✓</span> Cortes parejos</li>
-        <li><span class="mk" aria-hidden="true">✓</span> Rebanadas limpias</li>
-        <li><span class="mk" aria-hidden="true">✓</span> El peso hace la fuerza</li>
-        <li><span class="mk" aria-hidden="true">✓</span> Separas por la articulación</li>
-        <li><span class="mk" aria-hidden="true">✓</span> Uno solo para todo</li>
-      </ul>
-    </div>
-    <span class="vs-sello" aria-hidden="true">VS</span>
+  <picture>
+    <source srcset="img/dolor-muneca.webp" type="image/webp">
+    <img src="img/dolor-muneca.jpg" width="1080" height="1080" loading="lazy"
+         alt="A la izquierda, la muñeca torcida y dolorida con un cuchillo común. A la derecha, la misma mano relajada con este cuchillo.">
+  </picture>
+
+  <div class="destacado">
+    <span class="kicker">El mecanismo</span>
+    <p class="guia">Llevas años echándole la culpa a tu pulso. No es tu pulso: en un
+    cuchillo normal el mango va <span class="mal">detrás del filo</span>, así que cada corte lo
+    haces girando la muñeca, como una palanca. Aquí la mano entra <b>dentro de la hoja</b> y
+    baja recta. El acero hace el corte; tú solo lo acompañas.</p>
   </div>
 
-  <p class="rotulo">Así se corta cuando la mano<br>va encima del filo</p>
+<!-- Una idea por lado y una frase de remate. El párrafo corrido que había
+       antes no lo leía nadie: en móvil, un bloque de texto sin forma se salta. -->
+  <p class="remate">Y lo peor no es que duela. Es que un día terminas pidiéndole
+    a alguien de la casa <b>que corte por ti</b>.</p>
 
-  <!-- Vídeo de demostración: se muestra solo si CONFIG.VIDEO.activo -->
+  <div class="duelo">
+    <div class="duelo-col duelo-mal">
+      <div class="duelo-ico" aria-hidden="true">😖</div>
+      <p class="duelo-cab">Cuchillo común</p>
+      <p class="duelo-txt">La muñeca gira y hace de palanca en cada golpe.</p>
+      <span class="duelo-key">Tu articulación<br>aguanta todo</span>
+    </div>
+    <div class="duelo-col duelo-bien">
+      <div class="duelo-ico" aria-hidden="true">💪</div>
+      <p class="duelo-cab">Con este</p>
+      <p class="duelo-txt">El brazo baja recto y el peso hace el corte.</p>
+      <span class="duelo-key">Sin palanca,<br>sin tirón</span>
+    </div>
+    <span class="vs-chip" aria-hidden="true">VS</span>
+  </div>
+
+  <picture>
+    <source srcset="img/mecanismo-fuerza.webp" type="image/webp">
+    <img src="img/mecanismo-fuerza.jpg" width="1080" height="720" loading="lazy"
+         alt="La misma muñeca doblada con un cuchillo normal y recta con este cuchillo.">
+  </picture>
+
+
+  <div class="cierre">
+    <h2>Que cocinar<br><em>deje de dolerte</em></h2>
+    <p>La mano va <b>por encima</b> del filo, no al lado. Por eso no resbala hacia ti.</p>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Sin adelantos: pagas al recibirlo</small></button>
+  </div>
+
+
+  <!-- 2 · LA PRUEBA ──────────────────────────────────────────────── -->
+  <div class="franja">
+    <h2>El mismo tomate.<br><em>Otro cuchillo</em>.</h2>
+    <p>Izquierda: cuchillo común. Derecha: el nuestro.</p>
+  </div>
+
+  <!-- El antes/después. La pinta el JS desde CONFIG.COMPARATIVA.imagen. -->
+  <picture>
+    <source data-comparativa-webp srcset="img/vs-antes-despues.webp" type="image/webp">
+    <img data-comparativa hidden width="1080" height="1080" loading="lazy"
+         alt="A la izquierda, un tomate reventado por un cuchillo común. A la derecha, rodajas limpias con este cuchillo.">
+  </picture>
+  <div class="destacado">
+    <span class="kicker">La prueba</span>
+    <p class="guia">Misma tabla, misma mano, mismo tomate. A la izquierda se aplasta y
+    suelta el jugo en la tabla. A la derecha sale en rodajas parejas <b>a la primera</b>.
+    Lo único que cambia es dónde está tu mano.</p>
+  </div>
+
+<div class="ganancias">
+    <p class="gan-cab">Lo que ganas desde el primer corte</p>
+    <ul>
+      <li><i aria-hidden="true">💪</i><span>Dejas de hacer fuerza para cortar</span></li>
+      <li><i aria-hidden="true">✋</i><span>Terminas de picar con la mano entera</span></li>
+      <li><i aria-hidden="true">🎯</i><span>Cortas parejo aunque no tengas técnica</span></li>
+      <li><i aria-hidden="true">⏱️</i><span>Menos tiempo parada en la cocina</span></li>
+      <li><i aria-hidden="true">🔒</i><span>Mantiene el filo mucho más tiempo</span></li>
+      <li><i aria-hidden="true">🎁</i><span>Viene con funda para guardarlo seguro</span></li>
+    </ul>
+  </div>
+
+  <div class="cierre">
+    <h2>Todo esto<br><em>por S/ 69</em></h2>
+    <p>Hoja forjada, mango con triple remache y funda incluida.</p>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Pídelo ahora, paga en la puerta</small></button>
+  </div>
+
+
+  <!-- 3 · EL VÍDEO ───────────────────────────────────────────────── -->
+  <div class="franja franja-verde">
+    <h2>Míralo cortando<br><em>carne con hueso</em></h2>
+    <p>El peso del acero baja recto y el corte sale solo. Tú no aprietas.</p>
+  </div>
+
   <div class="video-caja" data-video hidden></div>
+  <div class="foto-pendiente" data-hueco-video hidden></div>
 
-  <div class="foto-pendiente" data-hueco-video hidden>
-    <span class="ico" aria-hidden="true">🎬</span>
-    <b>Aquí va el vídeo — lo que más convierte</b>
-    <span>15–20 s en vertical, cortando de verdad.<br>Guion A de PROMPTS-CREATIVOS.md</span>
-    <code>img/demo.mp4</code>
+  <div class="cierre">
+    <h2>Lo viste.<br><em>Ahora pídelo</em></h2>
+    <p>No hay técnica que aprender. Apoyas el filo, dejas caer el peso, y ya está cortado.</p>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
   </div>
 
-  <div style="margin:1.25rem 0">
-    <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+
+  <!-- 4 · CÓMO SE USA ────────────────────────────────────────────── -->
+  <div class="franja">
+    <h2>Se agarra así.<br>Y <em>ya está</em>.</h2>
+    <p>Cuatro pasos. Ninguno tiene truco.</p>
   </div>
 
-  <h2 style="margin:1.75rem 0 0">Un solo cuchillo<br>para toda tu cocina</h2>
-  <div class="rejilla">
+  <picture>
+    <source srcset="img/uso-3pasos.webp" type="image/webp">
+    <img src="img/uso-3pasos.jpg" width="1080" height="1080" loading="lazy"
+         alt="Los tres pasos: los dedos entran en el hueco, el peso baja sobre el tomate y salen rodajas parejas.">
+  </picture>
+
+<ol class="pasos-uso">
+    <li><b>✋</b> Mete los dedos índice y medio en el hueco de la hoja.</li>
+    <li><b>👍</b> Apoya el pulgar en el lomo para dirigir el corte.</li>
+    <li><b>⬇️</b> Deja caer el peso: no hace falta empujar.</li>
+    <li><b>💧</b> Lávalo a mano y sécalo. No lo metas al lavavajillas.</li>
+  </ol>
+
+  <div class="cierre">
+    <h2>Así de fácil<br><em>es usarlo</em></h2>
+    <p>Cuatro pasos y ninguno es fuerza. Si no es lo que esperabas, 7 días para devolverlo.</p>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Y si no te gusta, 7 días para devolverlo</small></button>
+  </div>
+
+  <!-- 5 · PARA QUÉ SIRVE ─────────────────────────────────────────── -->
+  <div class="franja">
+    <h2>Uno solo para<br><em>toda la cocina</em></h2>
+    <p>Un filo curvo largo hace lo de tres cuchillos del cajón.</p>
+  </div>
+
+<div class="rejilla">
     <div><i aria-hidden="true">🥩</i><b>Corta carne con hueso</b></div>
     <div><i aria-hidden="true">🍅</i><b>Rebana sin aplastar</b></div>
     <div><i aria-hidden="true">🥕</i><b>Pica verduras rápido</b></div>
@@ -800,95 +1227,137 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     <div><i aria-hidden="true">💪</i><b>Menos esfuerzo</b></div>
     <div><i aria-hidden="true">🧼</i><b>Fácil de limpiar</b></div>
   </div>
-
-  <picture>
-    <source srcset="img/uso.webp" type="image/webp">
-    <img src="img/uso.jpg" width="900" height="900" loading="lazy"
-         alt="El cuchillo en uso sobre una tabla de cocina.">
-  </picture>
-
-  <p class="rotulo">Un rato en la cocina, sin cambiar de cuchillo</p>
   <div class="video-caja" data-video2 hidden></div>
 
-  <h3>Características:</h3>
-  <ul>
-    <li><b>Agarre integrado:</b> el hueco en la hoja te deja meter los dedos y trabajar con
-      la mano encima del filo. La fuerza del brazo baja recta sobre lo que cortas, en vez
-      de hacer palanca desde la muñeca.</li>
-    <li><b>Hoja curva de 8.5 cm:</b> el filo entra por un punto y va abriendo el corte al
-      balancearse. Pasa el tomate sin reventarlo y separa el pollo por la articulación.</li>
-    <li><b>Acero forjado:</b> hoja ancha y pesada. No necesitas apretar: la dejas caer y
-      corta. Es lo que hace un carnicero todo el día sin cansarse.</li>
-    <li><b>Mango de madera con remaches:</b> tres remaches de acero fijan el mango a la
-      espiga. No se afloja con el uso ni con el lavado.</li>
-    <li><b>Funda incluida:</b> viene con protector para guardarlo en el cajón sin riesgo.</li>
-  </ul>
-
-  <h2 style="margin:1.75rem 0 1.1rem">Modo de uso</h2>
-  <ol>
-    <li>Mete los dedos índice y medio en el hueco de la hoja.</li>
-    <li>Apoya el pulgar en el lomo para dirigir el corte.</li>
-    <li>Deja caer el peso: no hace falta empujar.</li>
-    <li>Lávalo a mano y sécalo. No lo metas al lavavajillas.</li>
-  </ol>
-
-  <h2 style="margin:1.75rem 0 .25rem">Las medidas<br>de verdad</h2>
-  <p style="text-align:center;color:var(--gris);font-size:14px">
-    Casi nadie las publica. Aquí están, para que sepas qué te llega.</p>
-
-  <picture>
-    <source srcset="img/medidas.webp" type="image/webp">
-    <img src="img/medidas.jpg" width="720" height="900" loading="lazy"
-         alt="Plano del cuchillo con sus medidas: 8.5 cm de ancho de hoja y 20 cm de largo total.">
-  </picture>
-
-  <h3>Especificaciones:</h3>
-  <div class="dato">
-    <div><span>Largo total</span><b class="num">20 cm</b></div>
-    <div><span>Ancho de hoja</span><b class="num">8.5 cm</b></div>
-    <div><span>Material de la hoja</span><b>Acero forjado</b></div>
-    <div><span>Mango</span><b>Madera con remaches</b></div>
-    <div><span>Incluye</span><b>Funda protectora</b></div>
+  <div class="cierre">
+    <h2>Uno solo.<br><em>Y ya no cambias</em></h2>
+    <p>Carne con hueso, verduras y ajo con el mismo filo. Los otros tres se quedan en el cajón.</p>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Sin adelantos: pagas al recibirlo</small></button>
   </div>
 
-  <h3>Materiales:</h3>
 
-  <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Acero forjado</h3>
-  <p>La hoja se forja en caliente en vez de troquelarse de una plancha. Eso reordena el grano
-    del acero y le da a la pieza una densidad que se nota al levantarla: el peso trabaja a
-    tu favor y el filo aguanta muchos más cortes antes de pedir piedra.</p>
+  <!-- 6 · LA GARANTÍA ────────────────────────────────────────────── -->
+  <div class="franja franja-verde">
+    <h2>Si no te gusta,<br><em>devolvemos todo</em></h2>
+    <p>No arriesgas nada: pagas al recibirlo y lo pruebas en tu cocina.</p>
+  </div>
 
-  <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Madera con triple remache</h3>
-  <p>El mango va sujeto a la espiga con tres remaches de acero pasados de lado a lado. Es la
-    unión que no se afloja con los años ni con el agua caliente, a diferencia de los mangos
-    de plástico pegados que terminan girando en la mano.</p>
+  <figure class="garantia">
+    <picture>
+      <source srcset="img/garantia.webp" type="image/webp">
+      <img src="img/garantia.jpg" width="1080" height="1080" loading="lazy"
+           alt="El cuchillo con su funda protectora, en una cocina cálida.">
+    </picture>
+    <figcaption class="garantia-txt">
+      <b>7 días para devolverlo</b>
+      <span>Si no es lo que esperabas, lo cambiamos. Sin vueltas.</span>
+    </figcaption>
+  </figure>
 
-  <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Funda protectora</h3>
-  <p>Incluida. Guarda el filo cubierto dentro del cajón: protege la hoja del roce con otros
-    cubiertos y, sobre todo, protege tu mano al buscarlo a ciegas.</p>
+  <div class="cierre">
+    <h2>Sin riesgo:<br><em>pagas al recibir</em></h2>
+    <p>Lo recibes, lo abres y lo pruebas. Recién ahí sueltas el dinero.</p>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Pídelo ahora, paga en la puerta</small></button>
+  </div>
 
-  <h3 id="faq">Preguntas frecuentes:</h3>
-  <details><summary>¿De verdad pago cuando lo recibo?</summary>
+  <!-- 7 · LAS DUDAS ──────────────────────────────────────────────── -->
+  <div class="franja">
+    <h2 id="faq">Lo que <em>todos</em> preguntan</h2>
+    <p>Las dudas que llegan por WhatsApp, resueltas antes de que las escribas.</p>
+  </div>
+
+<picture>
+    <source srcset="img/entrega-motorizado.webp" type="image/webp">
+    <img src="img/entrega-motorizado.jpg" width="1080" height="1080" loading="lazy"
+         alt="El repartidor entrega el pedido en la puerta y la clienta lo recibe en la mano.">
+  </picture>
+
+<div class="faq">
+  <details><summary>💵 ¿De verdad pago cuando lo recibo?</summary>
     <p>En Lima y Callao, sí: haces el pedido, te lo llevamos a tu dirección y recién ahí
-      pagas. En provincias enviamos por agencia y se adelantan S/ 20 para cubrir el envío;
+      pagas. En provincias enviamos por agencia y se adelantan <span data-adelanto-monto>S/ 40</span> para cubrir el envío;
       el resto lo pagas al recoger tu pedido en la agencia.</p></details>
-  <details><summary>¿Cuánto demora en llegar?</summary>
-    <p>En Lima, entre 24 y 48 horas. En provincias, de 2 a 5 días hábiles. Te avisamos por
+  <details><summary>🚚 ¿Cuánto demora en llegar?</summary>
+    <p>En Lima, de 1 a 3 días. En provincias, de 3 a 7 días hábiles. Te avisamos por
       WhatsApp cuando sale tu pedido.</p></details>
-  <details><summary>¿Viene afilado?</summary>
-    <p>Sí, viene con filo de fábrica y listo para usar. Con el uso hay que reavivarlo: por eso
-      ofrecemos la piedra afiladora al hacer el pedido.</p></details>
-  <details><summary>¿Se puede lavar en lavavajillas?</summary>
+  <details><summary>🔪 ¿Viene afilado?</summary>
+    <p>Sí, viene con filo de fábrica y listo para usar. Con el uso hay que reavivarlo con
+      una piedra de afilar, igual que cualquier cuchillo bueno.</p></details>
+  <details><summary>🧽 ¿Se puede lavar en lavavajillas?</summary>
     <p>Mejor no. El mango es de madera y la hoja de acero forjado: lávalo a mano y sécalo
       después. Así te dura años.</p></details>
-  <details><summary>¿Es muy pesado para una mano de mujer?</summary>
+  <details><summary>💪 ¿Es muy pesado para una mano de mujer?</summary>
     <p>Pesa, y esa es la gracia: el peso hace el corte por ti. Al ir agarrado desde el hueco
       de la hoja, la muñeca trabaja mucho menos que con un cuchillo normal.</p></details>
-  <details><summary>¿Hacen factura?</summary>
+  <details><summary>🧾 ¿Hacen factura?</summary>
     <p>Sí. Escríbenos por WhatsApp con tus datos de facturación cuando hagas el pedido.</p></details>
 
-  <div style="margin-top:1.5rem">
-    <button class="btn btn-late" data-abrir>COMPRAR AHORA <small>Envío gratis - Todo Perú</small></button>
+  <div class="cta-faq">
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Lo pagas cuando llega a tu puerta</small></button>
+  </div>
+
+  <!-- ═══ FICHA TÉCNICA ══════════════════════════════════════════════
+       Va aquí abajo, plegada y después del botón, a propósito.
+       Medidas, acero y remaches no venden a tráfico frío: lo comprobamos
+       en los tres competidores (el que lleva 327 días vendiendo tiene DOS
+       palabras de descripción). Pero sí cierran al que ya decidió y quiere
+       confirmar que no le mandan plástico. Nadie más publica las medidas
+       reales: por eso se quedan, solo que en su sitio.
+       ═══════════════════════════════════════════════════════════════ -->
+
+
+  <div class="cierre">
+    <!-- Un titular de cierre sin nada que mirar pide la compra en seco. La
+         foto de la entrega es la última imagen mental antes del botón. -->
+    <figure class="cierre-foto" data-cierre-foto hidden></figure>
+    <h2>Mañana<br><em>en tu cocina</em></h2>
+    <p>Y la próxima vez que cocines para todos, terminas con la mano entera.</p>
+    <button class="btn btn-late" data-abrir><span class="btn-txt">LO QUIERO POR <span data-cta-precio>S/ 69</span></span><small>Y si no te gusta, 7 días para devolverlo</small></button>
+  </div>
+
+
+  <!-- La ficha técnica va al final y plegada: no vende a tráfico frío,
+       pero cierra al que ya decidió y quiere confirmar que no es plástico. -->
+<div class="ficha">
+    <details>
+      <summary>📐 Medidas y materiales exactos</summary>
+
+      <p style="color:var(--gris);font-size:14px;margin-top:.75rem">
+        Casi nadie las publica. Aquí están, para que sepas qué te llega.</p>
+
+      <picture>
+        <source srcset="img/medidas.webp" type="image/webp">
+        <img src="img/medidas.jpg" width="720" height="900" loading="lazy"
+             alt="Plano del cuchillo con sus medidas: 8.5 cm de ancho de hoja y 20 cm de largo total.">
+      </picture>
+
+      <div class="dato">
+        <div><span>Nombre</span><b>Cuchillo Ergonómico Forjado</b></div>
+        <div><span>Largo total</span><b class="num">20 cm</b></div>
+        <div><span>Ancho de hoja</span><b class="num">8.5 cm</b></div>
+        <div><span>Material de la hoja</span><b>Acero forjado</b></div>
+        <div><span>Mango</span><b>Madera con remaches</b></div>
+        <div><span>Incluye</span><b>Funda protectora</b></div>
+      </div>
+
+      <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Acero forjado</h3>
+      <p>La hoja se forja en caliente en vez de troquelarse de una plancha. Eso reordena el grano
+        del acero y le da a la pieza una densidad que se nota al levantarla: el peso trabaja a
+        tu favor y el filo aguanta muchos más cortes antes de pedir piedra.</p>
+
+      <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Madera con triple remache</h3>
+      <p>El mango va sujeto a la espiga con tres remaches de acero pasados de lado a lado. Es la
+        unión que no se afloja con los años ni con el agua caliente, a diferencia de los mangos
+        de plástico pegados que terminan girando en la mano.</p>
+
+      <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Funda protectora</h3>
+      <p>Incluida. Guarda el filo cubierto dentro del cajón: protege la hoja del roce con otros
+        cubiertos y, sobre todo, protege tu mano al buscarlo a ciegas.</p>
+
+      <h3 style="font-size:15px;margin:1.1rem 0 .35rem">Hoja curva de 8.5 cm</h3>
+      <p>El filo entra por un punto y va abriendo el corte al balancearse. Pasa el tomate sin
+        reventarlo y separa el pollo por la articulación en vez de astillar el hueso.</p>
+    </details>
   </div>
 
 </div>
@@ -899,7 +1368,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
 <footer>
   <div class="wrap">
-    <p class="marca-pie" data-marca>YUNQUE</p>
+    <p class="marca-pie" data-marca>Maestros del Corte</p>
 
     <div class="bloque contacto">
       <h3>Atención al cliente</h3>
@@ -933,15 +1402,15 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
     <p class="legal">
       Utensilio de cocina. Manténgase fuera del alcance de los niños.<br>
-      © 2026 <span data-marca>YUNQUE</span> · Todos los derechos reservados.
+      © 2026 <span data-marca>Maestros del Corte</span> · Todos los derechos reservados.
     </p>
   </div>
 </footer>
 
 <!-- ═══ BARRA FIJA ═════════════════════════════════════════════════ -->
 <div class="barra">
-  <div class="barra-precio"><b class="num" data-precio-barra>S/. 69.00</b><span>Envío gratis</span></div>
-  <button class="btn btn-late" data-abrir>COMPRAR AHORA</button>
+  <div class="barra-precio"><b class="num" data-precio-barra>S/. 69.00</b><span>Pagas al recibir</span></div>
+  <button class="btn btn-late" data-abrir>LO QUIERO</button>
 </div>
 
 <!-- ═══ MODAL DE PEDIDO ════════════════════════════════════════════ -->
@@ -992,16 +1461,10 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
         </div>
       </div>
       <div class="campo">
-        <label for="dir">Dirección completa <span class="req">*</span></label>
+        <label for="dir">Dirección y referencia <span class="req">*</span></label>
         <input id="dir" name="dir" type="text" autocomplete="street-address"
-               placeholder="Ej: Av. Arequipa 123, Dpto 402, Urb. Flores" required>
-        <p class="error" id="e-dir">Escribe la calle y el número.</p>
-      </div>
-      <div class="campo">
-        <label for="ref">Referencias de la dirección <span class="req">*</span></label>
-        <input id="ref" name="ref" type="text"
-               placeholder="Ej: entre las calles, frente a…, al lado de…" required>
-        <p class="error" id="e-ref">Una referencia ayuda al repartidor a encontrarte.</p>
+               placeholder="Ej: Av. Arequipa 123, Dpto 402 · portón azul" required>
+        <p class="error" id="e-dir">Escribe la calle, el número y alguna referencia.</p>
       </div>
 
       <p class="sub">Elige la cantidad a llevar:</p>
@@ -1068,7 +1531,12 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   var sol = function(n){ return 'S/. ' + Number(n).toFixed(2); };
 
   var packs = C.PACKS || [];
-  var sel   = packs.length > 1 ? packs[1] : packs[0];   // el "más vendido"
+  // Arranca en 1 unidad. Preseleccionar el pack de 2 sube el ticket medio, pero
+  // deja la barra fija anunciando S/89 mientras el precio de arriba dice S/69, y
+  // esa contradiccion es justo la que hace desconfiar en contraentrega.
+  // De los 142 productos que medimos en la competencia, 107 preseleccionan 1.
+  // Para probar el de 2: cambiar el 0 por un 1 y medir el ticket medio.
+  var sel   = packs[0] || null;
   var up    = false;
 
   var API = window.__LANDING__ = {
@@ -1198,6 +1666,52 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   montarVideo($('[data-video2]'), C.VIDEO2,
     'El cuchillo en una cocina, cortando de todo');
 
+  /* ── El heroe en movimiento ──────────────────────────────────── */
+  // Cambia la foto del heroe por el bucle del primer video. Tres cautelas,
+  // porque esto es lo primero que ve el trafico pagado y se ve en 4G:
+  //
+  //   1. La foto se queda de poster. Ya viene con fetchpriority alto, asi que
+  //      pinta primero igual que antes: el video no retrasa nada.
+  //   2. El cambio solo ocurre cuando el video YA tiene un fotograma. Si la
+  //      red falla o el archivo no carga, no se toca el heroe y se ve la
+  //      landing de siempre.
+  //   3. Con prefers-reduced-motion activado se queda la foto: hay gente que
+  //      apaga las animaciones porque le marean.
+  function heroEnMovimiento(){
+    if (!C.HERO_VIDEO) return;
+    var cfg = C.VIDEO;
+    if (!cfg || !cfg.activo) return;
+    var bucleHero = C.HERO_BUCLE || cfg.bucle;
+    if (!bucleHero) return;
+    if (window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var fig = $('.hero-img');
+    var img = fig && fig.querySelector('img');
+    if (!img) return;
+
+    var v = document.createElement('video');
+    v.muted = true; v.loop = true; v.autoplay = true; v.preload = 'auto';
+    v.playsInline = true;
+    v.setAttribute('playsinline', '');        // iOS antiguo lo exige en el atributo
+    // El poster se lee del DOM y no de una ruta escrita a mano: asi sigue
+    // valiendo despues de que build-shopify.mjs reescriba las rutas de las
+    // imagenes a etiquetas de Liquid al convertir esto en tema de Shopify.
+    v.setAttribute('poster', img.currentSrc || img.src);
+    v.setAttribute('aria-label', img.alt || '');
+    v.setAttribute('width', '900');
+    v.setAttribute('height', '900');
+
+    v.addEventListener('loadeddata', function(){
+      (img.closest('picture') || img).replaceWith(v);
+      var pr = v.play();                      // iOS puede rechazar: se ve el poster
+      if (pr && pr.catch) pr.catch(function(){});
+    });
+
+    v.src = bucleHero;
+  }
+  heroEnMovimiento();
+
   /* ── Galería ─────────────────────────────────────────────────── */
   // Miniaturas de la galería. Las genera procesar-imagenes.py desde
   // landing-cuchillo/originales/ — no las hagas a mano.
@@ -1230,17 +1744,40 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   /* ── Comparativa: imagen si la hay, texto si no ──────────────── */
   var hayComparativa = C.COMPARATIVA && C.COMPARATIVA.imagen;
-  if (hayComparativa){
-    var ic = $('[data-comparativa]');
-    ic.src = C.COMPARATIVA.imagen;
+  var ic = $('[data-comparativa]');
+  if (hayComparativa && ic){
+    // El .webp ya va en el <source>; aquí solo el respaldo .jpg del <img>.
+    ic.src = C.COMPARATIVA.imagen.replace(/\.webp$/, '.jpg');
     ic.loading = 'lazy';
     ic.hidden = false;
-    $('[data-vs-texto]').hidden = true;   // no se enseñan las dos versiones
+    var vs = $('[data-vs-texto]');
+    if (vs) vs.hidden = true;   // no se enseñan las dos versiones
+  }
+
+  /* Foto del cierre. Se construye aquí y no en el HTML: build-shopify.mjs
+     resuelve cada ruta de imagen para copiarla a assets/, y una referencia a
+     un archivo que aún no existe rompería la conversión a tema. */
+  var cfoto = C.CIERRE_FOTO, ch = $('[data-cierre-foto]');
+  if (cfoto && cfoto.jpg && ch){
+    var pic = document.createElement('picture');
+    var fw  = document.createElement('source');
+    fw.srcset = cfoto.webp; fw.type = 'image/webp';
+    var fi  = document.createElement('img');
+    fi.src = cfoto.jpg;
+    fi.width = 1080; fi.height = 1080; fi.loading = 'lazy';
+    fi.alt = 'Una clienta en su cocina, con el pedido recién abierto y el cuchillo sobre la tabla.';
+    // Si el archivo no está, el cierre se queda sin foto pero no con un roto.
+    fi.addEventListener('error', function(){ ch.remove(); });
+    pic.appendChild(fw); pic.appendChild(fi);
+    ch.appendChild(pic); ch.hidden = false;
   }
 
   // Los avisos de "falta imagen" solo existen mientras se monta la página.
   if (C.MOSTRAR_HUECOS){
     $$('[data-hueco]').forEach(function(e){ e.hidden = false; });
+  } else {
+    // Sin MOSTRAR_HUECOS no debe quedar ni rastro de maquetación en producción.
+    $$('.hueco[data-hueco]').forEach(function(e){ e.remove(); });
     // El del vídeo, solo si no hay vídeo ya puesto.
     if (!(C.VIDEO && C.VIDEO.activo)) $('[data-hueco-video]').hidden = false;
     if (!hayComparativa) $('[data-hueco-comparativa]').hidden = false;
@@ -1289,6 +1826,10 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
     $('[data-precio-hero]').textContent  = sol(packs[0].precio);
     $('[data-precio-barra]').textContent = sol(sel.precio);
+    // El botón dice el precio del pack elegido: si eliges 2, el CTA dice
+    // S/89. Un botón que anuncia un precio distinto al que vas a pagar es
+    // la clase de detalle que hace dudar en contraentrega.
+    $$('[data-cta-precio]').forEach(function(e){ e.textContent = 'S/ ' + sel.precio; });
     $('[data-r-sub]').textContent   = sol(base);
     $('[data-r-desc]').textContent  = desc ? '−' + sol(desc) : sol(0);
     $('[data-r-desc-fila]').hidden  = !desc;
@@ -1328,6 +1869,15 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
 
   /* ── Adelanto en provincia ───────────────────────────────────── */
   /** Lima y Callao son contraentrega puro; el resto paga el envío de agencia. */
+  /* El importe del adelanto se escribe en un solo sitio (CONFIG) y desde ahi
+     se reparte por la pagina. Antes estaba a mano en dos textos y bastaba con
+     cambiar el numero en CONFIG para que la landing se contradijera a si misma. */
+  (function pintarAdelanto(){
+    var monto = sol(C.ADELANTO_PROVINCIA || 0);
+    var nodos = document.querySelectorAll('[data-adelanto-monto]');
+    for (var i = 0; i < nodos.length; i++) nodos[i].textContent = monto;
+  })();
+
   function pideAdelanto(){
     return C.ADELANTO_PROVINCIA > 0 &&
            $('#dep').value !== '' &&
@@ -1353,8 +1903,11 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
      Lima y Callao con todos sus distritos, porque ahí está el grueso del
      reparto propio; el resto, sus ciudades principales. "Otro" siempre al
      final: una dirección mal escrita cuesta una entrega fallida. */
+  /* Las 196 provincias oficiales del Peru (INEI), agrupadas por departamento.
+     Lima Metropolitana y Callao van por DISTRITO: ahi el reparto es distrital
+     y poner "Lima" a secas no le dice nada al repartidor. El resto van por
+     provincia. Generado desde el ubigeo oficial, no escrito a mano. */
   var UBIGEO = {
-    // Los 43 distritos de la provincia de Lima: reparto propio, contraentrega.
     'Lima Metropolitana': ['Ancón','Ate','Barranco','Breña','Carabayllo','Chaclacayo',
       'Chorrillos','Cieneguilla','Comas','El Agustino','Independencia','Jesús María',
       'La Molina','La Victoria','Lima (Cercado)','Lince','Los Olivos',
@@ -1364,35 +1917,50 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       'San Juan de Miraflores','San Luis','San Martín de Porres','San Miguel',
       'Santa Anita','Santa María del Mar','Santa Rosa','Santiago de Surco','Surquillo',
       'Villa El Salvador','Villa María del Triunfo'],
-    // Lima región: Barranca está a 200 km. Va por agencia, como cualquier provincia.
-    'Lima Provincias': ['Barranca','Supe','Paramonga','Huacho','Huaura','Chancay','Huaral',
-      'Canta','Matucana','San Vicente de Cañete','Imperial','Mala','Asia','Oyón','Yauyos'],
+    'Lima Provincias': ['Barranca','Cajatambo','Canta','Cañete','Huaral','Huarochirí',
+      'Huaura','Oyón','Yauyos'],
     'Callao': ['Bellavista','Callao','Carmen de La Legua','La Perla','La Punta','Mi Perú',
       'Ventanilla'],
-    'Amazonas': ['Chachapoyas','Bagua','Bagua Grande','Jaén (frontera)','Lamud'],
-    'Áncash': ['Huaraz','Chimbote','Nuevo Chimbote','Casma','Huarmey','Caraz','Yungay'],
-    'Apurímac': ['Abancay','Andahuaylas','Chalhuanca','Talavera'],
-    'Arequipa': ['Arequipa','Cerro Colorado','Cayma','Paucarpata','Camaná','Mollendo','Majes'],
-    'Ayacucho': ['Ayacucho (Huamanga)','Huanta','San Miguel','Puquio'],
-    'Cajamarca': ['Cajamarca','Jaén','Chota','Cutervo','Bambamarca','Celendín'],
-    'Cusco': ['Cusco','Wanchaq','San Sebastián','San Jerónimo','Sicuani','Quillabamba','Urubamba'],
-    'Huancavelica': ['Huancavelica','Lircay','Pampas','Acobamba'],
-    'Huánuco': ['Huánuco','Amarilis','Tingo María','La Unión','Aucayacu'],
-    'Ica': ['Ica','Chincha Alta','Pisco','Nazca','Palpa'],
-    'Junín': ['Huancayo','El Tambo','Chilca','Jauja','Tarma','La Oroya','Satipo','Chanchamayo'],
-    'La Libertad': ['Trujillo','La Esperanza','El Porvenir','Víctor Larco','Chepén',
-      'Pacasmayo','Otuzco','Huamachuco'],
-    'Lambayeque': ['Chiclayo','José Leonardo Ortiz','La Victoria','Lambayeque','Ferreñafe','Motupe'],
-    'Loreto': ['Iquitos','Yurimaguas','Nauta','Requena'],
-    'Madre de Dios': ['Puerto Maldonado','Iberia','Salvación'],
-    'Moquegua': ['Moquegua','Ilo','Omate'],
-    'Pasco': ['Cerro de Pasco','Oxapampa','Villa Rica','La Merced'],
-    'Piura': ['Piura','Castilla','Sullana','Talara','Paita','Catacaos','Chulucanas','Sechura'],
-    'Puno': ['Puno','Juliaca','Ilave','Ayaviri','Azángaro','Desaguadero'],
-    'San Martín': ['Tarapoto','Moyobamba','Juanjuí','Rioja','Nueva Cajamarca'],
-    'Tacna': ['Tacna','Alto de la Alianza','Ciudad Nueva','Locumba'],
-    'Tumbes': ['Tumbes','Zarumilla','Aguas Verdes','Corrales'],
-    'Ucayali': ['Pucallpa','Yarinacocha','Campoverde','Atalaya']
+    'Amazonas': ['Bagua','Bongará','Chachapoyas','Condorcanqui','Luya',
+      'Rodríguez de Mendoza','Utcubamba'],
+    'Apurímac': ['Abancay','Andahuaylas','Antabamba','Aymaraes','Chincheros','Cotabambas',
+      'Grau'],
+    'Arequipa': ['Arequipa','Camaná','Caravelí','Castilla','Caylloma','Condesuyos','Islay',
+      'La Unión'],
+    'Ayacucho': ['Cangallo','Huamanga','Huanca Sancos','Huanta','La Mar','Lucanas',
+      'Parinacochas','Páucar del Sara Sara','Sucre','Vilcas Huamán','Víctor Fajardo'],
+    'Cajamarca': ['Cajabamba','Cajamarca','Celendín','Chota','Contumazá','Cutervo',
+      'Hualgayoc','Jaén','San Ignacio','San Marcos','San Miguel','San Pablo','Santa Cruz'],
+    'Cusco': ['Acomayo','Anta','Calca','Canas','Canchis','Chumbivilcas','Cusco','Espinar',
+      'La Convención','Paruro','Paucartambo','Quispicanchi','Urubamba'],
+    'Huancavelica': ['Acobamba','Angaraes','Castrovirreyna','Churcampa','Huancavelica',
+      'Huaytará','Tayacaja'],
+    'Huánuco': ['Ambo','Dos de Mayo','Huacaybamba','Huamalíes','Huánuco','Lauricocha',
+      'Leoncio Prado','Marañón','Pachitea','Puerto Inca','Yarowilca'],
+    'Ica': ['Chincha','Ica','Nasca','Palpa','Pisco'],
+    'Junín': ['Chanchamayo','Chupaca','Concepción','Huancayo','Jauja','Junín','Satipo',
+      'Tarma','Yauli'],
+    'La Libertad': ['Ascope','Bolívar','Chepén','Gran Chimú','Julcán','Otuzco','Pacasmayo',
+      'Pataz','Santiago de Chuco','Sánchez Carrión','Trujillo','Virú'],
+    'Lambayeque': ['Chiclayo','Ferreñafe','Lambayeque'],
+    'Loreto': ['Alto Amazonas','Datem del Marañón','Loreto','Mariscal Ramón Castilla',
+      'Maynas','Putumayo','Requena','Ucayali'],
+    'Madre de Dios': ['Manu','Tahuamanu','Tambopata'],
+    'Moquegua': ['General Sánchez Cerro','Ilo','Mariscal Nieto'],
+    'Pasco': ['Daniel Alcides Carrión','Oxapampa','Pasco'],
+    'Piura': ['Ayabaca','Huancabamba','Morropón','Paita','Piura','Sechura','Sullana',
+      'Talara'],
+    'Puno': ['Azángaro','Carabaya','Chucuito','El Collao','Huancané','Lampa','Melgar',
+      'Moho','Puno','San Antonio de Putina','San Román','Sandia','Yunguyo'],
+    'San Martín': ['Bellavista','El Dorado','Huallaga','Lamas','Mariscal Cáceres',
+      'Moyobamba','Picota','Rioja','San Martín','Tocache'],
+    'Tacna': ['Candarave','Jorge Basadre','Tacna','Tarata'],
+    'Tumbes': ['Contralmirante Villar','Tumbes','Zarumilla'],
+    'Ucayali': ['Atalaya','Coronel Portillo','Padre Abad','Purús'],
+    'Áncash': ['Aija','Antonio Raymondi','Asunción','Bolognesi','Carhuaz',
+      'Carlos Fermín Fitzcarrald','Casma','Corongo','Huaraz','Huari','Huarmey','Huaylas',
+      'Mariscal Luzuriaga','Ocros','Pallasca','Pomabamba','Recuay','Santa','Sihuas',
+      'Yungay']
   };
 
   var selCiu = $('#ciu');
@@ -1446,8 +2014,10 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     nom: function(v){ return v.trim().length >= 3; },
     dep: function(v){ return v !== ''; },
     ciu: function(v){ return v.trim().length >= 2; },
-    dir: function(v){ return v.trim().length >= 5; },
-    ref: function(v){ return v.trim().length >= 3; }
+    // Un solo campo para calle y referencia: en movil cada campo de texto
+    // libre cuesta abandonos, y la referencia es lo que evita la entrega
+    // fallida. Se pide mas largo para que quepan las dos cosas.
+    dir: function(v){ return v.trim().length >= 8; }
   };
   function validarCampo(id){
     var el = $('#' + id), ok = REGLAS[id](el.value);
@@ -1466,6 +2036,7 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   function registrarPedido(datos){
     var cfg = C.PEDIDOS;
     if (!cfg || !cfg.url) return;
+    if (cfg.token) datos.token = cfg.token;
     var cuerpo = JSON.stringify(datos);
     try {
       var blob = new Blob([cuerpo], {type:'text/plain;charset=UTF-8'});
@@ -1481,6 +2052,39 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       campana: q.get('utm_campaign') || q.get('utm_content') || ''
     };
   }
+
+  /* ── Senales de Meta para la Conversions API ──────────────────────
+     Sin estas tres, el evento server-side llega sin con que emparejar y
+     Meta no puede unir el pedido con el clic que lo origino. La calidad
+     de emparejamiento se desploma y la atribucion deja de servir.      */
+  function galleta(nombre){
+    var m = document.cookie.match('(^|;)\s*' + nombre + '\s*=\s*([^;]+)');
+    return m ? m.pop() : '';
+  }
+
+  function senalesMeta(){
+    var q = new URLSearchParams(location.search);
+    var fbclid = q.get('fbclid') || '';
+    // _fbc lo escribe el propio pixel, pero solo despues de su primer
+    // disparo. Si el visitante envia el formulario antes, se reconstruye
+    // desde el fbclid con el formato que Meta espera: fb.1.<ts>.<fbclid>
+    var fbc = galleta('_fbc') ||
+              (fbclid ? 'fb.1.' + Date.now() + '.' + fbclid : '');
+    return {
+      fbp: galleta('_fbp'),
+      fbc: fbc,
+      ua:  navigator.userAgent,
+      url: location.href.slice(0, 300)
+    };
+  }
+
+  /* Un id por evento, compartido entre navegador y servidor. Es lo que
+     permite a Meta ver dos envios del mismo Lead y contarlo UNA vez.
+     Sin esto, cada venta se contaria dos veces y el ROAS mentiria.      */
+  function idEvento(){
+    return 'lead-' + Date.now() + '-' +
+           Math.random().toString(36).slice(2, 10);
+  }
   // Tiene que ser único: si dos clientes comparten número, el backend toma el
   // segundo por una ampliación del primero y sobrescribe su fila. Una ranura
   // cada ~9 s; el backend desempata además por celular.
@@ -1492,6 +2096,18 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   }
 
   var pedido = null;
+
+  /* Cerrojo de doble envio.
+     El navegador dispara Purchase justo antes de saltar a WhatsApp. Si el
+     cliente toca el boton dos veces —lo normal en movil cuando parece que no
+     pasa nada— el manejador corre dos veces y idEvento() genera un id nuevo
+     en cada pasada. El backend no se entera (numeroPedido() da la misma
+     ranura durante ~9 s y buscarFila actualiza en vez de anadir, asi que la
+     hoja registra UN pedido y CAPI manda UN Purchase), pero el segundo
+     Purchase del navegador se queda sin pareja con la que deduplicarse.
+     Resultado: la hoja dice 1 y Meta dice 2, y el coste por pedido parece
+     mas barato de lo que es justo cuando estas decidiendo cuanto pujar. */
+  var enviando = false;
 
   /** Rellena la plantilla de CONFIG.MENSAJE_WA con los datos del pedido. */
   function mensajeWhatsApp(){
@@ -1540,13 +2156,27 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     var ok = Object.keys(REGLAS).map(validarCampo).every(Boolean);
     if (!ok){ $('[aria-invalid="true"]').focus(); return; }
 
+    // Va DESPUES de validar: si el formulario esta incompleto no se ha
+    // enviado nada y el boton tiene que seguir disponible.
+    if (enviando) return;
+    enviando = true;
+    var btnEnviar = this.querySelector('button[type="submit"]');
+    if (btnEnviar) btnEnviar.disabled = true;
+    // Se libera a los 5 s: en movil el cliente vuelve del salto a WhatsApp y
+    // la pagina sigue viva. Dejar el boton muerto para siempre convertiria un
+    // arreglo de medicion en una venta perdida.
+    setTimeout(function(){
+      enviando = false;
+      if (btnEnviar) btnEnviar.disabled = false;
+    }, 5000);
+
     var extra = up ? C.UPSELL.precio : 0;
     var org = origen();
     pedido = {
       num: numeroPedido(),
       nombre: $('#nom').value.trim(), celular: $('#cel').value,
       departamento: $('#dep').value, ciudad: $('#ciu').value.trim(),
-      direccion: $('#dir').value.trim(), referencia: $('#ref').value.trim(),
+      direccion: $('#dir').value.trim(), referencia: '',
       pack: sel.titulo, unidades: sel.cant,
       extras: extra ? [C.UPSELL.nombre] : [],
       total: sel.precio + extra,
@@ -1554,9 +2184,35 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
       origen: org.origen, campana: org.campana
     };
 
+    // El mismo id viaja al navegador y al servidor: es lo unico que permite
+    // a Meta reconocer los dos envios como UN solo Lead.
+    var sen = senalesMeta();
+    pedido.event_id = idEvento();
+    pedido.fbp = sen.fbp;
+    pedido.fbc = sen.fbc;
+    pedido.ua  = sen.ua;
+    pedido.url = sen.url;
+
     // El pedido queda guardado AQUÍ, antes del upsell.
     enviarAlBackend();
-    evento('Lead', {content_name:sel.titulo, currency:'PEN', value:pedido.total});
+    // El cuarto argumento es el que deduplica. Sin el, activar CAPI haria
+    // que cada venta se contase dos veces.
+    if (window.fbq) {
+      var datosConv = {content_name:sel.titulo, currency:'PEN', value:pedido.total};
+      window.fbq('track', 'Lead', datosConv, {eventID: pedido.event_id});
+      // En contraentrega el envio del formulario ES la venta: el cliente ya
+      // eligio, dio direccion y confirmo. Se manda Purchase porque el objetivo
+      // "Ventas" de Meta no admite Lead como evento de optimizacion.
+      // Ojo: el ROAS que veras en Meta sera superior al real, porque parte de
+      // estos pedidos se rechazan en la entrega. La tasa de entrega la tienes
+      // en el panel de la hoja.
+      window.fbq('track', 'Purchase',
+                 {content_name:sel.titulo, currency:'PEN', value:pedido.total,
+                  content_type:'product'},
+                 {eventID: 'Purchase-' + pedido.event_id});
+    }
+    if (window.ttq) window.ttq.track('SubmitForm',
+                 {content_name:sel.titulo, currency:'PEN', value:pedido.total});
 
     if (C.POST_UPSELL && C.POST_UPSELL.activo) mostrarPostventa();
     else irAWhatsApp();

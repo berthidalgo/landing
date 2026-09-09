@@ -5,8 +5,20 @@
 document.getElementById('f').addEventListener('load', function(){
  setTimeout(function(){
   var w = this.contentWindow, D = w.document, r = [];
+  /* Cada comprobación va envuelta: si un selector devuelve null, ese caso se
+     marca ROTO y los demás siguen. Antes una sola excepción abortaba el script
+     y el informe se quedaba en "esperando", que es peor que un fallo: no dice
+     nada. La condición se pasa como función para poder atraparla. */
   function chk(nombre, cond, detalle){
-    r.push((cond ? 'PASA' : 'FALLA') + ' :: ' + nombre + (detalle ? ' (' + detalle + ')' : ''));
+    var ok, det = detalle;
+    try {
+      ok = (typeof cond === 'function') ? cond() : cond;
+      if (typeof det === 'function') det = det();
+    } catch (e) {
+      r.push('ROTO :: ' + nombre + ' (' + e.message + ')');
+      return;
+    }
+    r.push((ok ? 'PASA' : 'FALLA') + ' :: ' + nombre + (det ? ' (' + det + ')' : ''));
   }
   function visible(el){ return el && w.getComputedStyle(el).display !== 'none'; }
   var API = w.__LANDING__;
@@ -20,32 +32,44 @@ document.getElementById('f').addEventListener('load', function(){
   var up       = D.getElementById('up');
   var packs    = D.querySelectorAll('#form [data-packs] .pack');
 
-  /* ── 1. Estado inicial ──────────────────────────────────────── */
+  /* ── 1. Estado inicial ──────────────────────────────────────────
+     Arranca en 1 unidad, no en el pack de 2. Preseleccionar el de 2
+     sube el ticket, pero deja la barra fija anunciando S/89 con S/69
+     escrito arriba, y esa contradicción es la que hace desconfiar en
+     contraentrega. De los 142 productos que medimos en la competencia,
+     107 preseleccionan 1. Si algún día se prueba el de 2, este bloque
+     es lo que hay que cambiar. */
   chk('Se pintan 3 packs en el formulario', packs.length === 3, packs.length + ' packs');
-  chk('Arranca con el pack "Más vendido"', total.textContent === 'S/. 89.00', total.textContent);
-  chk('Subtotal ancla en S/. 138.00', sub.textContent === 'S/. 138.00', sub.textContent);
-  chk('Muestra el descuento de S/. 49.00', desc.textContent === '−S/. 49.00', desc.textContent);
+  chk('Arranca en 1 unidad', total.textContent === 'S/. 69.00', total.textContent);
+  chk('Sin fila de descuento al arrancar', !visible(descFila));
   chk('Precio unitario en la ficha',
       D.querySelector('[data-precio-hero]').textContent === 'S/. 69.00',
       D.querySelector('[data-precio-hero]').textContent);
-  chk('Barra fija refleja el pack elegido', barra.textContent === 'S/. 89.00', barra.textContent);
+  chk('Barra fija coincide con el precio de la ficha',
+      barra.textContent === 'S/. 69.00', barra.textContent);
 
   /* ── 2. Sin complementos inventados ─────────────────────────── */
   chk('No se ofrece ningún complemento', !visible(D.querySelector('[data-upsell]')));
   chk('Fila del upsell oculta', !visible(upFila));
   chk('El resumen del pedido muestra el pack',
-      D.querySelector('[data-mini-pack]').textContent === '2 unidades',
+      D.querySelector('[data-mini-pack]').textContent === '1 unidad',
       D.querySelector('[data-mini-pack]').textContent);
 
-  /* ── 3. Cambio de pack ──────────────────────────────────────── */
-  packs[0].click();
-  chk('Pack de 1: total S/. 69.00', total.textContent === 'S/. 69.00', total.textContent);
-  chk('Pack de 1: sin fila de descuento', !visible(descFila));
-  chk('Pack de 1: la barra baja a S/. 69.00', barra.textContent === 'S/. 69.00', barra.textContent);
+  /* ── 3. Cambio de pack ──────────────────────────────────────────
+     La escalera es S/69 · S/89 · S/105: la 2.ª unidad cuesta S/20 y la
+     3.ª S/16. Que la unidad extra sea MÁS barata cada vez es lo que
+     hace verdadero el "mientras más llevas, más barata sale". */
+  packs[1].click();
+  chk('Pack de 2: total S/. 89.00', total.textContent === 'S/. 89.00', total.textContent);
+  chk('Pack de 2: subtotal ancla S/. 138.00', sub.textContent === 'S/. 138.00', sub.textContent);
+  chk('Pack de 2: descuento de S/. 49.00', desc.textContent === '−S/. 49.00', desc.textContent);
+  chk('Pack de 2: la barra sube a S/. 89.00', barra.textContent === 'S/. 89.00', barra.textContent);
 
   packs[2].click();
-  chk('Pack de 3: total S/. 119.00', total.textContent === 'S/. 119.00', total.textContent);
-  chk('Pack de 3: descuento de S/. 88.00', desc.textContent === '−S/. 88.00', desc.textContent);
+  chk('Pack de 3: total S/. 105.00', total.textContent === 'S/. 105.00', total.textContent);
+  chk('Pack de 3: descuento de S/. 102.00', desc.textContent === '−S/. 102.00', desc.textContent);
+  chk('La 3.ª unidad sale más barata que la 2.ª (S/16 vs S/20)',
+      (105 - 89) < (89 - 69), 'S/' + (105 - 89) + ' vs S/' + (89 - 69));
   chk('Pack de 3: aria-checked se mueve', packs[2].getAttribute('aria-checked') === 'true'
       && packs[0].getAttribute('aria-checked') === 'false');
 
@@ -86,11 +110,14 @@ document.getElementById('f').addEventListener('load', function(){
       ![].some.call(ciu.options, function(o){ return o.value === 'Rímac'; }));
 
   dep.value = 'Piura'; dep.dispatchEvent(new w.Event('change'));
+  // El importe se lee de CONFIG, no se escribe aquí: así cambiar la política
+  // de provincia (hoy S/40; Gabriel usa S/20 y le funciona) no rompe el test.
+  var ADELANTO = 'S/. ' + Number(w.CONFIG.ADELANTO_PROVINCIA).toFixed(2);
   chk('Provincia: avisa del adelanto', visible(aviso));
-  chk('Provincia: el aviso dice el importe',
-      aviso.textContent.indexOf('S/. 20.00') > -1, aviso.textContent.slice(0, 60));
+  chk('Provincia: el aviso dice el importe de CONFIG',
+      aviso.textContent.indexOf(ADELANTO) > -1, ADELANTO + ' — ' + aviso.textContent.slice(0, 50));
   chk('Provincia: la opción de envío cambia',
-      D.querySelector('[data-envio-val]').textContent.indexOf('20.00') > -1,
+      D.querySelector('[data-envio-val]').textContent.indexOf(ADELANTO.slice(4)) > -1,
       D.querySelector('[data-envio-val]').textContent);
 
   dep.value = 'Lima Metropolitana'; dep.dispatchEvent(new w.Event('change'));
@@ -99,12 +126,15 @@ document.getElementById('f').addEventListener('load', function(){
   var destino = null;
   API.navegar = function(url){ destino = url; };
 
+  // El formulario tiene 5 campos: nombre, celular, provincia, distrito y una
+  // sola línea de dirección que YA incluye la referencia ("...· portón azul").
+  // No hay campo `ref` aparte: cada campo de más en móvil es gente que se va,
+  // y el nuestro tiene 5 frente a los 8 del competidor.
   D.getElementById('nom').value = 'María Quispe';
   D.getElementById('cel').value = '12345';
   dep.value = 'Lima Metropolitana'; dep.dispatchEvent(new w.Event('change'));
   ciu.value = 'Los Olivos';
-  D.getElementById('dir').value = 'Av. Siempre Viva 123';
-  D.getElementById('ref').value = 'Portón verde';
+  D.getElementById('dir').value = 'Av. Siempre Viva 123 · portón verde';
   D.getElementById('form').dispatchEvent(new w.Event('submit', {cancelable:true}));
 
   chk('Celular inválido bloquea el envío', destino === null);
@@ -113,12 +143,12 @@ document.getElementById('f').addEventListener('load', function(){
   chk('Celular inválido muestra el mensaje',
       D.getElementById('e-cel').classList.contains('visible'));
 
-  D.getElementById('ref').value = '';
+  D.getElementById('dir').value = '';
   D.getElementById('cel').value = '987654321';
   D.getElementById('form').dispatchEvent(new w.Event('submit', {cancelable:true}));
-  chk('Referencia vacía también bloquea', destino === null);
+  chk('Dirección vacía también bloquea', destino === null);
 
-  D.getElementById('ref').value = 'Portón verde';
+  D.getElementById('dir').value = 'Av. Siempre Viva 123 · portón verde';
   D.getElementById('form').dispatchEvent(new w.Event('submit', {cancelable:true}));
 
   /* ── 5. Salida a WhatsApp (sin post-upsell) ─────────────────── */
@@ -168,8 +198,16 @@ document.getElementById('f').addEventListener('load', function(){
       imgs.filter(function(i){ return !i.naturalWidth; })
           .map(function(i){ return i.getAttribute('src'); }).join(', ') || 'todas OK');
 
-  chk('El héroe usa hero.webp/jpg',
-      D.querySelector('.hero-img img').getAttribute('src').indexOf('hero') > -1);
+  // Con CONFIG.HERO_VIDEO el <img> del héroe se sustituye por un <video> en
+  // cuanto el bucle tiene un fotograma, así que vale cualquiera de los dos.
+  chk('El héroe muestra el producto (foto o bucle)', function(){
+    var v = D.querySelector('.hero-img video');
+    if (v) return (v.getAttribute('poster') || v.currentSrc || v.src).indexOf('img/') > -1;
+    var i = D.querySelector('.hero-img img');
+    return !!i && i.getAttribute('src').indexOf('hero') > -1;
+  }, function(){
+    return D.querySelector('.hero-img video') ? 'bucle de vídeo' : 'foto fija';
+  });
   chk('La galería enseña las 8 fotos',
       D.querySelectorAll('.galeria img').length === 8,
       D.querySelectorAll('.galeria img').length + ' fotos');
@@ -179,11 +217,35 @@ document.getElementById('f').addEventListener('load', function(){
   chk('La ficha muestra la foto de medidas',
       !!D.querySelector('img[src*="medidas"]'));
 
-  chk('El antes/después es imagen, no texto',
-      visible(D.querySelector('[data-comparativa]')) &&
+  // La foto del antes/después abre ahora la sección del mecanismo, arriba del
+  // todo, que es donde más trabaja. Aquí abajo queda el bloque de texto, que
+  // dice cosas distintas (cinco dolores concretos contra cinco soluciones) en
+  // vez de repetir la misma imagen dos veces en la misma página.
+  // Ya existen las cinco imágenes propias, así que la comparativa vuelve a ser
+  // foto y la tabla de ✓/✗ se oculta: la imagen dice lo mismo y pesa más.
+  chk('El antes/después del tomate abre la sección del mecanismo',
+      !!D.querySelector('img[src*="antes-despues"]'));
+  chk('La comparativa se muestra en foto', visible(D.querySelector('[data-comparativa]')));
+  chk('La tabla de ✓/✗ queda oculta para no repetir',
       !visible(D.querySelector('[data-vs-texto]')));
-  chk('Sigue marcado el hueco del vídeo',
-      visible(D.querySelector('[data-hueco-video]')));
+  chk('Las cinco imágenes propias están puestas', function(){
+    var faltan = ['dolor-muneca','mecanismo-fuerza','uso-3pasos','vs-antes-despues','garantia']
+      .filter(function(n){ return D.body.innerHTML.indexOf(n) === -1; });
+    return faltan.length === 0;
+  }, function(){
+    return ['dolor-muneca','mecanismo-fuerza','uso-3pasos','vs-antes-despues','garantia']
+      .filter(function(n){ return D.body.innerHTML.indexOf(n) === -1; }).join(', ') || 'las cinco';
+  });
+  chk('No quedan recuadros de maquetación', D.querySelectorAll('.hueco').length === 0);
+  // Los vídeos ya existen y están recortados al tramo donde sale NUESTRO
+  // cuchillo (el master del proveedor mezclaba varios modelos distintos).
+  // Antes este caso comprobaba lo contrario: que siguiera el hueco por rellenar.
+  chk('El vídeo está puesto, ya no hay hueco',
+      !visible(D.querySelector('[data-hueco-video]')));
+  chk('La caja del vídeo se muestra', visible(D.querySelector('[data-video]')));
+  // El <video> de ese bloque se monta al entrar en pantalla, así que aquí solo
+  // se comprueba que la caja existe. Que el archivo cargue lo verifica
+  // correr_tests.py, que sí hace scroll por toda la página.
 
   /* ── 8. Fidelidad a la plantilla de referencia ──────────────── */
   var cs = w.getComputedStyle;
