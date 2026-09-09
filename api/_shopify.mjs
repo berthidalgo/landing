@@ -184,7 +184,7 @@ export async function crearPedidoShopify(datos) {
   const total    = Number(datos.total) || 0;
 
   // El precio del pack NO es el precio unitario del catálogo: 2 unidades
-  // cuestan S/89, no S/138. Se fija el precio de línea para que el importe
+  // cuestan S/99, no S/158. Se fija el precio de línea para que el importe
   // del admin cuadre con lo que el cliente va a pagar en la puerta. Si no,
   // los informes de Shopify mienten y el repartidor cobra otra cosa.
   const unitario = total > 0 ? (total / unidades).toFixed(2) : null;
