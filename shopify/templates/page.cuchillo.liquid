@@ -746,7 +746,7 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
    Era un <ol> con la numeración del navegador: cifras de 16 px pegadas al
    margen. El numeral es aquí un elemento de diseño, y la lista se separa con
    filetes en vez de con cuatro cajas más. */
-.pasos-uso li b{font-weight:400;font-size:17px;margin-right:.15rem}
+.pasos-uso li b{font-weight:400;font-size:19px;line-height:1}
 /* Respuesta al toque: en móvil no hay hover, así que el estado :active es
    la única confirmación de que el dedo ha hecho algo. Sin esto, cada
    tarjeta parece decorado en vez de algo con lo que se puede interactuar. */
@@ -763,9 +763,13 @@ details p{padding:0 0 .9rem;margin:0;font-size:14px;color:var(--gris)}
 }
 .contenido ol.pasos-uso{margin:var(--ritmo) 0 0;padding-left:0;list-style:none;
   counter-reset:paso;display:grid;gap:.15rem}
-.pasos-uso li{counter-increment:paso;display:grid;grid-template-columns:34px 1fr;
-  gap:.8rem;align-items:center;margin:0;padding:.6rem 0;font-size:15.5px;
-  line-height:1.35;color:var(--tinta);border-bottom:1px solid var(--linea)}
+.pasos-uso li{counter-increment:paso;display:grid;grid-template-columns:34px auto 1fr;
+  gap:.55rem;align-items:center;margin:0;padding:.7rem 0;font-size:16.5px;
+  line-height:1.34;font-weight:700;color:var(--tinta);
+  border-bottom:1px solid var(--linea)}
+/* La parte que hay que retener de cada paso, resaltada: el resto es
+   instrucción, esto es el porqué. */
+.pasos-uso li em{font-style:normal;font-weight:800;color:var(--verde-txt)}
 .pasos-uso li:last-child{border-bottom:0}
 .pasos-uso li::before{content:counter(paso);display:grid;place-content:center;
   width:34px;height:34px;border-radius:50%;border:2px solid var(--verde-2);
@@ -1213,10 +1217,10 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </picture>
 
 <ol class="pasos-uso">
-    <li><b>✋</b> Mete los dedos índice y medio en el hueco de la hoja.</li>
-    <li><b>👍</b> Apoya el pulgar en el lomo para dirigir el corte.</li>
-    <li><b>⬇️</b> Deja caer el peso: no hace falta empujar.</li>
-    <li><b>💧</b> Lávalo a mano y sécalo. No lo metas al lavavajillas.</li>
+    <li><b>✋</b><span>Mete los dedos índice y medio <em>en el hueco de la hoja</em>.</span></li>
+    <li><b>👍</b><span>Apoya el pulgar en el lomo <em>para dirigir el corte</em>.</span></li>
+    <li><b>🔻</b><span>Deja caer el peso: <em>no hace falta empujar</em>.</span></li>
+    <li><b>💧</b><span>Lávalo a mano y sécalo. <em>Nunca al lavavajillas</em>.</span></li>
   </ol>
 
   <div class="cierre">
