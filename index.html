@@ -14,11 +14,11 @@
 <meta name="theme-color" content="#ffffff">
 <link rel="preload" href="fonts/Poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Poppins-700.woff2" as="font" type="font/woff2" crossorigin>
-<!-- El video del heroe se descubre aqui, en el <head>, antes incluso de
-     que el navegador llegue al <body>: es el punto mas temprano posible
-     para arrancar la descarga. fetchpriority="high" lo pone por delante de
-     cualquier otra cosa que compita por ancho de banda en ese momento. -->
-<link rel="preload" href="img/bucle.mp4" as="video" type="video/mp4" fetchpriority="high">
+<!-- Se precarga el POSTER, no el video: medido en 4G simulado, el
+     <link as="video"> no lo respetan los navegadores (el video se pedia
+     igual a los 1085 ms, despues de las fuentes). El poster son 24 KB y
+     llega casi con el HTML, que es lo que quita el hueco en blanco. -->
+<link rel="preload" href="img/hero-poster.webp" as="image" type="image/webp" fetchpriority="high">
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════
@@ -1068,20 +1068,20 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </div>
 
   <figure class="hero-img" style="margin:0">
-    <!-- Sin poster ni imagen previa, a peticion expresa: lo unico que se ve
-         aqui es el video, desde el primer fotograma que el navegador logre
-         decodificar. El video va en el HTML desde el inicio (no lo crea JS
-         mas abajo), asi que empieza a bajar apenas el navegador lee la
-         etiqueta. El <img> de dentro NUNCA se pinta en ningun navegador
-         que soporte <video> (el 100% del trafico real): es el contenido de
-         reserva que exige el estandar para el caso, hoy inexistente, de un
-         navegador sin soporte de video. -->
+    <!-- El poster NO es una foto distinta: es el fotograma 1 EXACTO de
+         bucle.mp4, exportado a WebP (24 KB). Se pinta en cuanto llega -mucho
+         antes que el video, que pesa 20 veces mas- y muestra exactamente la
+         misma imagen con la que el video arranca, asi que no se percibe
+         ningun cambio: parece que el video estuvo ahi desde el primer
+         instante. Sin el, el hueco se queda en blanco hasta que el video
+         decodifica, que es lo que se veia antes.
+         Ojo: aqui NO va ningun <img> de reserva. Aunque los navegadores
+         modernos nunca lo pintan, SI lo descargan, y hero.jpg (323 KB)
+         estaba robandole ancho de banda al propio video. -->
     <video class="hero-video" muted loop playsinline preload="auto"
-           width="1080" height="1350" fetchpriority="high"
+           poster="img/hero-poster.webp" width="720" height="900" fetchpriority="high"
            aria-label="Cuchillo de cocina forjado con hoja curva, hueco de agarre y mango de madera sobre una tabla.">
       <source src="img/bucle.mp4" type="video/mp4">
-      <img src="img/hero.jpg" width="1080" height="1080"
-           alt="Cuchillo de cocina forjado con hoja curva, hueco de agarre y mango de madera sobre una tabla.">
     </video>
     <div class="pastillas">
       <span class="pastilla pastilla-v">🚚 ENVÍO GRATIS HOY</span>
