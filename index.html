@@ -14,6 +14,11 @@
 <meta name="theme-color" content="#ffffff">
 <link rel="preload" href="fonts/Poppins-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Poppins-700.woff2" as="font" type="font/woff2" crossorigin>
+<!-- El video del heroe se descubre aqui, en el <head>, antes incluso de
+     que el navegador llegue al <body>: es el punto mas temprano posible
+     para arrancar la descarga. fetchpriority="high" lo pone por delante de
+     cualquier otra cosa que compita por ancho de banda en ese momento. -->
+<link rel="preload" href="img/bucle.mp4" as="video" type="video/mp4" fetchpriority="high">
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════
