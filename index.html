@@ -1063,11 +1063,22 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
   </div>
 
   <figure class="hero-img" style="margin:0">
-    <picture>
-      <source srcset="img/hero.webp" type="image/webp">
-      <img src="img/hero.jpg" width="1080" height="1080" fetchpriority="high"
+    <!-- El video va en el HTML desde el inicio, no lo crea JS mas abajo:
+         asi el navegador empieza a bajarlo apenas lee la etiqueta, en vez
+         de esperar a que se ejecute todo el script de la pagina. El poster
+         es la misma foto de antes, y se ve mientras el video llega, sin
+         saltos: es el propio navegador quien pinta uno u otro, no un
+         reemplazo de elementos por JS. Si HERO_VIDEO fuera false o el
+         visitante pidiera prefers-reduced-motion, heroEnMovimiento() de
+         mas abajo simplemente no lo pone a reproducir y se queda quieto
+         en el poster — visualmente identico a la foto fija de siempre. -->
+    <video class="hero-video" muted loop playsinline preload="auto"
+           poster="img/hero.jpg" width="1080" height="1350" fetchpriority="high"
+           aria-label="Cuchillo de cocina forjado con hoja curva, hueco de agarre y mango de madera sobre una tabla.">
+      <source src="img/bucle.mp4" type="video/mp4">
+      <img src="img/hero.jpg" width="1080" height="1080"
            alt="Cuchillo de cocina forjado con hoja curva, hueco de agarre y mango de madera sobre una tabla.">
-    </picture>
+    </video>
     <div class="pastillas">
       <span class="pastilla pastilla-v">🚚 ENVÍO GRATIS HOY</span>
       <span class="pastilla pastilla-n">📦 STOCK LIMITADO</span>
@@ -1763,48 +1774,35 @@ footer .legal{text-align:center;font-size:12.5px;color:rgba(255,255,255,.75);
     'El cuchillo en una cocina, cortando de todo');
 
   /* ── El heroe en movimiento ──────────────────────────────────── */
-  // Cambia la foto del heroe por el bucle del primer video. Tres cautelas,
-  // porque esto es lo primero que ve el trafico pagado y se ve en 4G:
+  // El <video> ya esta en el HTML desde el inicio (con su <source> y su
+  // poster), asi que el navegador empieza a bajarlo solo, sin esperar a
+  // este script — antes, este mismo script era quien CREABA el <video> y
+  // le ponia el src, y el archivo no empezaba a bajar hasta que llegaba
+  // hasta aqui: de ahi el salto de foto-fija-a-video de un segundo largo
+  // que se veia al entrar. Lo unico que queda por hacer en JS:
   //
-  //   1. La foto se queda de poster. Ya viene con fetchpriority alto, asi que
-  //      pinta primero igual que antes: el video no retrasa nada.
-  //   2. El cambio solo ocurre cuando el video YA tiene un fotograma. Si la
-  //      red falla o el archivo no carga, no se toca el heroe y se ve la
-  //      landing de siempre.
-  //   3. Con prefers-reduced-motion activado se queda la foto: hay gente que
-  //      apaga las animaciones porque le marean.
+  //   1. Si CONFIG pide un bucle distinto al que ya trae el HTML, se
+  //      cambia aqui. Si es el mismo (el caso normal), poner el mismo src
+  //      no relanza la descarga: el navegador no repite lo que ya tiene.
+  //   2. Con prefers-reduced-motion activado no se llama a play(): el
+  //      video se queda quieto en el poster, igual que una foto fija, para
+  //      quien apaga las animaciones porque le marean.
   function heroEnMovimiento(){
     if (!C.HERO_VIDEO) return;
     var cfg = C.VIDEO;
     if (!cfg || !cfg.activo) return;
+    var v = $('.hero-video');
+    if (!v) return;
+
     var bucleHero = C.HERO_BUCLE || cfg.bucle;
-    if (!bucleHero) return;
+    var origen = v.querySelector('source');
+    if (bucleHero && origen) origen.src = bucleHero;
+
     if (window.matchMedia &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    var fig = $('.hero-img');
-    var img = fig && fig.querySelector('img');
-    if (!img) return;
-
-    var v = document.createElement('video');
-    v.muted = true; v.loop = true; v.autoplay = true; v.preload = 'auto';
-    v.playsInline = true;
-    v.setAttribute('playsinline', '');        // iOS antiguo lo exige en el atributo
-    // El poster se lee del DOM y no de una ruta escrita a mano: asi sigue
-    // valiendo despues de que build-shopify.mjs reescriba las rutas de las
-    // imagenes a etiquetas de Liquid al convertir esto en tema de Shopify.
-    v.setAttribute('poster', img.currentSrc || img.src);
-    v.setAttribute('aria-label', img.alt || '');
-    v.setAttribute('width', '900');
-    v.setAttribute('height', '900');
-
-    v.addEventListener('loadeddata', function(){
-      (img.closest('picture') || img).replaceWith(v);
-      var pr = v.play();                      // iOS puede rechazar: se ve el poster
-      if (pr && pr.catch) pr.catch(function(){});
-    });
-
-    v.src = bucleHero;
+    var pr = v.play();                      // iOS puede rechazar: se ve el poster
+    if (pr && pr.catch) pr.catch(function(){});
   }
   heroEnMovimiento();
 
