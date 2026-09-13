@@ -1,6 +1,6 @@
 /**
  * ══════════════════════════════════════════════════════════════════
- *  INTERMEDIARIO landing → Google Sheets   (función de Vercel)
+ *  INTERMEDIARIO landing → Google Apps Script   (función de Vercel)
  * ══════════════════════════════════════════════════════════════════
  *
  *  Existe por una razón: que el secreto del receptor NO viaje en el HTML
@@ -8,32 +8,31 @@
  *  función conoce la URL y el token de Apps Script — que viven en las
  *  variables de entorno de Vercel, no en el repo.
  *
- *  Es el mismo modelo que usan las apps COD de Shopify: un servidor en
- *  medio que guarda las credenciales.
- *
  *  Variables de entorno (Vercel → Settings → Environment Variables):
- *    PEDIDOS_URL    https://script.google.com/macros/s/…/exec
- *    PEDIDOS_TOKEN  el mismo TOKEN de las propiedades del Apps Script
- *
- *  Desde que la landing vive también en Shopify, este endpoint hace DOS
- *  cosas con cada pedido: lo escribe en la hoja (como siempre) y lo crea
- *  como pedido real en Shopify (ver _shopify.mjs). Son independientes: si
- *  una falla, la otra sigue, y el cliente llega a WhatsApp igual.
- *
+ *    PEDIDOS_URL          https://script.google.com/macros/s/…/exec
+ *    PEDIDOS_TOKEN        el mismo TOKEN de las propiedades del Apps Script
  *    ORIGENES_PERMITIDOS  https://tu-tienda.myshopify.com,https://tudominio.com
- *    META_CAPI_TOKEN      token de Conversions API (Events Manager → HIDATA
- *                         CAPI → Configuración → Conversions API)
  *
- *  Y un tercer destino: el evento "Lead" a la Conversions API de Meta. Es el
- *  registro server-side que complementa al Pixel del navegador — en Shopify la
- *  página usa {% layout none %}, así que ningún tracking del tema se ejecuta, y
- *  el Pixel solo pierde eventos por bloqueadores, Safari/iOS y pestañas que se
- *  cierran antes de que dispare. El id de evento viaja desde el navegador para
- *  que Meta deduplique: un Lead, no dos.
+ *  ── Por qué esta función YA NO llama a Shopify ni a Meta por su cuenta ──
+ *  Hasta el 13-sep-2026 creaba el pedido en Shopify (_shopify.mjs) y mandaba
+ *  el Lead a Meta EN PARALELO con Apps Script (Código.js), que hace
+ *  exactamente lo mismo — además de guardar la hoja. Las dos rutas no se
+ *  avisaban entre sí: cada una comprobaba "¿ya existe este pedido?" antes
+ *  de crearlo, pero como las dos llamadas salían al mismo tiempo, ambas
+ *  podían ver "no existe" antes de que la otra terminara → pedido
+ *  duplicado en el admin de Shopify, en cada venta. Apps Script además
+ *  recalcula el precio en servidor (Precios.js) — la llamada directa que
+ *  hacía esta función confiaba en el `total` del navegador y nunca tuvo
+ *  esa protección.
+ *
+ *  Ahora Apps Script (backend/apps-script/activo/: Código.js, Shopify.js,
+ *  Meta.js, Precios.js, Escudo.js) es el ÚNICO lugar que decide si el
+ *  pedido entra a Shopify y qué se manda a Meta. Esta función solo limpia
+ *  los datos, frena el spam y reenvía — el `shopify`/`meta` que devuelve
+ *  son los que Apps Script reportó en su propia respuesta, no un intento
+ *  propio. `_shopify.mjs` se conserva sin usar en este camino en vivo:
+ *  sigue sirviendo como diagnóstico manual vía test/probar-shopify.mjs.
  */
-
-import { crearPedidoShopify } from './_shopify.mjs';
-import { createHash } from 'node:crypto';
 
 /**
  * La landing ya no está en el mismo dominio que esta función: vive en el
@@ -65,7 +64,8 @@ const MAX_POR_VENTANA = 6;       // ningún cliente hace 6 pedidos en un minuto
 /**
  * Freno anti-spam. Es best-effort a propósito: en serverless cada instancia
  * tiene su propia memoria, así que esto frena el abuso trivial, no un ataque
- * distribuido. Para eso está la cuota de Apps Script como último tope.
+ * distribuido. Para eso está el escudo de Apps Script (Escudo.js) como
+ * segundo tope, ahora con la IP real (ver más abajo), no solo el celular.
  */
 const vistos = new Map();
 
@@ -92,10 +92,17 @@ function leerCuerpo(req) {
   try { return JSON.parse(crudo); } catch { return null; }
 }
 
-/** Solo se reenvían campos conocidos: nada que llegue de fuera pasa entero. */
+/**
+ * Solo se reenvían campos conocidos: nada que llegue de fuera pasa entero.
+ * event_id/fbp/fbc/ua/url viajan también: son los que Apps Script necesita
+ * para que su Lead/Purchase deduplique con el píxel del navegador y tenga
+ * buena calidad de coincidencia — antes se quedaban aquí y el Lead que
+ * mandaba Apps Script viajaba "a ciegas", sin poder deduplicarse con nada.
+ */
 const CAMPOS = ['tipo', 'pedido', 'nombre', 'celular', 'departamento', 'ciudad',
                 'direccion', 'referencia', 'pack', 'unidades', 'adicional',
-                'total', 'adelanto', 'origen', 'campana', 'dispositivo', 'correo'];
+                'total', 'adelanto', 'origen', 'campana', 'dispositivo', 'correo',
+                'event_id', 'fbp', 'fbc', 'ua', 'url'];
 
 function limpiar(datos) {
   const salida = {};
@@ -105,73 +112,6 @@ function limpiar(datos) {
     salida[campo] = typeof valor === 'number' ? valor : String(valor).slice(0, 300);
   }
   return salida;
-}
-
-/* ── Conversions API de Meta ─────────────────────────────────────────
-   Nada de esto toca la hoja de Sheets ni el mensaje de WhatsApp: si falla,
-   solo queda un log. La venta nunca se bloquea por un evento de tracking. */
-
-const META_PIXEL_ID = '4244873702429153';   // HIDATA CAPI — no es secreto, es
-                                             // solo el identificador del dataset
-
-function sha256Hex(texto) {
-  return createHash('sha256').update(texto).digest('hex');
-}
-
-/** Perú guarda el celular como 9 dígitos locales; CAPI exige E.164 sin '+'. */
-function telefonoHasheado(celular) {
-  const digitos = String(celular || '').replace(/\D/g, '');
-  if (!digitos) return null;
-  const e164 = digitos.length === 9 ? '51' + digitos : digitos;
-  return sha256Hex(e164);
-}
-
-async function enviarConversionsAPI(datos, ip) {
-  const token = process.env.META_CAPI_TOKEN;
-  if (!token || datos.tipo === 'suscripcion') return;
-
-  const ph = telefonoHasheado(datos.celular);
-  const userData = {};
-  if (ip && ip !== 'sin-ip') userData.client_ip_address = ip;
-  if (datos.ua) userData.client_user_agent = String(datos.ua).slice(0, 300);
-  if (datos.fbp) userData.fbp = String(datos.fbp).slice(0, 300);
-  if (datos.fbc) userData.fbc = String(datos.fbc).slice(0, 300);
-  if (ph) userData.ph = [ph];
-
-  const total = typeof datos.total === 'number' ? datos.total : Number(datos.total);
-
-  const evento = {
-    event_name: 'Lead',
-    event_time: Math.floor(Date.now() / 1000),
-    action_source: 'website',
-    user_data: userData
-  };
-  if (datos.event_id) evento.event_id = String(datos.event_id).slice(0, 100);
-  if (datos.url) evento.event_source_url = String(datos.url).slice(0, 300);
-  if (Number.isFinite(total) || datos.pack) {
-    evento.custom_data = {
-      currency: 'PEN',
-      ...(Number.isFinite(total) ? { value: total } : {}),
-      ...(datos.pack ? { content_name: String(datos.pack).slice(0, 100) } : {})
-    };
-  }
-
-  try {
-    const resp = await fetch(
-      `https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events?access_token=${encodeURIComponent(token)}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: [evento] })
-      }
-    );
-    if (!resp.ok) {
-      const texto = await resp.text();
-      console.error('Meta CAPI rechazó el evento — HTTP ' + resp.status + ' · ' + texto.slice(0, 300));
-    }
-  } catch (err) {
-    console.error('No se pudo enviar el evento a Meta CAPI: ' + err);
-  }
 }
 
 export default async function handler(req, res) {
@@ -202,9 +142,16 @@ export default async function handler(req, res) {
 
   const carga = limpiar(datos);
   carga.token = process.env.PEDIDOS_TOKEN || '';
+  // La IP real de Vercel (x-forwarded-for) es lo único estable para frenar
+  // abuso: el celular lo inventa quien manda la petición, la IP la pone la
+  // red. Sin esto, el escudo de Apps Script (Escudo.js) solo podía contar
+  // por celular — con tráfico pagado real entrando, esto es lo que hace que
+  // su freno por IP sirva de algo.
+  if (ip !== 'sin-ip') carga.ip = ip;
 
-  /** La hoja de cálculo: sigue siendo el registro de siempre. */
-  async function guardarEnHoja() {
+  let cuerpoRespuesta = null;
+  let registrado = false;
+  try {
     const respuesta = await fetch(destino, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
@@ -214,52 +161,32 @@ export default async function handler(req, res) {
 
     // No basta con el código HTTP: Apps Script responde 200 aunque rechace el
     // pedido (token inválido, por ejemplo) y lo dice solo en el cuerpo. Sin
-    // mirar dentro, un token mal puesto se traduce en ventas que nadie registra
-    // y que nadie ve fallar.
-    let cuerpo = null;
-    try { cuerpo = JSON.parse(texto); } catch { /* no vino JSON */ }
-    const registrado = respuesta.ok && cuerpo !== null && cuerpo.ok === true;
+    // mirar dentro, un token mal puesto se traduce en ventas que nadie
+    // registra y que nadie ve fallar.
+    try { cuerpoRespuesta = JSON.parse(texto); } catch { /* no vino JSON */ }
+    registrado = respuesta.ok && cuerpoRespuesta !== null && cuerpoRespuesta.ok === true;
 
     if (!registrado) {
-      console.error('EL PEDIDO NO SE REGISTRÓ EN LA HOJA — HTTP ' + respuesta.status +
+      console.error('EL PEDIDO NO SE REGISTRÓ — HTTP ' + respuesta.status +
                     ' · respuesta: ' + texto.slice(0, 300));
     }
-    return registrado;
+  } catch (err) {
+    console.error('No se pudo contactar a Apps Script: ' + String(err).slice(0, 200));
   }
 
-  // Los dos destinos van en paralelo y por separado: la hoja es el registro
-  // operativo (la usas para llamar y repartir) y Shopify es el registro
-  // contable (inventario, informes, píxel). Que Shopify falle no puede
-  // impedir que el pedido llegue a la hoja, ni al revés.
-  //
-  // Las suscripciones al boletín no son pedidos: solo van a la hoja.
-  const [hoja, shopify] = await Promise.allSettled([
-    guardarEnHoja(),
-    esSuscripcion ? Promise.resolve({ ok: false, motivo: 'no es un pedido' })
-                  : crearPedidoShopify(datos),
-    // Tracking, no registro: se traga sus propios errores y nunca decide el
-    // resultado de la respuesta. Un Lead perdido cuesta atribución; un pedido
-    // perdido cuesta la venta.
-    enviarConversionsAPI(datos, ip)
-  ]);
-
-  const enHoja = hoja.status === 'fulfilled' && hoja.value === true;
-  if (hoja.status === 'rejected') {
-    console.error('No se pudo registrar el pedido en la hoja: ' + hoja.reason);
-  }
-
-  const enShopify = shopify.status === 'fulfilled' && shopify.value?.ok === true;
-  if (!esSuscripcion) {
-    if (shopify.status === 'rejected') {
-      console.error('EL PEDIDO NO ENTRÓ EN SHOPIFY: ' + shopify.reason);
-    } else if (!enShopify && shopify.value?.motivo !== 'shopify sin configurar') {
-      console.error('EL PEDIDO NO ENTRÓ EN SHOPIFY: ' + shopify.value?.motivo);
-    } else if (enShopify && shopify.value.repetido) {
-      console.log('Pedido ya existente en Shopify (post-upsell): ' + shopify.value.pedido);
-    }
+  // shopify/meta ya no son intentos propios de esta función: son lo que
+  // Apps Script reportó en su respuesta (ver Código.js → doPost → el
+  // objeto que arma al final, con shop.ok y meta.ok).
+  if (!esSuscripcion && cuerpoRespuesta && cuerpoRespuesta.shopify === false) {
+    console.error('EL PEDIDO NO ENTRÓ EN SHOPIFY (reportado por Apps Script)');
   }
 
   // Pase lo que pase, el cliente sigue su camino a WhatsApp: la venta nunca
   // se rompe por un fallo de registro.
-  return res.status(200).json({ ok: enHoja, hoja: enHoja, shopify: enShopify });
+  return res.status(200).json({
+    ok: registrado,
+    hoja: registrado,
+    shopify: cuerpoRespuesta?.shopify === true,
+    meta: cuerpoRespuesta?.meta === true
+  });
 }

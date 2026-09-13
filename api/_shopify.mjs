@@ -3,10 +3,21 @@
  *  Crea el pedido REAL en Shopify        (Admin API · orderCreate)
  * ══════════════════════════════════════════════════════════════════
  *
+ *  ⚠ YA NO se llama desde pedido.mjs (13-sep-2026). Se llamaba en paralelo
+ *  con Apps Script (que hace lo mismo vía Shopify.js, además de blindar el
+ *  precio en servidor) y las dos rutas duplicaban el pedido en el admin de
+ *  Shopify — ver el comentario de cabecera de pedido.mjs. Apps Script es
+ *  ahora el único que crea el pedido en Shopify.
+ *
+ *  Este archivo se conserva porque sigue siendo útil como diagnóstico
+ *  manual: test/probar-shopify.mjs lo importa directamente (con --pedido)
+ *  para verificar credenciales y conectividad contra la tienda real, sin
+ *  pasar por Apps Script. Si algún día hace falta un segundo camino a
+ *  Shopify, que sea a propósito y coordinado con Shopify.js — no en
+ *  paralelo y sin que ninguno sepa del otro, como estaba antes.
+ *
  *  Esto es, literalmente, lo que hace Releasit COD por dentro: recibe el
- *  formulario y llama a la Admin API. No hay más magia. Como nuestro
- *  formulario ya pasa por /api/pedido —que existe para guardar secretos
- *  fuera del HTML— este es el sitio natural para hacer la llamada.
+ *  formulario y llama a la Admin API. No hay más magia.
  *
  *  Sin esto, Shopify no se entera de nada: 0 pedidos, 0 ingresos, 0
  *  inventario, y los informes marcan S/ 0 para siempre.
